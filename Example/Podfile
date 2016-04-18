@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'CentrifugoiOS_Example', :exclusive => true do
+  pod 'CentrifugoiOS', :path => '../'
+end
+
+target 'CentrifugoiOS_Tests', :exclusive => true do
+  pod 'CentrifugoiOS', :path => '../'
+
+  
+end
