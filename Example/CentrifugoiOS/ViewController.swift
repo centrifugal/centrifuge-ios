@@ -8,17 +8,136 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+import SwiftWebSocket
+import CentrifugoiOS
 
+typealias MessagesCallback = CentrifugoServerMessage -> Void
+
+class ViewController: UIViewController, UITableViewDataSource {
+    @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var tableView: UITableView!
+    let ws = WebSocket()
+    let builder = Centrifugal.messageBuilder()
+    
+    let url = "wss://centrifugo.herokuapp.com/connection/websocket"
+    var items = [(title: String, subtitle: String)]()
+    
+    var callbacks = [String : MessagesCallback]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        ws.event.open = {
+            self.connect()
+        }
+        
+        ws.event.message = Centrifugal.messageParseHandler(errorHandlerDecorator(viewHandlerDecorator(concreteMessageHandler)))
+        
+        ws.event.error = { error in
+            print(error)
+        }
+        
+        ws.open(url)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
     }
-
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.items.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("LeftDetail", forIndexPath: indexPath)
+        
+        cell.textLabel?.text = items[indexPath.row].title
+        cell.detailTextLabel?.text = items[indexPath.row].subtitle
+        
+        return cell
+    }
+    
+    @IBAction func sendButtonDidPress(sender: AnyObject) {
+        if let text = textField.text {
+            textField.text = nil
+            publish(text)
+        }
+    }
+    
+    func connect() {
+        let timestamp = "\(Int(NSDate().timeIntervalSince1970))"
+        let cred = CentrifugoCredentials(secret: "secret", user: "ios-swift", timestamp: timestamp)
+        let message = builder.buildConnectMessage(cred)
+        
+        callbacks[message.uid] = { message in
+            self.subscribe()
+        }
+        
+        try! ws.send(message)
+    }
+    
+    func publish(text: String) {
+        let message = builder.buildPublishMessage("jsfiddle-chat", data: ["nick" : "ios-swift", "input" : text])
+        callbacks[message.uid] = { message in
+        }
+        try! ws.send(message)
+    }
+    
+    func subscribe() {
+        let message = builder.buildSubscribeMessage("jsfiddle-chat")
+        
+        try! ws.send(message)
+    }
+    
+    func concreteMessageHandler(messages: [CentrifugoServerMessage]) {
+        for message in messages {
+            print("Handle message \(message)")
+            
+            if let uid = message.uid, handler = self.callbacks[uid] {
+                handler(message)
+                self.callbacks.removeValueForKey(uid)
+            }
+        }
+        
+    }
+    
+    func errorHandlerDecorator(handler: ([CentrifugoServerMessage] -> Void)) -> ([CentrifugoServerMessage] -> Void) {
+        return { messages in
+            if let error = messages[0].error {
+                self.showError(error)
+            } else {
+                handler(messages)
+            }
+        }
+    }
+    
+    func viewHandlerDecorator(handler: ([CentrifugoServerMessage] -> Void)) -> ([CentrifugoServerMessage] -> Void) {
+        return { messages in
+            for message in messages {
+                switch message.method {
+                case .Join, .Leave:
+                    if let data = message.body?["data"] as? [String : AnyObject], user = data["user"] as? String {
+                        self.items.append((title: message.method.rawValue, subtitle: user))
+                        self.tableView.reloadData()
+                    }
+                case .Message:
+                    if let data = message.body?["data"] as? [String : AnyObject], input = data["input"] as? String, nick = data["nick"] as? String {
+                        self.items.append((title: nick, subtitle: input))
+                        self.tableView.reloadData()
+                    }
+                default:
+                    print("")
+                }
+            }
+            
+            handler(messages)
+        }
+    }
+    
+    func showError(error: String) {
+        let vc = UIAlertController(title: "Error", message: error, preferredStyle: .Alert)
+        showViewController(vc, sender: self)
+    }
 }
+
 

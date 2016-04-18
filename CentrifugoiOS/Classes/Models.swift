@@ -9,16 +9,16 @@
 import Foundation
 
 public struct CentrifugoClientMessage {
-    let uid: String
-    let method: CentrifugeMethod
-    let params: [String : AnyObject]?
+    public let uid: String
+    public let method: CentrifugoMethod
+    public let params: [String : AnyObject]?
 }
 
-public struct CentrifugeServerMessage {
-    let uid: String?
-    let method: CentrifugeMethod
-    let error: String?
-    let body: [String : AnyObject]?
+public struct CentrifugoServerMessage {
+    public let uid: String?
+    public let method: CentrifugoMethod
+    public let error: String?
+    public let body: [String : AnyObject]?
 }
 
 extension CentrifugoClientMessage: Equatable {}
@@ -29,13 +29,19 @@ public func ==(lhs: CentrifugoClientMessage, rhs: CentrifugoClientMessage) -> Bo
     return lhs.uid == rhs.uid
 }
 
-public struct CentrifugeCredentials {
+public struct CentrifugoCredentials {
     let secret : String
     let user : String
     let timestamp : String
+    
+    public init(secret: String, user: String, timestamp:String) {
+        self.secret = secret
+        self.user = user
+        self.timestamp = timestamp
+    }
 }
 
-public enum CentrifugeMethod : String {
+public enum CentrifugoMethod : String {
     case Connect = "connect"
     case Disconnect = "disconnect"
     case Subscribe = "subscribe"

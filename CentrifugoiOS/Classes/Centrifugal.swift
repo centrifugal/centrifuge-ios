@@ -7,7 +7,7 @@
 //
 
 public protocol CentrifugoClientMessageBuilder {
-    func buildConnectMessage(credentials: CentrifugeCredentials) -> CentrifugoClientMessage
+    func buildConnectMessage(credentials: CentrifugoCredentials) -> CentrifugoClientMessage
     func buildSubscribeMessage(channel: String) -> CentrifugoClientMessage
     func buildUnsubscribeMessage(channel: String) -> CentrifugoClientMessage
     func buildPublishMessage(channel: String, data: [String: AnyObject]) -> CentrifugoClientMessage
@@ -18,38 +18,75 @@ public class Centrifugal {
         return CentrifugoClientMessageBuilderImpl()
     }
     
-    public func messageParse(info: [String : AnyObject]) -> CentrifugeServerMessage? {
-        guard let uid = info["uid"] as? String? else {
-            print("Error: Invalid server response: Not valid message format")
-            print(info)
-            return nil
+    public class func messageParseHandler(handler: ([CentrifugoServerMessage]) -> Void) -> (Any) -> Void {
+        return { message in
+            guard let text = message as? String else {
+                print("Error: Invalid server response: Not string")
+                return
+            }
+            
+            guard let data = text.dataUsingEncoding(NSUTF8StringEncoding) else {
+                print("Error: Invalid server response: Not valid string")
+                return
+            }
+            
+            do {
+                let response = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions())
+                var messages = [CentrifugoServerMessage]()
+                
+                if let infos = response as? [[String : AnyObject]] {
+                    for info in infos {
+                        if let message = messageParse(info){
+                            messages.append(message)
+                        }
+                    }
+                }
+                
+                if let info = response as? [String : AnyObject] {
+                    if let message = messageParse(info){
+                        messages.append(message)
+                    }
+                }
+                
+                handler(messages)
+                
+            } catch let error as NSError{
+                print(error)
+                return
+            }
         }
-        
-        guard let methodName = info["method"] as? String else {
-            print("Error: Invalid server response: Not valid message format")
-            print(info)
-            return nil
-        }
-        
-        guard let method = CentrifugeMethod(rawValue: methodName) else {
-            print("Error: Invalid server response: Not valid message format")
-            print(info)
-            return nil
-        }
-        var error: String?
-        
-        if let err = info["error"] as? String {
-            error = err
-        }
-        
-        var body: [String: AnyObject]?
-        
-        if let bd = info["body"] as? [String : AnyObject] {
-            body = bd
-        }
-        
-        return CentrifugeServerMessage(uid: uid, method: method, error: error, body: body)
     }
-
 }
 
+func messageParse(info: [String : AnyObject]) -> CentrifugoServerMessage? {
+    guard let uid = info["uid"] as? String? else {
+        print("Error: Invalid server response: Not valid message format")
+        print(info)
+        return nil
+    }
+    
+    guard let methodName = info["method"] as? String else {
+        print("Error: Invalid server response: Not valid message format")
+        print(info)
+        return nil
+    }
+    
+    guard let method = CentrifugoMethod(rawValue: methodName) else {
+        print("Error: Invalid server response: Not valid message format")
+        print(info)
+        return nil
+    }
+    var error: String?
+    
+    if let err = info["error"] as? String {
+        error = err
+    }
+    
+    var body: [String: AnyObject]?
+    
+    if let bd = info["body"] as? [String : AnyObject] {
+        body = bd
+    }
+    
+    return CentrifugoServerMessage(uid: uid, method: method, error: error, body: body)
+}

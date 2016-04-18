@@ -9,7 +9,7 @@
 import SwiftWebSocket
 
 extension WebSocket {
-    func send(message: CentrifugoClientMessage) throws {
+    public func send(message: CentrifugoClientMessage) throws {
         var dict: [String:AnyObject] = ["uid" : message.uid,
                                         "method" : message.method.rawValue]
         if let params = message.params {

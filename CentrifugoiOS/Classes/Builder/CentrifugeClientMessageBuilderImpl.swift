@@ -11,7 +11,7 @@ import IDZSwiftCommonCrypto
 
 class CentrifugoClientMessageBuilderImpl: CentrifugoClientMessageBuilder {
     
-    func buildConnectMessage(credentials: CentrifugeCredentials) -> CentrifugoClientMessage {
+    func buildConnectMessage(credentials: CentrifugoCredentials) -> CentrifugoClientMessage {
         
         let user = credentials.user, timestamp = credentials.timestamp, secret = credentials.secret
         
@@ -38,7 +38,7 @@ class CentrifugoClientMessageBuilderImpl: CentrifugoClientMessageBuilder {
         return buildMessage(.Publish, params: params)
     }
     
-    private func buildMessage(method: CentrifugeMethod, params: [String: AnyObject]?) -> CentrifugoClientMessage {
+    private func buildMessage(method: CentrifugoMethod, params: [String: AnyObject]?) -> CentrifugoClientMessage {
         let uid = generateUUID()
         let message = CentrifugoClientMessage(uid: uid, method: method, params: params)
         return message
@@ -49,10 +49,26 @@ class CentrifugoClientMessageBuilderImpl: CentrifugoClientMessageBuilder {
     }
     
     private func createToken(string: String, key: String) -> String {
-        let keys5 = arrayFromHexString(key)
-        let datas5 = arrayFromHexString(string)
-        let hmacs5 = HMAC(algorithm:.SHA1, key:keys5).update(datas5)?.final()
+        let hexKey = hexadecimalStringFromData(key.dataUsingEncoding(NSUTF8StringEncoding)!)
+        let hexString = hexadecimalStringFromData(string.dataUsingEncoding(NSUTF8StringEncoding)!)
+        
+        let keys5 = arrayFromHexString(hexKey)
+        let datas5 = arrayFromHexString(hexString)
+        
+        let hmacs5 = HMAC(algorithm:.SHA256, key:keys5).update(datas5)?.final()
         let token = hexStringFromArray(hmacs5!)
         return token
+    }
+    
+    private func hexadecimalStringFromData(data: NSData) -> String{
+        var bytes = [UInt8](count: data.length, repeatedValue: 0)
+        data.getBytes(&bytes, length: data.length)
+        
+        var hexString = NSMutableString()
+        for byte in bytes {
+            hexString.appendFormat("%02x", UInt(byte))
+        }
+        
+        return String(hexString)
     }
 }
