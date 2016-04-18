@@ -22,7 +22,7 @@ pod "CentrifugoiOS"
 
 ## Author
 
-Herman Saprykin, g.saprykin@rambler-co.ru
+Herman Saprykin, saprykin.h@gmail.com
 
 ## License
 
