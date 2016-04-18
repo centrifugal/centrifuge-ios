@@ -1,0 +1,14 @@
+PODS:
+  - CentrifugoiOS (0.1.0)
+
+DEPENDENCIES:
+  - CentrifugoiOS (from `../`)
+
+EXTERNAL SOURCES:
+  CentrifugoiOS:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  CentrifugoiOS: b36b997d2151decca0cc1b8f353bdf9bad05f0f3
+
+COCOAPODS: 0.39.0
