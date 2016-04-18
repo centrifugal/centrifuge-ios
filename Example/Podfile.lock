@@ -1,5 +1,7 @@
 PODS:
-  - CentrifugoiOS (0.1.0)
+  - CentrifugoiOS (0.1.0):
+    - SwiftWebSocket (~> 2.6)
+  - SwiftWebSocket (2.6.0)
 
 DEPENDENCIES:
   - CentrifugoiOS (from `../`)
@@ -9,6 +11,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  CentrifugoiOS: b36b997d2151decca0cc1b8f353bdf9bad05f0f3
+  CentrifugoiOS: 8d585a0c99c4f5a300d70bdc1aacc0ed8300d7d6
+  SwiftWebSocket: c24c0dde0b33852f478ffb54226408bfe703b26b
 
 COCOAPODS: 0.39.0
