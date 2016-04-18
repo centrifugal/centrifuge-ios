@@ -77,14 +77,14 @@ class ViewController: UIViewController, UITableViewDataSource {
     }
     
     func publish(text: String) {
-        let message = builder.buildPublishMessage("jsfiddle-chat", data: ["nick" : "ios-swift", "input" : text])
+        let message = builder.buildPublishMessageTo("jsfiddle-chat", data: ["nick" : "ios-swift", "input" : text])
         callbacks[message.uid] = { message in
         }
         try! ws.send(message)
     }
     
     func subscribe() {
-        let message = builder.buildSubscribeMessage("jsfiddle-chat")
+        let message = builder.buildSubscribeMessageTo("jsfiddle-chat")
         
         try! ws.send(message)
     }

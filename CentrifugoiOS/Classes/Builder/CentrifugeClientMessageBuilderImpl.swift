@@ -22,17 +22,17 @@ class CentrifugoClientMessageBuilderImpl: CentrifugoClientMessageBuilder {
         return buildMessage(.Connect, params: params)
     }
     
-    func buildSubscribeMessage(channel: String) -> CentrifugoClientMessage {
+    func buildSubscribeMessageTo(channel: String) -> CentrifugoClientMessage {
         let params = ["channel" : channel]
         return buildMessage(.Subscribe, params: params)
     }
     
-    func buildUnsubscribeMessage(channel: String) -> CentrifugoClientMessage {
+    func buildUnsubscribeMessageFrom(channel: String) -> CentrifugoClientMessage {
         let params = ["channel" : channel]
         return buildMessage(.Unsubscribe, params: params)
     }
     
-    func buildPublishMessage(channel: String, data: [String : AnyObject]) -> CentrifugoClientMessage {
+    func buildPublishMessageTo(channel: String, data: [String : AnyObject]) -> CentrifugoClientMessage {
         let params:[String : AnyObject] = ["channel" : channel,
                                            "data" : data]
         return buildMessage(.Publish, params: params)
