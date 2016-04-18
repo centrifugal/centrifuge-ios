@@ -13,17 +13,14 @@ import CentrifugoiOS
 
 typealias MessagesCallback = CentrifugoServerMessage -> Void
 
-class ViewController: UIViewController, UITableViewDataSource {
+class ViewController: UIViewController {
     @IBOutlet weak var nickTextField: UITextField!
     @IBOutlet weak var messageTextField: UITextField!
     @IBOutlet weak var tableView: UITableView!
     
     let ws = WebSocket()
     let builder = Centrifugal.messageBuilder()
-    
-    let url = "wss://centrifugo.herokuapp.com/connection/websocket"
-    var items = [(title: String, subtitle: String)]()
-    
+    let datasource = TableViewDataSource()
     var callbacks = [String : MessagesCallback]()
     
     var nickName: String {
@@ -35,42 +32,21 @@ class ViewController: UIViewController, UITableViewDataSource {
             }
         }
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        ws.event.open = {
-            self.connect()
-        }
+        tableView.dataSource = datasource
+        ws.event.message = Centrifugal.messagesParser(eachMessage(handleError(present(handleCallback))))
+        ws.event.open = connect
+        ws.event.error = showError
         
-        ws.event.message = Centrifugal.messageParseHandler(errorHandlerDecorator(viewHandlerDecorator(concreteMessageHandler)))
-        
-        ws.event.error = { error in
-            print(error)
-        }
-        
-        ws.open(url)
-    }
-    
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.items.count
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("LeftDetail", forIndexPath: indexPath)
-        
-        cell.textLabel?.text = items[indexPath.row].title
-        cell.detailTextLabel?.text = items[indexPath.row].subtitle
-        
-        return cell
+        ws.open("wss://centrifugo.herokuapp.com/connection/websocket")
     }
     
     @IBAction func sendButtonDidPress(sender: AnyObject) {
-        if let text = messageTextField.text {
-            messageTextField.text = nil
+        if let text = messageTextField.text where text.characters.count > 0 {
+            messageTextField.text = ""
             publish(text)
         }
     }
@@ -81,7 +57,7 @@ class ViewController: UIViewController, UITableViewDataSource {
         let cred = CentrifugoCredentials(secret: "secret", user: "ios-swift", timestamp: timestamp)
         let message = builder.buildConnectMessage(cred)
         
-        callbacks[message.uid] = { message in
+        callbacks[message.uid] = { _ in
             self.subscribe()
         }
         
@@ -90,64 +66,65 @@ class ViewController: UIViewController, UITableViewDataSource {
     
     func publish(text: String) {
         let message = builder.buildPublishMessageTo("jsfiddle-chat", data: ["nick" : nickName, "input" : text])
-        callbacks[message.uid] = { message in
-        }
         try! ws.send(message)
     }
     
     func subscribe() {
         let message = builder.buildSubscribeMessageTo("jsfiddle-chat")
-        
         try! ws.send(message)
     }
     
-    func concreteMessageHandler(messages: [CentrifugoServerMessage]) {
-        for message in messages {
-            print("Handle message \(message)")
-            
-            if let uid = message.uid, handler = self.callbacks[uid] {
-                handler(message)
-                self.callbacks.removeValueForKey(uid)
-            }
+    func handleCallback(message: CentrifugoServerMessage) {
+        if let uid = message.uid, handler = self.callbacks[uid] {
+            handler(message)
+            self.callbacks.removeValueForKey(uid)
         }
-        
     }
     
-    func errorHandlerDecorator(handler: ([CentrifugoServerMessage] -> Void)) -> ([CentrifugoServerMessage] -> Void) {
-        return { messages in
-            if let error = messages[0].error {
+    func handleError(handler: (CentrifugoServerMessage -> Void)) -> (CentrifugoServerMessage -> Void) {
+        return { message in
+            if let error = message.error {
                 self.showError(error)
             } else {
-                handler(messages)
+                handler(message)
             }
         }
     }
     
-    func viewHandlerDecorator(handler: ([CentrifugoServerMessage] -> Void)) -> ([CentrifugoServerMessage] -> Void) {
+    func eachMessage(handler: (CentrifugoServerMessage -> Void)) -> ([CentrifugoServerMessage] -> Void) {
         return { messages in
             for message in messages {
-                switch message.method {
-                case .Join, .Leave:
-                    if let data = message.body?["data"] as? [String : AnyObject], user = data["user"] as? String {
-                        self.items.append((title: message.method.rawValue, subtitle: user))
-                        self.tableView.reloadData()
-                    }
-                case .Message:
-                    if let data = message.body?["data"] as? [String : AnyObject], input = data["input"] as? String, nick = data["nick"] as? String {
-                        self.items.append((title: nick, subtitle: input))
-                        self.tableView.reloadData()
-                    }
-                default:
-                    print("")
-                }
+                handler(message)
             }
-            
-            handler(messages)
         }
     }
     
-    func showError(error: String) {
-        let vc = UIAlertController(title: "Error", message: error, preferredStyle: .Alert)
+    func present(handler: (CentrifugoServerMessage -> Void)) -> (CentrifugoServerMessage -> Void) {
+        func addItem(title: String, subtitle: String) {
+            datasource.addItem(TableViewItem(title: title, subtitle: subtitle))
+            tableView.reloadData()
+        }
+        
+        return { message in
+            switch message.method {
+            case .Join, .Leave:
+                if let data = message.body?["data"] as? [String : AnyObject], user = data["user"] as? String {
+                    addItem(message.method.rawValue, subtitle: user)
+                }
+            case .Message:
+                if let data = message.body?["data"] as? [String : AnyObject], input = data["input"] as? String, nick = data["nick"] as? String {
+                    addItem(nick, subtitle: input)
+                }
+            default:
+                print("")
+            }
+            
+            handler(message)
+        }
+    }
+    
+    func showError(error: Any) {
+        let vc = UIAlertController(title: "Error", message: "\(error)", preferredStyle: .Alert)
         showViewController(vc, sender: self)
     }
 }

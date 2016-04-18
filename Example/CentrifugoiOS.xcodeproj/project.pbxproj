@@ -14,6 +14,7 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		DF03AD451CC51CF7006CF54B /* TableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03AD441CC51CF7006CF54B /* TableViewDataSource.swift */; };
 		FD4544F0DC7DEF254FFD70DE /* Pods_CentrifugoiOS_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69659195C779884768FA33BB /* Pods_CentrifugoiOS_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +47,7 @@
 		6D446E195C5C6147C9B981B0 /* Pods-CentrifugoiOS_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CentrifugoiOS_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CentrifugoiOS_Tests/Pods-CentrifugoiOS_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		CE54B77814FB0BA2016B9E4F /* CentrifugoiOS.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = CentrifugoiOS.podspec; path = ../CentrifugoiOS.podspec; sourceTree = "<group>"; };
 		D926C63825E212F492907348 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		DF03AD441CC51CF7006CF54B /* TableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewDataSource.swift; sourceTree = "<group>"; };
 		F959058C8699B78BBF25295F /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -115,6 +117,7 @@
 			children = (
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
+				DF03AD441CC51CF7006CF54B /* TableViewDataSource.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
@@ -359,6 +362,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF03AD451CC51CF7006CF54B /* TableViewDataSource.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 			);

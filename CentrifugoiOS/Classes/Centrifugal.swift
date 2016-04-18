@@ -18,7 +18,7 @@ public class Centrifugal {
         return CentrifugoClientMessageBuilderImpl()
     }
     
-    public class func messageParseHandler(handler: ([CentrifugoServerMessage]) -> Void) -> (Any) -> Void {
+    public class func messagesParser(handler: ([CentrifugoServerMessage]) -> Void) -> (Any) -> Void {
         return { message in
             guard let text = message as? String else {
                 print("Error: Invalid server response: Not string")
