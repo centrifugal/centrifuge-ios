@@ -1,6 +1,8 @@
 PODS:
   - CentrifugoiOS (0.1.0):
+    - IDZSwiftCommonCrypto (~> 0.7)
     - SwiftWebSocket (~> 2.6)
+  - IDZSwiftCommonCrypto (0.7.1)
   - SwiftWebSocket (2.6.0)
 
 DEPENDENCIES:
@@ -11,7 +13,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  CentrifugoiOS: 8d585a0c99c4f5a300d70bdc1aacc0ed8300d7d6
+  CentrifugoiOS: 5d4ab23519cca6934fa368ca47173f5704856c9b
+  IDZSwiftCommonCrypto: 320d5d0254b3d5230004bb01ef7753b0777d916c
   SwiftWebSocket: c24c0dde0b33852f478ffb54226408bfe703b26b
 
 COCOAPODS: 0.39.0
