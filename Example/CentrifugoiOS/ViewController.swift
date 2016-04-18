@@ -14,8 +14,10 @@ import CentrifugoiOS
 typealias MessagesCallback = CentrifugoServerMessage -> Void
 
 class ViewController: UIViewController, UITableViewDataSource {
-    @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var nickTextField: UITextField!
+    @IBOutlet weak var messageTextField: UITextField!
     @IBOutlet weak var tableView: UITableView!
+    
     let ws = WebSocket()
     let builder = Centrifugal.messageBuilder()
     
@@ -24,6 +26,15 @@ class ViewController: UIViewController, UITableViewDataSource {
     
     var callbacks = [String : MessagesCallback]()
     
+    var nickName: String {
+        get {
+            if let nick = self.nickTextField.text where nick.characters.count > 0 {
+                return nick
+            }else {
+                return "anonymous"
+            }
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -58,14 +69,15 @@ class ViewController: UIViewController, UITableViewDataSource {
     }
     
     @IBAction func sendButtonDidPress(sender: AnyObject) {
-        if let text = textField.text {
-            textField.text = nil
+        if let text = messageTextField.text {
+            messageTextField.text = nil
             publish(text)
         }
     }
     
     func connect() {
         let timestamp = "\(Int(NSDate().timeIntervalSince1970))"
+        
         let cred = CentrifugoCredentials(secret: "secret", user: "ios-swift", timestamp: timestamp)
         let message = builder.buildConnectMessage(cred)
         
@@ -77,7 +89,7 @@ class ViewController: UIViewController, UITableViewDataSource {
     }
     
     func publish(text: String) {
-        let message = builder.buildPublishMessageTo("jsfiddle-chat", data: ["nick" : "ios-swift", "input" : text])
+        let message = builder.buildPublishMessageTo("jsfiddle-chat", data: ["nick" : nickName, "input" : text])
         callbacks[message.uid] = { message in
         }
         try! ws.send(message)
