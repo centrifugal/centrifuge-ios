@@ -1,6 +1,6 @@
 # CentrifugoiOS
 
-[![CI Status](http://img.shields.io/travis/Herman Saprykin/CentrifugoiOS.svg?style=flat)](https://travis-ci.org/Herman Saprykin/CentrifugoiOS)
+[![Build Status](https://travis-ci.org/mogol/centrifugo-ios.svg?branch=develop)](https://travis-ci.org/mogol/centrifugo-ios)
 [![Version](https://img.shields.io/cocoapods/v/CentrifugoiOS.svg?style=flat)](http://cocoapods.org/pods/CentrifugoiOS)
 [![License](https://img.shields.io/cocoapods/l/CentrifugoiOS.svg?style=flat)](http://cocoapods.org/pods/CentrifugoiOS)
 [![Platform](https://img.shields.io/cocoapods/p/CentrifugoiOS.svg?style=flat)](http://cocoapods.org/pods/CentrifugoiOS)
