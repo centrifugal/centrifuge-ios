@@ -39,7 +39,7 @@ class CentrifugoServerMessageParserImpl: CentrifugoServerMessageParser {
             
             return messages
             
-        } catch let error as NSError{
+        }catch {
             //TODO: add error thrown
             return []
         }

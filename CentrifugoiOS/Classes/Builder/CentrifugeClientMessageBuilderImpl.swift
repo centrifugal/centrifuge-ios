@@ -68,7 +68,7 @@ class CentrifugoClientMessageBuilderImpl: CentrifugoClientMessageBuilder {
         var bytes = [UInt8](count: data.length, repeatedValue: 0)
         data.getBytes(&bytes, length: data.length)
         
-        var hexString = NSMutableString()
+        let hexString = NSMutableString()
         for byte in bytes {
             hexString.appendFormat("%02x", UInt(byte))
         }
