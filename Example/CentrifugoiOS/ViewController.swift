@@ -84,6 +84,8 @@ class ViewController: UIViewController {
     func subscribe() {
         let message = builder.buildSubscribeMessageTo(channel)
         try! ws.send(message)
+        let message1 = builder.buildPingMessage()
+        try! ws.send(message1)
     }
     
     //MARK:- Server response handlers
@@ -91,6 +93,7 @@ class ViewController: UIViewController {
     func eachMessage(handler: (CentrifugoServerMessage -> Void)) -> ([CentrifugoServerMessage] -> Void) {
         return { messages in
             for message in messages {
+                print(message)
                 handler(message)
             }
         }

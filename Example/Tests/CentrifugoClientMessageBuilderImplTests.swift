@@ -26,10 +26,10 @@ class CentrifugoClientMessageBuilderImplTests: XCTestCase {
         
         // then
         XCTAssertEqual(message.method, CentrifugoMethod.Connect)
-        XCTAssertNotNil(message.params?["token"])
-        XCTAssertNotNil(message.params?["user"])
-        XCTAssertNotNil(message.params?["timestamp"])
-        XCTAssertNil(message.params?["info"])
+        XCTAssertNotNil(message.params["token"])
+        XCTAssertNotNil(message.params["user"])
+        XCTAssertNotNil(message.params["timestamp"])
+        XCTAssertNil(message.params["info"])
     }
     
     func testBuildingConnectMessageWithInfo() {
@@ -41,9 +41,9 @@ class CentrifugoClientMessageBuilderImplTests: XCTestCase {
         
         // then
         XCTAssertEqual(message.method, CentrifugoMethod.Connect)
-        XCTAssertNotNil(message.params?["token"])
-        XCTAssertNotNil(message.params?["user"])
-        XCTAssertNotNil(message.params?["timestamp"])
-        XCTAssertNotNil(message.params?["info"])
+        XCTAssertNotNil(message.params["token"])
+        XCTAssertNotNil(message.params["user"])
+        XCTAssertNotNil(message.params["timestamp"])
+        XCTAssertNotNil(message.params["info"])
     }
 }

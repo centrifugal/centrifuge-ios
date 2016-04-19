@@ -11,12 +11,10 @@ import SwiftWebSocket
 extension WebSocket {
     public func send(message: CentrifugoClientMessage) throws {
         var dict: [String:AnyObject] = ["uid" : message.uid,
-                                        "method" : message.method.rawValue]
-        if let params = message.params {
-            dict["params"] = params
-        }
+                                        "method" : message.method.rawValue,
+                                        "params" : message.params]
         let data = try NSJSONSerialization.dataWithJSONObject(dict, options: NSJSONWritingOptions())
-        
+        print(message.uid)
         send(data: data)
     }
 }

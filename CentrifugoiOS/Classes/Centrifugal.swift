@@ -10,6 +10,9 @@ public protocol CentrifugoClientMessageBuilder {
     func buildConnectMessage(credentials: CentrifugoCredentials) -> CentrifugoClientMessage
     func buildSubscribeMessageTo(channel: String) -> CentrifugoClientMessage
     func buildUnsubscribeMessageFrom(channel: String) -> CentrifugoClientMessage
+    func buildPresenceMessage(channel: String) -> CentrifugoClientMessage
+    func buildHistoryMessage(channel: String) -> CentrifugoClientMessage
+    func buildPingMessage() -> CentrifugoClientMessage
     func buildPublishMessageTo(channel: String, data: [String: AnyObject]) -> CentrifugoClientMessage
 }
 

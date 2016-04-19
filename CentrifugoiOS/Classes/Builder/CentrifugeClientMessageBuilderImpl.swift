@@ -42,7 +42,21 @@ class CentrifugoClientMessageBuilderImpl: CentrifugoClientMessageBuilder {
         return buildMessage(.Publish, params: params)
     }
     
-    private func buildMessage(method: CentrifugoMethod, params: [String: AnyObject]?) -> CentrifugoClientMessage {
+    func buildPresenceMessage(channel: String) -> CentrifugoClientMessage {
+        let params:[String : AnyObject] = ["channel" : channel]
+        return buildMessage(.Presence, params: params)
+    }
+    
+    func buildHistoryMessage(channel: String) -> CentrifugoClientMessage {
+        let params:[String : AnyObject] = ["channel" : channel]
+        return buildMessage(.History, params: params)
+    }
+    
+    func buildPingMessage() -> CentrifugoClientMessage {
+        return buildMessage(.Ping, params: [:])
+    }
+    
+    private func buildMessage(method: CentrifugoMethod, params: [String: AnyObject]) -> CentrifugoClientMessage {
         let uid = generateUUID()
         let message = CentrifugoClientMessage(uid: uid, method: method, params: params)
         return message

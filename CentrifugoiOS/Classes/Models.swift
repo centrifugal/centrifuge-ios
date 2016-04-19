@@ -11,7 +11,7 @@ import Foundation
 public struct CentrifugoClientMessage {
     public let uid: String
     public let method: CentrifugoMethod
-    public let params: [String : AnyObject]?
+    public let params: [String : AnyObject]
 }
 
 extension CentrifugoClientMessage: Equatable {}
