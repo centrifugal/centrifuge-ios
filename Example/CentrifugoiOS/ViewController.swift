@@ -18,10 +18,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var messageTextField: UITextField!
     @IBOutlet weak var tableView: UITableView!
     
-    let ws = WebSocket()
-    let builder = Centrifugal.messageBuilder()
     let datasource = TableViewDataSource()
-    var callbacks = [String : MessagesCallback]()
     
     var nickName: String {
         get {
@@ -42,6 +39,11 @@ class ViewController: UIViewController {
     }
 
     //MARK:- Interactions with server
+    let ws = WebSocket()
+    let builder = Centrifugal.messageBuilder()
+    let parser = Centrifugal.messageParser()
+    
+    var callbacks = [String : MessagesCallback]()
     
     let channel = "jsfiddle-chat"
     let user = "ios-swift"
@@ -49,11 +51,16 @@ class ViewController: UIViewController {
     let url = "wss://centrifugo.herokuapp.com/connection/websocket"
     
     func open() {
-        ws.event.message = Centrifugal.messagesParser(eachMessage(handleError(present(handleCallback))))
+        ws.event.message = message
         ws.event.open = connect
         ws.event.error = showError
         
         ws.open(url)
+    }
+    
+    func message(data: Any) {
+        let messages = try! parser.parse(data)
+        eachMessage(handleError(present(handleCallback)))(messages)
     }
 
     func connect() {

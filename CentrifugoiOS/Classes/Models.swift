@@ -14,19 +14,17 @@ public struct CentrifugoClientMessage {
     public let params: [String : AnyObject]?
 }
 
+extension CentrifugoClientMessage: Equatable {}
+
+public func ==(lhs: CentrifugoClientMessage, rhs: CentrifugoClientMessage) -> Bool {
+    return lhs.uid == rhs.uid
+}
+
 public struct CentrifugoServerMessage {
     public let uid: String?
     public let method: CentrifugoMethod
     public let error: String?
     public let body: [String : AnyObject]?
-}
-
-extension CentrifugoClientMessage: Equatable {}
-
-// MARK: Equatable
-
-public func ==(lhs: CentrifugoClientMessage, rhs: CentrifugoClientMessage) -> Bool {
-    return lhs.uid == rhs.uid
 }
 
 public struct CentrifugoCredentials {
