@@ -37,24 +37,29 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         tableView.dataSource = datasource
+        
+        open()
+    }
+
+    //MARK:- Interactions with server
+    
+    let channel = "jsfiddle-chat"
+    let user = "ios-swift"
+    let secret = "secret"
+    let url = "wss://centrifugo.herokuapp.com/connection/websocket"
+    
+    func open() {
         ws.event.message = Centrifugal.messagesParser(eachMessage(handleError(present(handleCallback))))
         ws.event.open = connect
         ws.event.error = showError
         
-        ws.open("wss://centrifugo.herokuapp.com/connection/websocket")
+        ws.open(url)
     }
-    
-    @IBAction func sendButtonDidPress(sender: AnyObject) {
-        if let text = messageTextField.text where text.characters.count > 0 {
-            messageTextField.text = ""
-            publish(text)
-        }
-    }
-    
+
     func connect() {
         let timestamp = "\(Int(NSDate().timeIntervalSince1970))"
         
-        let cred = CentrifugoCredentials(secret: "secret", user: "ios-swift", timestamp: timestamp)
+        let cred = CentrifugoCredentials(secret: secret, user: user, timestamp: timestamp)
         let message = builder.buildConnectMessage(cred)
         
         callbacks[message.uid] = { _ in
@@ -65,19 +70,22 @@ class ViewController: UIViewController {
     }
     
     func publish(text: String) {
-        let message = builder.buildPublishMessageTo("jsfiddle-chat", data: ["nick" : nickName, "input" : text])
+        let message = builder.buildPublishMessageTo(channel, data: ["nick" : nickName, "input" : text])
         try! ws.send(message)
     }
     
     func subscribe() {
-        let message = builder.buildSubscribeMessageTo("jsfiddle-chat")
+        let message = builder.buildSubscribeMessageTo(channel)
         try! ws.send(message)
     }
     
-    func handleCallback(message: CentrifugoServerMessage) {
-        if let uid = message.uid, handler = self.callbacks[uid] {
-            handler(message)
-            self.callbacks.removeValueForKey(uid)
+    //MARK:- Server response handlers
+    
+    func eachMessage(handler: (CentrifugoServerMessage -> Void)) -> ([CentrifugoServerMessage] -> Void) {
+        return { messages in
+            for message in messages {
+                handler(message)
+            }
         }
     }
     
@@ -91,29 +99,21 @@ class ViewController: UIViewController {
         }
     }
     
-    func eachMessage(handler: (CentrifugoServerMessage -> Void)) -> ([CentrifugoServerMessage] -> Void) {
-        return { messages in
-            for message in messages {
-                handler(message)
-            }
-        }
-    }
-    
     func present(handler: (CentrifugoServerMessage -> Void)) -> (CentrifugoServerMessage -> Void) {
-        func addItem(title: String, subtitle: String) {
-            datasource.addItem(TableViewItem(title: title, subtitle: subtitle))
-            tableView.reloadData()
+        let addItem: ((String,String) -> Void) = { title, subtitle in
+            self.datasource.addItem(TableViewItem(title: title, subtitle: subtitle))
+            self.tableView.reloadData()
         }
         
         return { message in
             switch message.method {
             case .Join, .Leave:
                 if let data = message.body?["data"] as? [String : AnyObject], user = data["user"] as? String {
-                    addItem(message.method.rawValue, subtitle: user)
+                    addItem(message.method.rawValue, user)
                 }
             case .Message:
                 if let data = message.body?["data"] as? [String : AnyObject], input = data["input"] as? String, nick = data["nick"] as? String {
-                    addItem(nick, subtitle: input)
+                    addItem(nick, input)
                 }
             default:
                 print("")
@@ -123,9 +123,26 @@ class ViewController: UIViewController {
         }
     }
     
+    func handleCallback(message: CentrifugoServerMessage){
+        if let uid = message.uid, handler = self.callbacks[uid] {
+            handler(message)
+            self.callbacks.removeValueForKey(uid)
+        }
+    }
+
+    
     func showError(error: Any) {
         let vc = UIAlertController(title: "Error", message: "\(error)", preferredStyle: .Alert)
         showViewController(vc, sender: self)
+    }
+    
+    //MARK:- Interactions with user
+    
+    @IBAction func sendButtonDidPress(sender: AnyObject) {
+        if let text = messageTextField.text where text.characters.count > 0 {
+            messageTextField.text = ""
+            publish(text)
+        }
     }
 }
 
