@@ -84,22 +84,19 @@ class ViewController: UIViewController {
     func subscribe() {
         let message = builder.buildSubscribeMessageTo(channel)
         try! ws.send(message)
-        let message1 = builder.buildPingMessage()
-        try! ws.send(message1)
     }
     
     //MARK:- Server response handlers
     
-    func eachMessage(handler: (CentrifugoServerMessage -> Void)) -> ([CentrifugoServerMessage] -> Void) {
+    func eachMessage(handler: (MessagesCallback)) -> ([CentrifugoServerMessage] -> Void) {
         return { messages in
             for message in messages {
-                print(message)
                 handler(message)
             }
         }
     }
     
-    func handleError(handler: (CentrifugoServerMessage -> Void)) -> (CentrifugoServerMessage -> Void) {
+    func handleError(handler: (MessagesCallback)) -> (MessagesCallback) {
         return { message in
             if let error = message.error {
                 self.showError(error)
@@ -109,7 +106,7 @@ class ViewController: UIViewController {
         }
     }
     
-    func present(handler: (CentrifugoServerMessage -> Void)) -> (CentrifugoServerMessage -> Void) {
+    func present(handler: (MessagesCallback)) -> (MessagesCallback) {
         let addItem: ((String,String) -> Void) = { title, subtitle in
             self.datasource.addItem(TableViewItem(title: title, subtitle: subtitle))
             self.tableView.reloadData()
