@@ -10,7 +10,7 @@ import SwiftWebSocket
 
 extension WebSocket {
     public func send(message: CentrifugoClientMessage) throws {
-        var dict: [String:AnyObject] = ["uid" : message.uid,
+        let dict: [String:AnyObject] = ["uid" : message.uid,
                                         "method" : message.method.rawValue,
                                         "params" : message.params]
         let data = try NSJSONSerialization.dataWithJSONObject(dict, options: NSJSONWritingOptions())

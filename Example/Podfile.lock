@@ -13,7 +13,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  CentrifugoiOS: 5d4ab23519cca6934fa368ca47173f5704856c9b
+  CentrifugoiOS: 82376eaa6c7526096a8a6c2993a4cdb86877d37e
   IDZSwiftCommonCrypto: 320d5d0254b3d5230004bb01ef7753b0777d916c
   SwiftWebSocket: c24c0dde0b33852f478ffb54226408bfe703b26b
 
