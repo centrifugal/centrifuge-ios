@@ -31,11 +31,13 @@ public struct CentrifugoCredentials {
     let secret : String
     let user : String
     let timestamp : String
+    let info: String?
     
-    public init(secret: String, user: String, timestamp:String) {
+    public init(secret: String, user: String, timestamp:String, info: String? = nil) {
         self.secret = secret
         self.user = user
         self.timestamp = timestamp
+        self.info = info
     }
 }
 

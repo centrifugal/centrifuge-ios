@@ -15,9 +15,13 @@ class CentrifugoClientMessageBuilderImpl: CentrifugoClientMessageBuilder {
         
         let user = credentials.user, timestamp = credentials.timestamp, secret = credentials.secret
         
-        let params = ["user" : user,
+        var params = ["user" : user,
                       "timestamp" : timestamp,
                       "token" : createToken("\(user)\(timestamp)", key: secret)]
+        
+        if let info = credentials.info {
+            params["info"] = info
+        }
         
         return buildMessage(.Connect, params: params)
     }
