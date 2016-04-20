@@ -34,7 +34,6 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         tableView.dataSource = datasource
-        
         open()
     }
 
