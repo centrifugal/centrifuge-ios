@@ -21,12 +21,16 @@ public protocol CentrifugoServerMessageParser {
 }
 
 public class Centrifugal {
-    public class func messageBuilder() -> CentrifugoClientMessageBuilder {
-        return CentrifugoClientMessageBuilderImpl()
-    }
-    
-    public class func messageParser() -> CentrifugoServerMessageParser {
-        return CentrifugoServerMessageParserImpl()
+    public class func client(url: String, creds: CentrifugoCredentials) -> CentrifugoClient {
+        let client = CentrifugoClientImpl()
+        client.ws = CentrifugoWebSocket(url)
+        client.builder = CentrifugoClientMessageBuilderImpl()
+        client.parser = CentrifugoServerMessageParserImpl()
+        client.creds = creds
+        // TODO: Check references cycle
+        client.ws.delegate = client
+        
+        return client
     }
 }
 
