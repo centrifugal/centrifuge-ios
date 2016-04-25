@@ -57,7 +57,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     //MARK: - Handlers
     func connectionProcessHandler(messages: [CentrifugoServerMessage]?, error: NSError?) -> Void {
         guard let handler = connectionCompletion else {
-            print("Error: No connectionCompletion")
+            assertionFailure("Error: No connectionCompletion")
             return
         }
         
@@ -67,7 +67,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         }
         
         guard let message = messages?.first else {
-            print("Error: Empty messages array")
+            assertionFailure("Error: Empty messages array")
             return
         }
         
