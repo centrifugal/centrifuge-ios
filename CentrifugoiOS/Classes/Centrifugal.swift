@@ -17,7 +17,7 @@ public protocol CentrifugoClientMessageBuilder {
 }
 
 public protocol CentrifugoServerMessageParser {
-    func parse(data: Any) throws -> [CentrifugoServerMessage]
+    func parse(data: NSData) throws -> [CentrifugoServerMessage]
 }
 
 public class Centrifugal {
@@ -30,3 +30,9 @@ public class Centrifugal {
     }
 }
 
+let CentrifugoErrorDomain = "com.centrifugo.error.domain"
+let CentrifugoErrorMessageKey = "com.centrifugo.error.messagekey"
+
+enum CentrifugoErrorCode: Int {
+    case CentrifugoMessageWithError
+}

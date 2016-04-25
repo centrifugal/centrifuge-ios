@@ -27,6 +27,15 @@ public struct CentrifugoServerMessage {
     public let body: [String : AnyObject]?
 }
 
+extension CentrifugoServerMessage: Equatable {}
+
+public func ==(lhs: CentrifugoServerMessage, rhs: CentrifugoServerMessage) -> Bool {
+    if let luid = lhs.uid, ruid = rhs.uid {
+        return luid == ruid
+    }
+    return false
+}
+
 public struct CentrifugoCredentials {
     let secret : String
     let user : String

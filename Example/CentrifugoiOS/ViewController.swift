@@ -36,7 +36,7 @@ class ViewController: UIViewController {
         tableView.dataSource = datasource
         open()
     }
-
+    
     //MARK:- Interactions with server
     let ws = WebSocket()
     let builder = Centrifugal.messageBuilder()
@@ -58,10 +58,12 @@ class ViewController: UIViewController {
     }
     
     func message(data: Any) {
-        let messages = try! parser.parse(data)
-        eachMessage(handleError(present(handleCallback)))(messages)
+        if let data = data as? NSData {
+            let messages = try! parser.parse(data)
+            eachMessage(handleError(present(handleCallback)))(messages)
+        }
     }
-
+    
     func connect() {
         let timestamp = "\(Int(NSDate().timeIntervalSince1970))"
         
@@ -72,17 +74,17 @@ class ViewController: UIViewController {
             self.subscribe()
         }
         
-        try! ws.send(message)
+        ws.send(message)
     }
     
     func publish(text: String) {
         let message = builder.buildPublishMessageTo(channel, data: ["nick" : nickName, "input" : text])
-        try! ws.send(message)
+        ws.send(message)
     }
     
     func subscribe() {
         let message = builder.buildSubscribeMessageTo(channel)
-        try! ws.send(message)
+        ws.send(message)
     }
     
     //MARK:- Server response handlers
@@ -135,7 +137,7 @@ class ViewController: UIViewController {
             self.callbacks.removeValueForKey(uid)
         }
     }
-
+    
     
     func showError(error: Any) {
         let vc = UIAlertController(title: "Error", message: "\(error)", preferredStyle: .Alert)
