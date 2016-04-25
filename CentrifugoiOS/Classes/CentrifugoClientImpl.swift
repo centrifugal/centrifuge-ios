@@ -116,7 +116,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     
     func webSocketError(error: NSError) {
         if let handler = blockingHandler {
-            handler(nil, nil)
+            handler(nil, error)
         }        
     }
 }

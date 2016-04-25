@@ -229,16 +229,19 @@ class CentrifugoClientImplTests: XCTestCase {
     func testClientWebSocketErrorUsesHandler() {
         // given
         var handlerCalled = false
+        var receivedError: NSError?
         let error = NSError(domain: "", code: 0, userInfo: nil)
         
-        client.blockingHandler = { _, _ in
+        client.blockingHandler = { _, error in
             handlerCalled = true
+            receivedError = error
         }
         // when
         client.webSocketError(error)
         
         // then
         XCTAssertTrue(handlerCalled)
+        XCTAssertEqual(receivedError, error)
     }
     
     //MARK: - Helpers
