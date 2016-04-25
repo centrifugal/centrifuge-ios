@@ -8,7 +8,6 @@
 
 import UIKit
 
-import SwiftWebSocket
 import CentrifugoiOS
 
 typealias MessagesCallback = CentrifugoServerMessage -> Void
@@ -34,58 +33,31 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         tableView.dataSource = datasource
-        open()
+        
+        connect()
     }
     
     //MARK:- Interactions with server
-    let ws = WebSocket()
-    let builder = Centrifugal.messageBuilder()
-    let parser = Centrifugal.messageParser()
-    
+    var client: CentrifugoClient!
     var callbacks = [String : MessagesCallback]()
     
     let channel = "jsfiddle-chat"
     let user = "ios-swift"
     let secret = "secret"
-    let url = "wss://centrifugo.herokuapp.com/connection/websocket"
     
-    func open() {
-        ws.event.message = message
-        ws.event.open = connect
-        ws.event.error = showError
-        
-        ws.open(url)
-    }
-    
-    func message(data: Any) {
-        if let data = data as? NSData {
-            let messages = try! parser.parse(data)
-            eachMessage(handleError(present(handleCallback)))(messages)
-        }
-    }
+//  eachMessage(handleError(present(handleCallback)))(messages)
     
     func connect() {
         let timestamp = "\(Int(NSDate().timeIntervalSince1970))"
         
-        let cred = CentrifugoCredentials(secret: secret, user: user, timestamp: timestamp)
-        let message = builder.buildConnectMessage(cred)
-        
-        callbacks[message.uid] = { _ in
-            self.subscribe()
+        let creds = CentrifugoCredentials(secret: secret, user: user, timestamp: timestamp)
+        let url = "wss://centrifugo.herokuapp.com/connection/websocket"
+        client = Centrifugal.client(url, creds: creds)
+        client.connect { (error) in
+            print("connect error: \(error)")
         }
-        
-        ws.send(message)
     }
     
-    func publish(text: String) {
-        let message = builder.buildPublishMessageTo(channel, data: ["nick" : nickName, "input" : text])
-        ws.send(message)
-    }
-    
-    func subscribe() {
-        let message = builder.buildSubscribeMessageTo(channel)
-        ws.send(message)
-    }
     
     //MARK:- Server response handlers
     
@@ -149,7 +121,6 @@ class ViewController: UIViewController {
     @IBAction func sendButtonDidPress(sender: AnyObject) {
         if let text = messageTextField.text where text.characters.count > 0 {
             messageTextField.text = ""
-            publish(text)
         }
     }
 }
