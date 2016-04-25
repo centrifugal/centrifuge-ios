@@ -10,7 +10,7 @@ import SwiftWebSocket
 
 typealias CentrifugoBlockingHandler = ([CentrifugoServerMessage]?, NSError?) -> Void
 typealias CentrifugoHandler = (Void -> Void)
-typealias CentrifugoErrorHandler = (NSError? -> Void)
+public typealias CentrifugoErrorHandler = (NSError? -> Void)
 
 protocol CentrifugoClientDelegate {
     func client(client: CentrifugoClient, didReceiveError:ErrorType)
@@ -18,8 +18,11 @@ protocol CentrifugoClientDelegate {
     func client(client: CentrifugoClient, didDisconnect: Any)
 }
 
-protocol CentrifugoClient {
+public protocol CentrifugoClient {
     func connect(completion: CentrifugoErrorHandler)
+}
+
+protocol CentrifugoClientUnimplemented {
     func disconnect(completion: CentrifugoErrorHandler)
     func ping(completion: CentrifugoErrorHandler)
     
@@ -30,8 +33,7 @@ protocol CentrifugoClient {
     func unsubscribe(channel: String, completion: CentrifugoErrorHandler)
 }
 
-class CentrifugoClientImpl: NSObject, WebSocketDelegate {
-    var url: String!
+class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     var ws: CentrifugoWebSocket!
     var creds: CentrifugoCredentials!
     var builder: CentrifugoClientMessageBuilder!
@@ -86,7 +88,8 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate {
         try! ws.send(message)
     }
     
-    func webSocketMessageData(data: NSData) {
+    func webSocketMessageText(text: String) {
+        let data = text.dataUsingEncoding(NSUTF8StringEncoding)!
         let messages = try! parser.parse(data)
 
         if let handler = blockingHandler {

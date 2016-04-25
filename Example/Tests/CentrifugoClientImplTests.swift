@@ -133,13 +133,12 @@ class CentrifugoClientImplTests: XCTestCase {
     func testClientWebSocketMessageDataUsesHandler() {
         // given
         var handlerCalled = false
-        let data = NSData()
         
         client.blockingHandler = { _, _ in
             handlerCalled = true
         }
         // when
-        client.webSocketMessageData(data)
+        client.webSocketMessageText("")
         
         // then
         XCTAssertTrue(handlerCalled)
@@ -150,7 +149,7 @@ class CentrifugoClientImplTests: XCTestCase {
         var handlerCalled = false
         
         let parser = ParserMock()
-        let data = NSData()
+        let text = "[qw1234]"
         client.parser = parser
         
         parser.parseHandler = { data in
@@ -159,7 +158,7 @@ class CentrifugoClientImplTests: XCTestCase {
         }
         
         // when
-        client.webSocketMessageData(data)
+        client.webSocketMessageText(text)
         
         // then
         XCTAssertTrue(handlerCalled)
@@ -171,7 +170,7 @@ class CentrifugoClientImplTests: XCTestCase {
         let messages = [CentrifugoServerMessage.testMessage()]
         
         let parser = ParserMock()
-        let data = NSData()
+        let text = "asdfgh35e4trf"
         client.parser = parser
         
         parser.parseHandler = { data in
@@ -186,7 +185,7 @@ class CentrifugoClientImplTests: XCTestCase {
         }
         
         // when
-        client.webSocketMessageData(data)
+        client.webSocketMessageText(text)
         
         // then
         XCTAssertTrue(validMessagesDidReceive)

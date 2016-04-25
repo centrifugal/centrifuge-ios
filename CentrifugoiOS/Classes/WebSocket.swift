@@ -14,7 +14,7 @@ class CentrifugoWebSocket: WebSocket {
                                         "method" : message.method.rawValue,
                                         "params" : message.params]
         let data = try NSJSONSerialization.dataWithJSONObject(dict, options: NSJSONWritingOptions())
-        print(message.uid)
+
         send(data: data)
     }
 }
