@@ -9,17 +9,23 @@
 import SwiftWebSocket
 
 typealias CentrifugoBlockingHandler = ([CentrifugoServerMessage]?, NSError?) -> Void
+public typealias CentrifugoMessageHandler = (CentrifugoServerMessage?, NSError?) -> Void
 typealias CentrifugoHandler = (Void -> Void)
 public typealias CentrifugoErrorHandler = (NSError? -> Void)
 
 protocol CentrifugoClientDelegate {
-    func client(client: CentrifugoClient, didReceiveError:NSError)
+    func client(client: CentrifugoClient, didReceiveError error:NSError)
     func client(client: CentrifugoClient, didReceiveRefresh: Any)
     func client(client: CentrifugoClient, didDisconnect: Any)
 }
 
+public protocol CentrifugoChannelDelegate {
+    func client(client: CentrifugoClient, didReceiveInChannel channel: String, message: CentrifugoServerMessage)
+    }
+
 public protocol CentrifugoClient {
     func connect(completion: CentrifugoErrorHandler)
+    func subscribe(channel: String, delegate: CentrifugoChannelDelegate, completion: CentrifugoMessageHandler)
 }
 
 protocol CentrifugoClientUnimplemented {
@@ -29,7 +35,6 @@ protocol CentrifugoClientUnimplemented {
     var delegate: CentrifugoClientDelegate? {get set}
     var connected: Bool {get}
     
-    func subscribe(channel: String, delegate: Any, completion: Any)
     func unsubscribe(channel: String, completion: CentrifugoErrorHandler)
 }
 
@@ -39,7 +44,10 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     var builder: CentrifugoClientMessageBuilder!
     var parser: CentrifugoServerMessageParser!
     
-    var delegate: CentrifugoClientDelegate?
+    var delegate: CentrifugoClientDelegate!
+    
+    var messageCallbacks = [String : CentrifugoMessageHandler]()
+    var subscription = [String : CentrifugoChannelDelegate]()
     
     /** Handler is used to process websocket delegate method.
         If it is not nil, it blocks default actions. */
@@ -54,9 +62,22 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         ws.open()
     }
     
-    //MARK: - Helpers
-    func setupConnectedState() {
+    func subscribe(channel: String, delegate: CentrifugoChannelDelegate, completion: CentrifugoMessageHandler) {
+        let message = builder.buildSubscribeMessageTo(channel)
         
+        subscription[channel] = delegate
+        messageCallbacks[message.uid] = completion
+
+        send(message)
+    }
+    
+    //MARK: - Helpers
+    func send(message: CentrifugoClientMessage) {
+        try! ws.send(message)
+    }
+    
+    func setupConnectedState() {
+        blockingHandler = defaultProcessHandler
     }
     
     func resetState() {
@@ -87,7 +108,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         }
         
         if message.error == nil{
-            blockingHandler = defaultProcessHandler
+            setupConnectedState()
             handler(nil)
         } else {
             let error = NSError.errorWithMessage(message)
@@ -99,12 +120,29 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
      Handler is using while normal working with server.
     */
     func defaultProcessHandler(messages: [CentrifugoServerMessage]?, error: NSError?) -> Void {
+        if let err = error {
+            delegate.client(self, didReceiveError: err)
+            return
+        }
+        
+        guard let msgs = messages else {
+            assertionFailure("Error: Empty messages array without error")
+            return
+        }
+        
+        for message in msgs {
+            switch message.method {
+
+            default:
+                assertionFailure("Error: Invalid method type")
+            }
+        }
     }
     
     //MARK: - WebSocketDelegate
     func webSocketOpen() {
         let message = builder.buildConnectMessage(creds)
-        try! ws.send(message)
+        send(message)
     }
     
     func webSocketMessageText(text: String) {

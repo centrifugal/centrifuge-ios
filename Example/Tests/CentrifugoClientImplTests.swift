@@ -46,7 +46,51 @@ class CentrifugoClientImplTests: XCTestCase {
         XCTAssertNotNil(client.connectionCompletion)
     }
     
+    func testSubscribeProcessValid() {
+        // given
+        var validMessageDidSend = false
+        
+        let channel = "channelName"
+        let delegate = ChannelDelegateMock()
+        
+        let ws = WebSocketMock()
+        client.ws = ws
+        
+        let builder = BuilderMock()
+        client.builder = builder
+        
+        let message = CentrifugoClientMessage.testMessage()
+        
+        builder.buildSubscribeHandler = { _ in return message }
+        
+        ws.sendHandler = { aMessage in
+            validMessageDidSend = (aMessage == message)
+        }
+        
+        // when
+        client.subscribe(channel, delegate: delegate) { _, _ in }
+        
+        // then
+        XCTAssertTrue(validMessageDidSend)
+        XCTAssertNotNil(client.messageCallbacks[message.uid])
+        XCTAssertNotNil(client.subscription[channel])
+    }
+    
     //MARK: - Helpers
+    func testDefaultProcessHandlerProcessError() {
+        // given
+        let expectedError = NSError(domain: "", code: 1, userInfo: nil)
+        let delegate = ClientDelegateMock()
+        
+        client.delegate = delegate
+        
+        // when
+        client.defaultProcessHandler(nil, error: expectedError)
+        
+        // then
+        XCTAssertEqual(delegate.receivedError, expectedError)
+    }
+    
     func testConnectionProcessHandlerResetsStateIfError() {
         // given
         let error = NSError(domain: "", code: 1, userInfo: nil)
@@ -275,7 +319,12 @@ class CentrifugoClientImplTests: XCTestCase {
     class BuilderMock: CentrifugoClientMessageBuilderImpl {
         var buildConnectHandler: ( CentrifugoCredentials -> CentrifugoClientMessage )!
         override func buildConnectMessage(credentials: CentrifugoCredentials) -> CentrifugoClientMessage {
-            return self.buildConnectHandler(credentials)
+            return buildConnectHandler(credentials)
+        }
+        
+        var buildSubscribeHandler: ( String -> CentrifugoClientMessage )!
+        override func buildSubscribeMessageTo(channel: String) -> CentrifugoClientMessage {
+            return buildSubscribeHandler(channel)
         }
     }
     
@@ -287,6 +336,29 @@ class CentrifugoClientImplTests: XCTestCase {
             } else {
                 return []
             }
+        }
+    }
+    
+    class ClientDelegateMock: CentrifugoClientDelegate {
+        var receivedError: NSError?
+        
+        func client(client: CentrifugoClient, didReceiveRefresh: Any) {
+            
+        }
+        
+        func client(client: CentrifugoClient, didDisconnect: Any) {
+        }
+        
+        func client(client: CentrifugoClient, didReceiveError error: NSError) {
+            receivedError = error
+        }
+    }
+    
+    class ChannelDelegateMock: CentrifugoChannelDelegate {
+        var messageHandler: ( (CentrifugoClient, String, CentrifugoServerMessage) -> Void )!
+        
+        func client(client: CentrifugoClient, didReceiveInChannel channel: String, message: CentrifugoServerMessage) {
+                messageHandler(client, channel, message)
         }
     }
 }
