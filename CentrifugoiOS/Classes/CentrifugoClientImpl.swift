@@ -11,17 +11,6 @@ import SwiftWebSocket
 public typealias CentrifugoErrorHandler = (ErrorType? -> Void)
 public typealias CentrifugoHandler = (Void -> Void)
 
-public struct CentrifugoClientEvents {
-    let onError: CentrifugoErrorHandler?
-    let onRefresh: CentrifugoHandler?
-    let onDisconnect: CentrifugoErrorHandler?
-    
-    public init(error: CentrifugoErrorHandler? = nil, refresh: CentrifugoHandler? = nil, disconnect: CentrifugoErrorHandler? = nil) {
-        onError = error
-        onRefresh = refresh
-        onDisconnect = disconnect
-    }
-}
 
 public struct CentrifugoSubscriptionEvents {
     let onJoin: CentrifugoHandler?
@@ -37,18 +26,47 @@ public struct CentrifugoSubscriptionEvents {
     }
 }
 
+protocol CentrifugoClientDelegate {
+    func client(client: CentrifugoClient, didReceiveError:ErrorType)
+    func client(client: CentrifugoClient, didReceiveRefresh: Any)
+    func client(client: CentrifugoClient, didDisconnect: Any)
+}
+
 protocol CentrifugoClient {
     func connect(completion: CentrifugoErrorHandler)
     func disconnect(completion: CentrifugoErrorHandler)
     func ping(completion: CentrifugoErrorHandler)
     
-    var events: CentrifugoClientEvents? {get set}
+    var delegate: CentrifugoClientDelegate? {get set}
     var connected: Bool {get}
     
     func subscribe(channel: String, events: CentrifugoSubscriptionEvents?, completion: Any)
     func unsubscribe(channel: String, completion: CentrifugoErrorHandler)
 }
 
-class CentrifugoClientImpl {
+class CentrifugoClientImpl: NSObject, WebSocketDelegate {
+    var url: String!
+    var ws: CentrifugoWebSocket!
+    var creds: CentrifugoCredentials!
+    var builder: CentrifugoClientMessageBuilder!
+    var delegate: CentrifugoClientDelegate!
+    
+    func connect(completion: CentrifugoErrorHandler) {
+        ws.open()
+    }
+    
+    //MARK: - WebSocketDelegate
+    func webSocketOpen() {
+        let message = builder.buildConnectMessage(creds)
+        try! ws.send(message)
+    }
+    
+    func webSocketClose(code: Int, reason: String, wasClean: Bool) {
+        
+    }
+    
+    func webSocketError(error: NSError) {
+        
+    }
 }
 

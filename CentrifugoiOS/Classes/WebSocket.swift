@@ -8,7 +8,7 @@
 
 import SwiftWebSocket
 
-extension WebSocket {
+class CentrifugoWebSocket: WebSocket {
     public func send(message: CentrifugoClientMessage) throws {
         let dict: [String:AnyObject] = ["uid" : message.uid,
                                         "method" : message.method.rawValue,
