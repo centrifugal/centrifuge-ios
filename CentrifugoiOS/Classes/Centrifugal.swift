@@ -35,6 +35,7 @@ public class Centrifugal {
 }
 
 let CentrifugoErrorDomain = "com.centrifugo.error.domain"
+let CentrifugoWebSocketErrorDomain = "com.centrifugo.error.domain.websocket"
 let CentrifugoErrorMessageKey = "com.centrifugo.error.messagekey"
 
 enum CentrifugoErrorCode: Int {

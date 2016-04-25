@@ -47,7 +47,7 @@ class CentrifugoClientImplTests: XCTestCase {
     }
     
     //MARK: - Helpers
-    func testConnectionProcessHandlerResetsState() {
+    func testConnectionProcessHandlerResetsStateIfError() {
         // given
         let error = NSError(domain: "", code: 1, userInfo: nil)
 
@@ -95,6 +95,7 @@ class CentrifugoClientImplTests: XCTestCase {
         // then
         XCTAssertNil(receivedError)
         XCTAssertTrue(handlerCalled)
+        XCTAssertNotNil(client.blockingHandler)
     }
     
     func testConnectionProcessHandlerProcessErrorMessage() {
@@ -215,15 +216,28 @@ class CentrifugoClientImplTests: XCTestCase {
     func testClientWebSocketCloseUsesHandler() {
         // given
         var handlerCalled = false
+        let code = 111
+        let reason = "Hello, world"
         
-        client.blockingHandler = { _, _ in
+        var receivedCode = -1
+        var receivedReason = ""
+        
+        client.blockingHandler = { _, error in
+            if let err = error {
+                receivedCode = err.code
+                receivedReason = err.localizedDescription
+            }
+            
             handlerCalled = true
         }
+        
         // when
-        client.webSocketClose(0, reason: "", wasClean: true)
+        client.webSocketClose(code, reason: reason, wasClean: true)
         
         // then
         XCTAssertTrue(handlerCalled)
+        XCTAssertEqual(receivedReason, reason)
+        XCTAssertEqual(receivedCode, code)
     }
     
     func testClientWebSocketErrorUsesHandler() {

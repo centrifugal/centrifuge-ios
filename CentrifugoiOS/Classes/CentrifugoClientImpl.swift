@@ -13,7 +13,7 @@ typealias CentrifugoHandler = (Void -> Void)
 public typealias CentrifugoErrorHandler = (NSError? -> Void)
 
 protocol CentrifugoClientDelegate {
-    func client(client: CentrifugoClient, didReceiveError:ErrorType)
+    func client(client: CentrifugoClient, didReceiveError:NSError)
     func client(client: CentrifugoClient, didReceiveRefresh: Any)
     func client(client: CentrifugoClient, didDisconnect: Any)
 }
@@ -39,7 +39,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     var builder: CentrifugoClientMessageBuilder!
     var parser: CentrifugoServerMessageParser!
     
-    var delegate: CentrifugoClientDelegate!
+    var delegate: CentrifugoClientDelegate?
     
     /** Handler is used to process websocket delegate method.
         If it is not nil, it blocks default actions. */
@@ -65,6 +65,9 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     }
     
     //MARK: - Handlers
+    /**
+     Handler is using during connection to server.
+     */
     func connectionProcessHandler(messages: [CentrifugoServerMessage]?, error: NSError?) -> Void {
         guard let handler = connectionCompletion else {
             assertionFailure("Error: No connectionCompletion")
@@ -84,12 +87,18 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         }
         
         if message.error == nil{
+            blockingHandler = defaultProcessHandler
             handler(nil)
         } else {
             let error = NSError.errorWithMessage(message)
             handler(error)
         }
-        
+    }
+    
+    /**
+     Handler is using while normal working with server.
+    */
+    func defaultProcessHandler(messages: [CentrifugoServerMessage]?, error: NSError?) -> Void {
     }
     
     //MARK: - WebSocketDelegate
@@ -109,7 +118,8 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     
     func webSocketClose(code: Int, reason: String, wasClean: Bool) {
         if let handler = blockingHandler {
-            handler(nil, nil)
+            let error = NSError(domain: CentrifugoWebSocketErrorDomain, code: code, userInfo: [NSLocalizedDescriptionKey : reason])
+            handler(nil, error)
         }
         
     }
