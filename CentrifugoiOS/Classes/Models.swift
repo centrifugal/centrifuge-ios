@@ -64,3 +64,19 @@ public enum CentrifugoMethod : String {
     case Refresh = "refresh"
     case Ping = "ping"
 }
+
+class CentrifugoWrapper<T> {
+    var value: T
+    init(theValue: T) {
+        value = theValue
+    }
+}
+
+extension NSError {
+    static func errorWithMessage(message: CentrifugoServerMessage) -> NSError {
+        let error = NSError(domain: CentrifugoErrorDomain,
+                            code: CentrifugoErrorCode.CentrifugoMessageWithError.rawValue,
+                            userInfo: [NSLocalizedDescriptionKey : message.error!, CentrifugoErrorMessageKey : CentrifugoWrapper(theValue: message)])
+        return error
+    }
+}

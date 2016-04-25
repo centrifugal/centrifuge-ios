@@ -46,7 +46,23 @@ class CentrifugoClientImplTests: XCTestCase {
         XCTAssertNotNil(client.connectionCompletion)
     }
     
-    //MARK - Helpers
+    //MARK: - Helpers
+    func testConnectionProcessHandlerResetsState() {
+        // given
+        let error = NSError(domain: "", code: 1, userInfo: nil)
+
+        client.connectionCompletion = { _ in
+        }
+        client.blockingHandler = client.connectionProcessHandler
+        
+        // when
+        client.connectionProcessHandler(nil, error: error)
+        
+        // then
+        XCTAssertNil(client.blockingHandler)
+        XCTAssertNil(client.connectionCompletion)
+    }
+    
     func testConnectionProcessHandlerProcessError() {
         // given
         var receivedError: NSError?
@@ -99,6 +115,11 @@ class CentrifugoClientImplTests: XCTestCase {
         XCTAssertEqual(receivedError.code, CentrifugoErrorCode.CentrifugoMessageWithError.rawValue)
         XCTAssertEqual(receivedError.domain, CentrifugoErrorDomain)
         XCTAssertEqual(receivedError.localizedDescription, desc)
+        if let wrapper = receivedError.userInfo[CentrifugoErrorMessageKey] as? CentrifugoWrapper<CentrifugoServerMessage> {
+            XCTAssertEqual(message, wrapper.value )
+        }else {
+            XCTFail()
+        }
         XCTAssertTrue(handlerCalled)
     }
     

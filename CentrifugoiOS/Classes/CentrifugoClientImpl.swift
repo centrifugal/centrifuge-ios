@@ -54,12 +54,24 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         ws.open()
     }
     
+    //MARK: - Helpers
+    func setupConnectedState() {
+        
+    }
+    
+    func resetState() {
+        blockingHandler = nil
+        connectionCompletion = nil
+    }
+    
     //MARK: - Handlers
     func connectionProcessHandler(messages: [CentrifugoServerMessage]?, error: NSError?) -> Void {
         guard let handler = connectionCompletion else {
             assertionFailure("Error: No connectionCompletion")
             return
         }
+        
+        resetState()
         
         if let err = error {
             handler(err)
@@ -71,13 +83,11 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
             return
         }
         
-        if let error = message.error {
-            let error = NSError(domain: CentrifugoErrorDomain, code: CentrifugoErrorCode.CentrifugoMessageWithError.rawValue, userInfo: [
-                NSLocalizedDescriptionKey : error
-                ])
-            handler(error)
-        } else {
+        if message.error == nil{
             handler(nil)
+        } else {
+            let error = NSError.errorWithMessage(message)
+            handler(error)
         }
         
     }
