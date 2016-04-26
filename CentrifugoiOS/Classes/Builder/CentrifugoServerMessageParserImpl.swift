@@ -6,6 +6,10 @@
 //
 //
 
+protocol CentrifugoServerMessageParser {
+    func parse(data: NSData) throws -> [CentrifugoServerMessage]
+}
+
 class CentrifugoServerMessageParserImpl: CentrifugoServerMessageParser {
     func parse(data: NSData) throws -> [CentrifugoServerMessage] {        
         do {
@@ -30,6 +34,7 @@ class CentrifugoServerMessageParserImpl: CentrifugoServerMessageParser {
             
         }catch {
             //TODO: add error thrown
+            assertionFailure("Error: Invalid message json")
             return []
         }
     }

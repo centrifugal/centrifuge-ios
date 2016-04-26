@@ -6,8 +6,18 @@
 //
 //
 
-import Foundation
 import IDZSwiftCommonCrypto
+
+protocol CentrifugoClientMessageBuilder {
+    func buildConnectMessage(credentials: CentrifugoCredentials) -> CentrifugoClientMessage
+    func buildSubscribeMessageTo(channel: String) -> CentrifugoClientMessage
+    func buildSubscribeMessageTo(channel: String, lastMessageUUID: String) -> CentrifugoClientMessage
+    func buildUnsubscribeMessageFrom(channel: String) -> CentrifugoClientMessage
+    func buildPresenceMessage(channel: String) -> CentrifugoClientMessage
+    func buildHistoryMessage(channel: String) -> CentrifugoClientMessage
+    func buildPingMessage() -> CentrifugoClientMessage
+    func buildPublishMessageTo(channel: String, data: [String: AnyObject]) -> CentrifugoClientMessage
+}
 
 class CentrifugoClientMessageBuilderImpl: CentrifugoClientMessageBuilder {
     

@@ -6,20 +6,16 @@
 //
 //
 
-public protocol CentrifugoClientMessageBuilder {
-    func buildConnectMessage(credentials: CentrifugoCredentials) -> CentrifugoClientMessage
-    func buildSubscribeMessageTo(channel: String) -> CentrifugoClientMessage
-    func buildSubscribeMessageTo(channel: String, lastMessageUUID: String) -> CentrifugoClientMessage
-    func buildUnsubscribeMessageFrom(channel: String) -> CentrifugoClientMessage
-    func buildPresenceMessage(channel: String) -> CentrifugoClientMessage
-    func buildHistoryMessage(channel: String) -> CentrifugoClientMessage
-    func buildPingMessage() -> CentrifugoClientMessage
-    func buildPublishMessageTo(channel: String, data: [String: AnyObject]) -> CentrifugoClientMessage
+public let CentrifugoErrorDomain = "com.centrifugo.error.domain"
+public let CentrifugoWebSocketErrorDomain = "com.centrifugo.error.domain.websocket"
+public let CentrifugoErrorMessageKey = "com.centrifugo.error.messagekey"
+
+public enum CentrifugoErrorCode: Int {
+    case CentrifugoMessageWithError
 }
 
-public protocol CentrifugoServerMessageParser {
-    func parse(data: NSData) throws -> [CentrifugoServerMessage]
-}
+public typealias CentrifugoMessageHandler = (CentrifugoServerMessage?, NSError?) -> Void
+public typealias CentrifugoErrorHandler = (NSError? -> Void)
 
 public class Centrifugal {
     public class func client(url: String, creds: CentrifugoCredentials, delegate: CentrifugoClientDelegate) -> CentrifugoClient {
@@ -34,12 +30,4 @@ public class Centrifugal {
         
         return client
     }
-}
-
-let CentrifugoErrorDomain = "com.centrifugo.error.domain"
-let CentrifugoWebSocketErrorDomain = "com.centrifugo.error.domain.websocket"
-let CentrifugoErrorMessageKey = "com.centrifugo.error.messagekey"
-
-enum CentrifugoErrorCode: Int {
-    case CentrifugoMessageWithError
 }
