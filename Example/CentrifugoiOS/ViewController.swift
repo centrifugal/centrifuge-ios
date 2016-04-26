@@ -34,7 +34,11 @@ class ViewController: UIViewController, CentrifugoChannelDelegate, CentrifugoCli
         
         tableView.dataSource = datasource
         
-        connect()
+        let timestamp = "\(Int(NSDate().timeIntervalSince1970))"
+        
+        let creds = CentrifugoCredentials(secret: secret, user: user, timestamp: timestamp)
+        let url = "wss://centrifugo.herokuapp.com/connection/websocket"
+        client = Centrifugal.client(url, creds: creds, delegate: self)
     }
     
     //MARK:- Interactions with server
@@ -43,41 +47,26 @@ class ViewController: UIViewController, CentrifugoChannelDelegate, CentrifugoCli
     let channel = "jsfiddle-chat"
     let user = "ios-swift"
     let secret = "secret"
-    
-    func connect() {
-        let timestamp = "\(Int(NSDate().timeIntervalSince1970))"
-        
-        let creds = CentrifugoCredentials(secret: secret, user: user, timestamp: timestamp)
-        let url = "wss://centrifugo.herokuapp.com/connection/websocket"
-        client = Centrifugal.client(url, creds: creds, delegate: self)
-        client.connect { (error) in
-            print("connect error: \(error)")
-            
-            self.client.subscribe("jsfiddle-chat", delegate: self, completion: { (message, error) in
-                print("subscribe error: \(error)")
-                print("subscribe message: \(message)")
-            })
-        }
-    }
-    
+
     func publish(text: String) {
         client.publish(channel, data:  ["nick" : nickName, "input" : text]) { message, error in
             print("publish message: \(message)")
-            print("publish error: \(error)")
         }
     }
     
     //MARK: CentrifugoClientDelegate
     func client(client: CentrifugoClient, didReceiveError error: NSError) {
-        print("\(error)")
+        showError(error)
     }
     
     func client(client: CentrifugoClient, didDisconnect message: CentrifugoServerMessage) {
-        print("disconnect message: \(message)")
+        print("didDisconnect message: \(message)")
+        datasource.removeAll()
+        tableView.reloadData()
     }
     
     func client(client: CentrifugoClient, didReceiveRefresh message: CentrifugoServerMessage) {
-        print("refresh message: \(message)")
+        print("didReceiveRefresh message: \(message)")
     }
     
     //MARK: CentrifugoChannelDelegate
@@ -100,7 +89,7 @@ class ViewController: UIViewController, CentrifugoChannelDelegate, CentrifugoCli
     }
     
     func client(client: CentrifugoClient, didReceiveUnsubscribeInChannel channel: String, message: CentrifugoServerMessage) {
-        print(message)
+        print("didReceiveUnsubscribeInChannel \(message)"   )
     }
     
     //MARK: Presentation
@@ -109,9 +98,32 @@ class ViewController: UIViewController, CentrifugoChannelDelegate, CentrifugoCli
         self.tableView.reloadData()
     }
     
-    func showError(error: Any) {
-        let vc = UIAlertController(title: "Error", message: "\(error)", preferredStyle: .Alert)
+    
+    func showAlert(title: String, message: String) {
+        let vc = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        
+        let close = UIAlertAction(title: "Close", style: .Cancel) { _ in
+            vc.dismissViewControllerAnimated(true, completion: nil)
+        }
+        vc.addAction(close)
+        
         showViewController(vc, sender: self)
+    }
+    
+    func showError(error: Any) {
+        showAlert("Error", message: "\(error)")
+    }
+    
+    func showMessage(message: CentrifugoServerMessage) {
+        showAlert("Message", message: "\(message)")
+    }
+    
+    func showResponse(message: CentrifugoServerMessage?, error: NSError?) {
+        if let msg = message {
+            showMessage(msg)
+        } else if let err = error {
+            showError(err)
+        }
     }
     
     //MARK:- Interactions with user
@@ -121,6 +133,52 @@ class ViewController: UIViewController, CentrifugoChannelDelegate, CentrifugoCli
             messageTextField.text = ""
             publish(text)
         }
+    }
+    
+    @IBAction func actionButtonDidPress() {
+        let alert = UIAlertController(title: "Choose command", message: nil, preferredStyle: .ActionSheet)
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { _ in
+            alert.dismissViewControllerAnimated(true, completion: nil)
+        }
+        alert.addAction(cancel)
+        
+        let connect = UIAlertAction(title: "Connect", style: .Default) { _ in
+            self.client.connect(self.showResponse)
+        }
+        alert.addAction(connect)
+        
+        let disconnect = UIAlertAction(title: "Disconnect", style: .Default) { _ in
+            self.client.disconnect{_, _ in}
+        }
+        alert.addAction(disconnect)
+        
+        let ping = UIAlertAction(title: "Ping", style: .Default) { _ in
+            self.client.ping(self.showResponse)
+        }
+        alert.addAction(ping)
+        
+        let subscribe = UIAlertAction(title: "Subscribe to \(channel)", style: .Default) { _ in
+            self.client.subscribe(self.channel, delegate: self, completion: self.showResponse)
+        }
+        alert.addAction(subscribe)
+        
+        let unsubscribe = UIAlertAction(title: "Unsubscribe from \(channel)", style: .Default) { _ in
+            self.client.unsubscribe(self.channel, completion: self.showResponse)
+        }
+        alert.addAction(unsubscribe)
+        
+        let history = UIAlertAction(title: "History \(channel)", style: .Default) { _ in
+            self.client.history(self.channel, completion: self.showResponse)
+        }
+        alert.addAction(history)
+        
+        let presence = UIAlertAction(title: "Presence \(channel)", style: .Default) { _ in
+            self.client.presence(self.channel, completion:self.showResponse)
+        }
+        alert.addAction(presence)
+        
+        presentViewController(alert, animated: true, completion: nil)
     }
 }
 

@@ -23,6 +23,10 @@ extension UITableViewCell {
 class TableViewDataSource : NSObject, UITableViewDataSource {
     private var items = [TableViewItem]()
     
+    func removeAll() {
+        items.removeAll()
+    }
+    
     func addItem(item: TableViewItem) {
         items.append(item)
     }
