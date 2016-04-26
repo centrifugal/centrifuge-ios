@@ -19,12 +19,11 @@ public typealias CentrifugoMessageHandler = (CentrifugoServerMessage?, NSError?)
 public class Centrifugal {
     public class func client(url: String, creds: CentrifugoCredentials, delegate: CentrifugoClientDelegate) -> CentrifugoClient {
         let client = CentrifugoClientImpl()
-        client.ws = CentrifugoWebSocket(url)
         client.builder = CentrifugoClientMessageBuilderImpl()
         client.parser = CentrifugoServerMessageParserImpl()
         client.creds = creds
+        client.url = url
         // TODO: Check references cycle
-        client.ws.delegate = client
         client.delegate = delegate
         
         return client

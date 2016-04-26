@@ -30,20 +30,15 @@ class CentrifugoClientImplTests: XCTestCase {
     //MARK: - Public interface
     func testConnectCallsWebSocketOpenAndSetupsHandler() {
         // given
-        var methodCalled = false
-        let ws = WebSocketMock()
-        
-        ws.openHandler = { methodCalled = true }
-        
-        client.ws = ws
+        let url = "asdasd"
+        client.url = url
         
         // when
         client.connect { _ in }
         
         // then
-        XCTAssertTrue(methodCalled)
-        XCTAssertNotNil(client.blockingHandler)
-        XCTAssertNotNil(client.connectionCompletion)
+        XCTAssertNotNil(client.ws.delegate)
+        XCTAssertNotNil(client.ws)
     }
     
     func testPingProcessValid() {
@@ -74,28 +69,21 @@ class CentrifugoClientImplTests: XCTestCase {
     
     func testDisconnectProcessValid() {
         // given
-        var validMessageDidSend = false
+        var closeDidCall = false
         
         let ws = WebSocketMock()
-        let builder = BuilderMock()
-        
-        client.builder = builder
         client.ws = ws
-        
-        let message = CentrifugoClientMessage.testMessage()
-        
-        builder.buildDisconnectHandler = { _ in return message }
-        
-        ws.sendHandler = { aMessage in
-            validMessageDidSend = (aMessage == message)
+        ws.delegate = client
+        ws.closeHandler = {
+            closeDidCall = true
         }
         
         // when
         client.disconnect { _, _ in }
         
         // then
-        XCTAssertTrue(validMessageDidSend)
-        XCTAssertNotNil(client.messageCallbacks[message.uid])
+        XCTAssertTrue(closeDidCall)
+        XCTAssertNil(ws.delegate)
     }
     
     func testSubscribeProcessValid() {
@@ -695,12 +683,12 @@ class CentrifugoClientImplTests: XCTestCase {
     
     //MARK: - Helpers
     class WebSocketMock: CentrifugoWebSocket {
-        var openHandler: (Void -> Void)?
+        var openHandler: (String -> Void)?
         var closeHandler: (Void -> Void)?
         var sendHandler: (CentrifugoClientMessage -> Void)?
         
-        override func open() {
-            self.openHandler?()
+        override func open(url: String) {
+            self.openHandler?(url)
         }
         
         override func close(code : Int = 1000, reason : String = "Normal Closure"){

@@ -12,6 +12,7 @@ typealias CentrifugoBlockingHandler = ([CentrifugoServerMessage]?, NSError?) -> 
 
 class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     var ws: CentrifugoWebSocket!
+    var url: String!
     var creds: CentrifugoCredentials!
     var builder: CentrifugoClientMessageBuilder!
     var parser: CentrifugoServerMessageParser!
@@ -31,14 +32,13 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     func connect(completion: CentrifugoMessageHandler) {
         blockingHandler = connectionProcessHandler
         connectionCompletion = completion
-        
-        ws.open()
+        ws = CentrifugoWebSocket(url)
+        ws.delegate = self
     }
     
     func disconnect(completion: CentrifugoMessageHandler) {
-        let message = builder.buildDisconnectMessage()
-        messageCallbacks[message.uid] = completion
-        send(message)
+        ws.delegate = nil
+        ws.close()
     }
     
     func ping(completion: CentrifugoMessageHandler) {
