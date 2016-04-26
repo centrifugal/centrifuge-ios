@@ -33,6 +33,7 @@ public protocol CentrifugoClient {
     //MARK: Channel related methods
     func subscribe(channel: String, delegate: CentrifugoChannelDelegate, completion: CentrifugoMessageHandler)
     func publish(channel: String, data: [String : AnyObject], completion: CentrifugoMessageHandler)
+    func unsubscribe(channel: String, completion: CentrifugoMessageHandler)
 }
 
 protocol CentrifugoClientUnimplemented {
@@ -42,7 +43,6 @@ protocol CentrifugoClientUnimplemented {
     var delegate: CentrifugoClientDelegate? {get set}
     var connected: Bool {get}
     
-    func unsubscribe(channel: String, completion: CentrifugoErrorHandler)
 }
 
 class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
@@ -84,7 +84,17 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         send(message)
     }
     
+    func unsubscribe(channel: String, completion: CentrifugoMessageHandler) {
+        let message = builder.buildUnsubscribeMessageFrom(channel)
+        messageCallbacks[message.uid] = completion
+        send(message)
+    }
+    
     //MARK: - Helpers
+    func unsubscribeFrom(channel: String) {
+        subscription[channel] = nil
+    }
+    
     func send(message: CentrifugoClientMessage) {
         try! ws.send(message)
     }
@@ -149,9 +159,14 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     }
     
     func defaultProcessHandler(message: CentrifugoServerMessage) {
+        var handled = false
         if let uid = message.uid, handler = messageCallbacks[uid] {
             handler(message, nil)
             messageCallbacks[uid] = nil
+            handled = true
+        }
+        
+        if (handled && message.method != .Unsubscribe) {
             return
         }
         
@@ -180,7 +195,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
                 return
             }
             delegate.client(self, didReceiveUnsubscribeInChannel: channel, message: message)
-            subscription[channel] = nil
+            unsubscribeFrom(channel)
         default:
             print(message)
             assertionFailure("Error: Invalid method type")
@@ -196,7 +211,9 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     func webSocketMessageText(text: String) {
         let data = text.dataUsingEncoding(NSUTF8StringEncoding)!
         let messages = try! parser.parse(data)
-        
+        messages.forEach { message in
+            print(message)
+        }
         if let handler = blockingHandler {
             handler(messages, nil)
         }

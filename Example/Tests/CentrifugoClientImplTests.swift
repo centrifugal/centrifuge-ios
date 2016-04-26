@@ -76,6 +76,36 @@ class CentrifugoClientImplTests: XCTestCase {
         XCTAssertNotNil(client.subscription[channel])
     }
     
+    func testUnubscribeProcessValid() {
+        // given
+        var validMessageDidSend = false
+        
+        let channel = "channelName"
+        
+        let ws = WebSocketMock()
+        client.ws = ws
+        
+        let builder = BuilderMock()
+        client.builder = builder
+        
+        let message = CentrifugoClientMessage.testMessage()
+        
+        builder.buildUnsubscribeHandler = { _ in return message }
+        
+        ws.sendHandler = { aMessage in
+            validMessageDidSend = (aMessage == message)
+        }
+        
+        client.subscription[channel] = ChannelDelegateMock()
+        
+        // when
+        client.unsubscribe(channel) { _, _ in }
+        
+        // then
+        XCTAssertTrue(validMessageDidSend)
+        XCTAssertNotNil(client.messageCallbacks[message.uid])
+    }
+    
     func testPublishProcessValid() {
         // given
         var validMessageDidSend = false
@@ -199,12 +229,14 @@ class CentrifugoClientImplTests: XCTestCase {
         XCTAssertEqual(expectedChannel, receivedChannel)
     }
     
-    func testDefaultProcessHandlerCallsUnsubscribeChannelDelegate() {
+    func testDefaultProcessHandlerCallsUnsubscribeChannelDelegateAndHandler() {
         // given
         let expectedChannel = "myChannel"
         var receivedChannel = ""
+        var handlerCalled = false
+        let uid = NSUUID().UUIDString
         
-        let message = CentrifugoServerMessage(uid: nil, method: .Unsubscribe, error: nil, body: ["channel" : expectedChannel])
+        let message = CentrifugoServerMessage(uid: uid, method: .Unsubscribe, error: nil, body: ["channel" : expectedChannel])
         
         let delegate = ChannelDelegateMock()
         delegate.unsubscribeHandler = { _, channel, _ in
@@ -212,11 +244,15 @@ class CentrifugoClientImplTests: XCTestCase {
         }
         
         client.subscription[expectedChannel] = delegate
+        client.messageCallbacks[uid] = { _, _ in
+            handlerCalled = true
+        }
         
         // when
         client.defaultProcessHandler([message], error: nil)
         
         // then
+        XCTAssert(handlerCalled)
         XCTAssertEqual(expectedChannel, receivedChannel)
         XCTAssertNil(client.subscription[expectedChannel])
     }
@@ -455,6 +491,11 @@ class CentrifugoClientImplTests: XCTestCase {
         var buildSubscribeHandler: ( String -> CentrifugoClientMessage )!
         override func buildSubscribeMessageTo(channel: String) -> CentrifugoClientMessage {
             return buildSubscribeHandler(channel)
+        }
+        
+        var buildUnsubscribeHandler: ( String -> CentrifugoClientMessage )!
+        override func buildUnsubscribeMessageFrom(channel: String) -> CentrifugoClientMessage {
+            return buildUnsubscribeHandler(channel)
         }
         
         var buildPublishHandler: ( (String, [String : AnyObject]) -> CentrifugoClientMessage )!
