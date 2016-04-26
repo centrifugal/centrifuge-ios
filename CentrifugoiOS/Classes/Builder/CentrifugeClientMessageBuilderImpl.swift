@@ -10,6 +10,7 @@ import IDZSwiftCommonCrypto
 
 protocol CentrifugoClientMessageBuilder {
     func buildConnectMessage(credentials: CentrifugoCredentials) -> CentrifugoClientMessage
+    func buildDisconnectMessage() -> CentrifugoClientMessage
     func buildSubscribeMessageTo(channel: String) -> CentrifugoClientMessage
     func buildSubscribeMessageTo(channel: String, lastMessageUUID: String) -> CentrifugoClientMessage
     func buildUnsubscribeMessageFrom(channel: String) -> CentrifugoClientMessage
@@ -34,6 +35,10 @@ class CentrifugoClientMessageBuilderImpl: CentrifugoClientMessageBuilder {
         }
         
         return buildMessage(.Connect, params: params)
+    }
+    
+    func buildDisconnectMessage() -> CentrifugoClientMessage {
+        return buildMessage(.Disconnect, params: [:])
     }
     
     func buildSubscribeMessageTo(channel: String) -> CentrifugoClientMessage {

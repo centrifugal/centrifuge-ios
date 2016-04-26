@@ -35,6 +35,12 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         ws.open()
     }
     
+    func disconnect(completion: CentrifugoMessageHandler) {
+        let message = builder.buildDisconnectMessage()
+        messageCallbacks[message.uid] = completion
+        send(message)
+    }
+    
     func ping(completion: CentrifugoMessageHandler) {
         let message = builder.buildPingMessage()
         messageCallbacks[message.uid] = completion
@@ -171,7 +177,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
             handled = true
         }
         
-        if (handled && message.method != .Unsubscribe) {
+        if (handled && (message.method != .Unsubscribe && message.method != .Disconnect)) {
             return
         }
         

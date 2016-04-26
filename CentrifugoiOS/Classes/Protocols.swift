@@ -22,7 +22,9 @@ public protocol CentrifugoChannelDelegate {
 public protocol CentrifugoClient {
     //MARK: General methods
     func connect(completion: CentrifugoErrorHandler)
-    
+    func disconnect(completion: CentrifugoMessageHandler)
+    func ping(completion: CentrifugoMessageHandler)
+
     //MARK: Channel related methods
     func subscribe(channel: String, delegate: CentrifugoChannelDelegate, completion: CentrifugoMessageHandler)
     func subscribe(channel: String, delegate: CentrifugoChannelDelegate, lastMessageUID: String, completion: CentrifugoMessageHandler)
@@ -31,11 +33,9 @@ public protocol CentrifugoClient {
     func unsubscribe(channel: String, completion: CentrifugoMessageHandler)
     func history(channel: String, completion: CentrifugoMessageHandler)
     func presence(channel: String, completion: CentrifugoMessageHandler)
-    func ping(completion: CentrifugoMessageHandler)
 }
 
 protocol CentrifugoClientUnimplemented {
-    func disconnect(completion: CentrifugoErrorHandler)
     
     var delegate: CentrifugoClientDelegate? {get set}
     var connected: Bool {get}

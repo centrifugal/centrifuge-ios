@@ -49,7 +49,7 @@ class CentrifugoClientImplTests: XCTestCase {
     func testPingProcessValid() {
         // given
         var validMessageDidSend = false
-
+        
         let ws = WebSocketMock()
         let builder = BuilderMock()
         
@@ -66,6 +66,32 @@ class CentrifugoClientImplTests: XCTestCase {
         
         // when
         client.ping { _, _ in }
+        
+        // then
+        XCTAssertTrue(validMessageDidSend)
+        XCTAssertNotNil(client.messageCallbacks[message.uid])
+    }
+    
+    func testDisconnectProcessValid() {
+        // given
+        var validMessageDidSend = false
+        
+        let ws = WebSocketMock()
+        let builder = BuilderMock()
+        
+        client.builder = builder
+        client.ws = ws
+        
+        let message = CentrifugoClientMessage.testMessage()
+        
+        builder.buildDisconnectHandler = { _ in return message }
+        
+        ws.sendHandler = { aMessage in
+            validMessageDidSend = (aMessage == message)
+        }
+        
+        // when
+        client.disconnect { _, _ in }
         
         // then
         XCTAssertTrue(validMessageDidSend)
@@ -431,6 +457,31 @@ class CentrifugoClientImplTests: XCTestCase {
         XCTAssertNil(client.subscription[expectedChannel])
     }
     
+    func testDefaultProcessHandlerCallsDisconnectChannelDelegateAndHandler() {
+        // given
+        var handlerCalled = false
+        let uid = NSUUID().UUIDString
+        
+        let message = CentrifugoServerMessage(uid: uid, method: .Disconnect, error: nil, body: [ : ])
+        
+        let delegate = ClientDelegateMock()
+        
+        client.delegate = delegate
+        client.messageCallbacks[uid] = { _, _ in
+            handlerCalled = true
+        }
+        
+        client.ws = WebSocketMock()
+        
+        // when
+        client.defaultProcessHandler([message], error: nil)
+        
+        // then
+        XCTAssertTrue(handlerCalled)
+        XCTAssertTrue(delegate.disconnectDidCall)
+        XCTAssertNil(client.messageCallbacks[uid])
+    }
+    
     func testConnectionProcessHandlerResetsStateIfError() {
         // given
         let error = NSError(domain: "", code: 1, userInfo: nil)
@@ -670,6 +721,11 @@ class CentrifugoClientImplTests: XCTestCase {
         var buildPingHandler: ( Void -> CentrifugoClientMessage )!
         override func buildPingMessage() -> CentrifugoClientMessage {
             return buildPingHandler()
+        }
+        
+        var buildDisconnectHandler: ( Void -> CentrifugoClientMessage )!
+        override func buildDisconnectMessage() -> CentrifugoClientMessage {
+            return buildDisconnectHandler()
         }
         
         var buildSubscribeHandler: ( String -> CentrifugoClientMessage )!
