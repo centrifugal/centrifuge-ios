@@ -18,7 +18,7 @@ let timestamp = "\(Int(NSDate().timeIntervalSince1970))"
 
 let creds = CentrifugeCredentials(secret: secret, user: user, timestamp: timestamp)
 let url = "wss://Centrifuge.herokuapp.com/connection/websocket"
-client = Centrifugal.client(url, creds: creds, delegate: self)
+client = Centrifuge.client(url, creds: creds, delegate: self)
 ```
 Connect to server:
 ```swift
