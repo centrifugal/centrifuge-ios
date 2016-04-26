@@ -503,7 +503,7 @@ class CentrifugoClientImplTests: XCTestCase {
         var receivedError: NSError?
         let expectedError = NSError(domain: "", code: 1, userInfo: nil)
         
-        client.connectionCompletion = { error in
+        client.connectionCompletion = { _, error in
             receivedError = error
         }
         
@@ -519,7 +519,7 @@ class CentrifugoClientImplTests: XCTestCase {
         var handlerCalled = false
         var receivedError: NSError?
         
-        client.connectionCompletion = { error in
+        client.connectionCompletion = { _, error in
             handlerCalled = true
             receivedError = error
         }
@@ -539,7 +539,7 @@ class CentrifugoClientImplTests: XCTestCase {
         var receivedError: NSError!
         let desc = "Error description"
         let message = CentrifugoServerMessage.errorMessage(desc)
-        client.connectionCompletion = { error in
+        client.connectionCompletion = { _, error in
             handlerCalled = true
             receivedError = error
         }

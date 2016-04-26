@@ -15,7 +15,6 @@ public enum CentrifugoErrorCode: Int {
 }
 
 public typealias CentrifugoMessageHandler = (CentrifugoServerMessage?, NSError?) -> Void
-public typealias CentrifugoErrorHandler = (NSError? -> Void)
 
 public class Centrifugal {
     public class func client(url: String, creds: CentrifugoCredentials, delegate: CentrifugoClientDelegate) -> CentrifugoClient {

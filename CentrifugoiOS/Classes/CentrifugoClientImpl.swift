@@ -24,11 +24,11 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     /** Handler is used to process websocket delegate method.
      If it is not nil, it blocks default actions. */
     var blockingHandler: CentrifugoBlockingHandler?
-    var connectionCompletion: CentrifugoErrorHandler?
+    var connectionCompletion: CentrifugoMessageHandler?
     
     //MARK: - Public interface
     //MARK: Server related method
-    func connect(completion: CentrifugoErrorHandler) {
+    func connect(completion: CentrifugoMessageHandler) {
         blockingHandler = connectionProcessHandler
         connectionCompletion = completion
         
@@ -120,7 +120,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         resetState()
         
         if let err = error {
-            handler(err)
+            handler(nil, err)
             return
         }
         
@@ -131,10 +131,10 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         
         if message.error == nil{
             setupConnectedState()
-            handler(nil)
+            handler(message, nil)
         } else {
             let error = NSError.errorWithMessage(message)
-            handler(error)
+            handler(nil, error)
         }
     }
     
