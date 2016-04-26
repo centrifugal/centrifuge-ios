@@ -321,6 +321,46 @@ class CentrifugoClientImplTests: XCTestCase {
         XCTAssertEqual(expectedChannel, receivedChannel)
     }
     
+    func testDefaultProcessHandlerProcessesDisconnect() {
+        // given
+        let message = CentrifugoServerMessage(uid: nil, method: .Disconnect, error: nil, body: [ : ])
+        var closeDidCall = false
+        let delegate = ClientDelegateMock()
+        client.delegate = delegate
+        
+        client.subscription["2"] = ChannelDelegateMock()
+        client.subscription["1"] = ChannelDelegateMock()
+        client.messageCallbacks["1"] = { _, _ in }
+        let ws = WebSocketMock()
+        client.ws = ws
+        
+        ws.closeHandler = {
+            closeDidCall = true
+        }
+        // when
+        client.defaultProcessHandler([message], error: nil)
+        
+        // then
+        XCTAssertTrue(delegate.disconnectDidCall)
+        XCTAssertTrue(closeDidCall)
+        XCTAssertEqual(client.subscription.count, 0)
+        XCTAssertEqual(client.messageCallbacks.count, 0)
+    }
+    
+    func testDefaultProcessHandlerCallsRefreshClientDelegate() {
+        // given
+        let message = CentrifugoServerMessage(uid: nil, method: .Refresh, error: nil, body: [ : ])
+        
+        let delegate = ClientDelegateMock()
+        client.delegate = delegate
+        
+        // when
+        client.defaultProcessHandler([message], error: nil)
+        
+        // then
+        XCTAssertTrue(delegate.refreshtDidCall)
+    }
+    
     func testDefaultProcessHandlerCallsJoinChannelDelegate() {
         // given
         let expectedChannel = "myChannel"
@@ -605,10 +645,15 @@ class CentrifugoClientImplTests: XCTestCase {
     //MARK: - Helpers
     class WebSocketMock: CentrifugoWebSocket {
         var openHandler: (Void -> Void)?
+        var closeHandler: (Void -> Void)?
         var sendHandler: (CentrifugoClientMessage -> Void)?
         
         override func open() {
             self.openHandler?()
+        }
+        
+        override func close(code : Int = 1000, reason : String = "Normal Closure"){
+            self.closeHandler?()
         }
         
         override func send(message: CentrifugoClientMessage) throws {
@@ -672,11 +717,20 @@ class CentrifugoClientImplTests: XCTestCase {
     class ClientDelegateMock: CentrifugoClientDelegate {
         var receivedError: NSError?
         
-        func client(client: CentrifugoClient, didReceiveRefresh: Any) {
-            
+        var disconnectDidCall = false
+        var disconnectMessage:CentrifugoServerMessage!
+        
+        var refreshtDidCall = false
+        var refreshMessage:CentrifugoServerMessage!
+        
+        func client(client: CentrifugoClient, didReceiveRefresh message: CentrifugoServerMessage) {
+            refreshtDidCall = true
+            refreshMessage = message
         }
         
-        func client(client: CentrifugoClient, didDisconnect: Any) {
+        func client(client: CentrifugoClient, didDisconnect message: CentrifugoServerMessage) {
+            disconnectDidCall = true
+            disconnectMessage = message
         }
         
         func client(client: CentrifugoClient, didReceiveError error: NSError) {

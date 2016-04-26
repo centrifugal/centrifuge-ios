@@ -72,12 +72,12 @@ class ViewController: UIViewController, CentrifugoChannelDelegate, CentrifugoCli
         print("\(error)")
     }
     
-    func client(client: CentrifugoClient, didDisconnect: Any) {
-        print("disconnect")
+    func client(client: CentrifugoClient, didDisconnect message: CentrifugoServerMessage) {
+        print("disconnect message: \(message)")
     }
     
-    func client(client: CentrifugoClient, didReceiveRefresh: Any) {
-        print("refresh")
+    func client(client: CentrifugoClient, didReceiveRefresh message: CentrifugoServerMessage) {
+        print("refresh message: \(message)")
     }
     
     //MARK: CentrifugoChannelDelegate

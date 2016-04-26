@@ -15,8 +15,8 @@ public typealias CentrifugoErrorHandler = (NSError? -> Void)
 
 public protocol CentrifugoClientDelegate {
     func client(client: CentrifugoClient, didReceiveError error:NSError)
-    func client(client: CentrifugoClient, didReceiveRefresh: Any)
-    func client(client: CentrifugoClient, didDisconnect: Any)
+    func client(client: CentrifugoClient, didReceiveRefresh: CentrifugoServerMessage)
+    func client(client: CentrifugoClient, didDisconnect: CentrifugoServerMessage)
 }
 
 public protocol CentrifugoChannelDelegate {
@@ -135,6 +135,9 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     func resetState() {
         blockingHandler = nil
         connectionCompletion = nil
+        
+        messageCallbacks.removeAll()
+        subscription.removeAll()
     }
     
     //MARK: - Handlers
@@ -212,6 +215,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         }
         
         switch message.method {
+        // Channel events
         case .Message:
             guard let channel = message.body?["channel"] as? String, delegate = subscription[channel] else {
                 assertionFailure("Error: Invalid \(message.method) handler")
@@ -237,6 +241,13 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
             }
             delegate.client(self, didReceiveUnsubscribeInChannel: channel, message: message)
             unsubscribeFrom(channel)
+        // Client events
+        case .Disconnect:
+            delegate.client(self, didDisconnect: message)
+            ws.close()
+            resetState()
+        case .Refresh:
+            delegate.client(self, didReceiveRefresh: message)
         default:
             print(message)
             assertionFailure("Error: Invalid method type")
