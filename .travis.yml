@@ -8,5 +8,5 @@ before_install:
 - gem install cocoapods xcpretty --no-ri --no-rdoc
 - pod install --project-directory=Example
 script:
-- set -o pipefail && xcodebuild test -workspace Example/CentrifugoiOS.xcworkspace -scheme CentrifugoiOS-Example -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 5' ONLY_ACTIVE_ARCH=NO | xcpretty
+- set -o pipefail && xcodebuild test -workspace Example/CentrifugeiOS.xcworkspace -scheme CentrifugoiOS-Example -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 5' ONLY_ACTIVE_ARCH=NO | xcpretty
 - pod lib lint

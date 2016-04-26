@@ -8,35 +8,35 @@
 
 import Foundation
 
-public struct CentrifugoClientMessage {
+public struct CentrifugeClientMessage {
     public let uid: String
-    public let method: CentrifugoMethod
+    public let method: CentrifugeMethod
     public let params: [String : AnyObject]
 }
 
-extension CentrifugoClientMessage: Equatable {}
+extension CentrifugeClientMessage: Equatable {}
 
-public func ==(lhs: CentrifugoClientMessage, rhs: CentrifugoClientMessage) -> Bool {
+public func ==(lhs: CentrifugeClientMessage, rhs: CentrifugeClientMessage) -> Bool {
     return lhs.uid == rhs.uid
 }
 
-public struct CentrifugoServerMessage {
+public struct CentrifugeServerMessage {
     public let uid: String?
-    public let method: CentrifugoMethod
+    public let method: CentrifugeMethod
     public let error: String?
     public let body: [String : AnyObject]?
 }
 
-extension CentrifugoServerMessage: Equatable {}
+extension CentrifugeServerMessage: Equatable {}
 
-public func ==(lhs: CentrifugoServerMessage, rhs: CentrifugoServerMessage) -> Bool {
+public func ==(lhs: CentrifugeServerMessage, rhs: CentrifugeServerMessage) -> Bool {
     if let luid = lhs.uid, ruid = rhs.uid {
         return luid == ruid
     }
     return false
 }
 
-public struct CentrifugoCredentials {
+public struct CentrifugeCredentials {
     let secret : String
     let user : String
     let timestamp : String
@@ -50,7 +50,7 @@ public struct CentrifugoCredentials {
     }
 }
 
-public enum CentrifugoMethod : String {
+public enum CentrifugeMethod : String {
     case Connect = "connect"
     case Disconnect = "disconnect"
     case Subscribe = "subscribe"
@@ -65,7 +65,7 @@ public enum CentrifugoMethod : String {
     case Ping = "ping"
 }
 
-class CentrifugoWrapper<T> {
+class CentrifugeWrapper<T> {
     var value: T
     init(theValue: T) {
         value = theValue
@@ -73,10 +73,10 @@ class CentrifugoWrapper<T> {
 }
 
 extension NSError {
-    static func errorWithMessage(message: CentrifugoServerMessage) -> NSError {
-        let error = NSError(domain: CentrifugoErrorDomain,
-                            code: CentrifugoErrorCode.CentrifugoMessageWithError.rawValue,
-                            userInfo: [NSLocalizedDescriptionKey : message.error!, CentrifugoErrorMessageKey : CentrifugoWrapper(theValue: message)])
+    static func errorWithMessage(message: CentrifugeServerMessage) -> NSError {
+        let error = NSError(domain: CentrifugeErrorDomain,
+                            code: CentrifugeErrorCode.CentrifugeMessageWithError.rawValue,
+                            userInfo: [NSLocalizedDescriptionKey : message.error!, CentrifugeErrorMessageKey : CentrifugeWrapper(theValue: message)])
         return error
     }
 }

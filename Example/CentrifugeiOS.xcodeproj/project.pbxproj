@@ -7,17 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4D84BA925707CEB3A96764D0 /* Pods_CentrifugoiOS_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42F278DEE072518D51F0B1CB /* Pods_CentrifugoiOS_Tests.framework */; };
-		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
-		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
-		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
-		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
-		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
+		21790FCDB4A1099DD2BAE959 /* Pods_CentrifugeiOS_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D31E36130D9C97200613EA8A /* Pods_CentrifugeiOS_Tests.framework */; };
+		4C5C3325356910DA2D7FE13B /* Pods_CentrifugeiOS_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 699B18E483B17184E33CF147 /* Pods_CentrifugeiOS_Example.framework */; };
 		607FACEC1AFB9204008FA782 /* CentrifugoClientMessageBuilderImplTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* CentrifugoClientMessageBuilderImplTests.swift */; };
-		DF03AD451CC51CF7006CF54B /* TableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03AD441CC51CF7006CF54B /* TableViewDataSource.swift */; };
 		DF8487C41CCE121B0048559B /* CentrifugoClientImplTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8487C31CCE121B0048559B /* CentrifugoClientImplTests.swift */; };
 		DF8487C61CCE15900048559B /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8487C51CCE15900048559B /* Helpers.swift */; };
-		FD4544F0DC7DEF254FFD70DE /* Pods_CentrifugoiOS_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69659195C779884768FA33BB /* Pods_CentrifugoiOS_Example.framework */; };
+		DFA947E01CCFE57700E06BE9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA947D71CCFE57700E06BE9 /* AppDelegate.swift */; };
+		DFA947E31CCFE57700E06BE9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFA947DD1CCFE57700E06BE9 /* Images.xcassets */; };
+		DFA947E41CCFE57700E06BE9 /* TableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA947DE1CCFE57700E06BE9 /* TableViewDataSource.swift */; };
+		DFA947E51CCFE57700E06BE9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA947DF1CCFE57700E06BE9 /* ViewController.swift */; };
+		DFA947EA1CCFE70800E06BE9 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFA947E81CCFE70800E06BE9 /* LaunchScreen.xib */; };
+		DFA947EB1CCFE70800E06BE9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DFA947E91CCFE70800E06BE9 /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,27 +31,33 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		135C26B99132DFB1BC07A481 /* Pods-CentrifugeiOS_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CentrifugeiOS_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CentrifugeiOS_Example/Pods-CentrifugeiOS_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		2536F7A61B19545409CBF980 /* Pods-CentrifugoiOS_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CentrifugoiOS_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-CentrifugoiOS_Example/Pods-CentrifugoiOS_Example.release.xcconfig"; sourceTree = "<group>"; };
+		2881904D9F759B915BFBD765 /* Pods-CentrifugeiOS_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CentrifugeiOS_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CentrifugeiOS_Tests/Pods-CentrifugeiOS_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		2B615B91A3426921A5A7F1F7 /* Pods-CentrifugoiOS_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CentrifugoiOS_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CentrifugoiOS_Example/Pods-CentrifugoiOS_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		42F278DEE072518D51F0B1CB /* Pods_CentrifugoiOS_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CentrifugoiOS_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		43B68F71967CC843D9E1A086 /* Pods-CentrifugeiOS_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CentrifugeiOS_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CentrifugeiOS_Tests/Pods-CentrifugeiOS_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		5EBA3F0B7A38D11946EC691C /* Pods-CentrifugoiOS_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CentrifugoiOS_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CentrifugoiOS_Tests/Pods-CentrifugoiOS_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		607FACD01AFB9204008FA782 /* CentrifugoiOS_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CentrifugoiOS_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		607FACD71AFB9204008FA782 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		607FACDA1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		607FACE51AFB9204008FA782 /* CentrifugoiOS_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CentrifugoiOS_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		607FACD01AFB9204008FA782 /* CentrifugeiOS_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CentrifugeiOS_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		607FACE51AFB9204008FA782 /* CentrifugeiOS_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CentrifugeiOS_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* CentrifugoClientMessageBuilderImplTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CentrifugoClientMessageBuilderImplTests.swift; sourceTree = "<group>"; };
 		69659195C779884768FA33BB /* Pods_CentrifugoiOS_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CentrifugoiOS_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		699B18E483B17184E33CF147 /* Pods_CentrifugeiOS_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CentrifugeiOS_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D446E195C5C6147C9B981B0 /* Pods-CentrifugoiOS_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CentrifugoiOS_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CentrifugoiOS_Tests/Pods-CentrifugoiOS_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		CE54B77814FB0BA2016B9E4F /* CentrifugoiOS.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = CentrifugoiOS.podspec; path = ../CentrifugoiOS.podspec; sourceTree = "<group>"; };
+		C5F269F420DCCDE74B4E54A5 /* Pods-CentrifugeiOS_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CentrifugeiOS_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-CentrifugeiOS_Example/Pods-CentrifugeiOS_Example.release.xcconfig"; sourceTree = "<group>"; };
+		CE54B77814FB0BA2016B9E4F /* CentrifugeiOS.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = CentrifugeiOS.podspec; path = ../CentrifugeiOS.podspec; sourceTree = "<group>"; };
+		D31E36130D9C97200613EA8A /* Pods_CentrifugeiOS_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CentrifugeiOS_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D926C63825E212F492907348 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		DF03AD441CC51CF7006CF54B /* TableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewDataSource.swift; sourceTree = "<group>"; };
 		DF8487C31CCE121B0048559B /* CentrifugoClientImplTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CentrifugoClientImplTests.swift; sourceTree = "<group>"; };
 		DF8487C51CCE15900048559B /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		DFA947D71CCFE57700E06BE9 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = CentrifugeiOS/AppDelegate.swift; sourceTree = SOURCE_ROOT; };
+		DFA947DD1CCFE57700E06BE9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = CentrifugeiOS/Images.xcassets; sourceTree = SOURCE_ROOT; };
+		DFA947DE1CCFE57700E06BE9 /* TableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TableViewDataSource.swift; path = CentrifugeiOS/TableViewDataSource.swift; sourceTree = SOURCE_ROOT; };
+		DFA947DF1CCFE57700E06BE9 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = CentrifugeiOS/ViewController.swift; sourceTree = SOURCE_ROOT; };
+		DFA947E61CCFE58000E06BE9 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = CentrifugeiOS/Info.plist; sourceTree = SOURCE_ROOT; };
+		DFA947E81CCFE70800E06BE9 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = CentrifugeiOS/LaunchScreen.xib; sourceTree = SOURCE_ROOT; };
+		DFA947E91CCFE70800E06BE9 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = CentrifugeiOS/Main.storyboard; sourceTree = SOURCE_ROOT; };
 		F959058C8699B78BBF25295F /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -60,7 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FD4544F0DC7DEF254FFD70DE /* Pods_CentrifugoiOS_Example.framework in Frameworks */,
+				4C5C3325356910DA2D7FE13B /* Pods_CentrifugeiOS_Example.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,7 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D84BA925707CEB3A96764D0 /* Pods_CentrifugoiOS_Tests.framework in Frameworks */,
+				21790FCDB4A1099DD2BAE959 /* Pods_CentrifugeiOS_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,6 +88,10 @@
 				2536F7A61B19545409CBF980 /* Pods-CentrifugoiOS_Example.release.xcconfig */,
 				5EBA3F0B7A38D11946EC691C /* Pods-CentrifugoiOS_Tests.debug.xcconfig */,
 				6D446E195C5C6147C9B981B0 /* Pods-CentrifugoiOS_Tests.release.xcconfig */,
+				135C26B99132DFB1BC07A481 /* Pods-CentrifugeiOS_Example.debug.xcconfig */,
+				C5F269F420DCCDE74B4E54A5 /* Pods-CentrifugeiOS_Example.release.xcconfig */,
+				43B68F71967CC843D9E1A086 /* Pods-CentrifugeiOS_Tests.debug.xcconfig */,
+				2881904D9F759B915BFBD765 /* Pods-CentrifugeiOS_Tests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -91,6 +101,8 @@
 			children = (
 				69659195C779884768FA33BB /* Pods_CentrifugoiOS_Example.framework */,
 				42F278DEE072518D51F0B1CB /* Pods_CentrifugoiOS_Tests.framework */,
+				699B18E483B17184E33CF147 /* Pods_CentrifugeiOS_Example.framework */,
+				D31E36130D9C97200613EA8A /* Pods_CentrifugeiOS_Tests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -110,8 +122,8 @@
 		607FACD11AFB9204008FA782 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				607FACD01AFB9204008FA782 /* CentrifugoiOS_Example.app */,
-				607FACE51AFB9204008FA782 /* CentrifugoiOS_Tests.xctest */,
+				607FACD01AFB9204008FA782 /* CentrifugeiOS_Example.app */,
+				607FACE51AFB9204008FA782 /* CentrifugeiOS_Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -119,13 +131,13 @@
 		607FACD21AFB9204008FA782 /* Example for CentrifugoiOS */ = {
 			isa = PBXGroup;
 			children = (
-				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
-				607FACD71AFB9204008FA782 /* ViewController.swift */,
-				DF03AD441CC51CF7006CF54B /* TableViewDataSource.swift */,
-				607FACD91AFB9204008FA782 /* Main.storyboard */,
-				607FACDC1AFB9204008FA782 /* Images.xcassets */,
-				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
+				DFA947D71CCFE57700E06BE9 /* AppDelegate.swift */,
+				DFA947DD1CCFE57700E06BE9 /* Images.xcassets */,
+				DFA947E81CCFE70800E06BE9 /* LaunchScreen.xib */,
+				DFA947E91CCFE70800E06BE9 /* Main.storyboard */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
+				DFA947DE1CCFE57700E06BE9 /* TableViewDataSource.swift */,
+				DFA947DF1CCFE57700E06BE9 /* ViewController.swift */,
 			);
 			name = "Example for CentrifugoiOS";
 			path = CentrifugoiOS;
@@ -134,7 +146,7 @@
 		607FACD31AFB9204008FA782 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				607FACD41AFB9204008FA782 /* Info.plist */,
+				DFA947E61CCFE58000E06BE9 /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -161,7 +173,7 @@
 		607FACF51AFB993E008FA782 /* Podspec Metadata */ = {
 			isa = PBXGroup;
 			children = (
-				CE54B77814FB0BA2016B9E4F /* CentrifugoiOS.podspec */,
+				CE54B77814FB0BA2016B9E4F /* CentrifugeiOS.podspec */,
 				F959058C8699B78BBF25295F /* README.md */,
 				D926C63825E212F492907348 /* LICENSE */,
 			);
@@ -171,9 +183,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		607FACCF1AFB9204008FA782 /* CentrifugoiOS_Example */ = {
+		607FACCF1AFB9204008FA782 /* CentrifugeiOS_Example */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 607FACEF1AFB9204008FA782 /* Build configuration list for PBXNativeTarget "CentrifugoiOS_Example" */;
+			buildConfigurationList = 607FACEF1AFB9204008FA782 /* Build configuration list for PBXNativeTarget "CentrifugeiOS_Example" */;
 			buildPhases = (
 				53C30FFB2485660AACB4F2A9 /* Check Pods Manifest.lock */,
 				607FACCC1AFB9204008FA782 /* Sources */,
@@ -186,14 +198,14 @@
 			);
 			dependencies = (
 			);
-			name = CentrifugoiOS_Example;
+			name = CentrifugeiOS_Example;
 			productName = CentrifugoiOS;
-			productReference = 607FACD01AFB9204008FA782 /* CentrifugoiOS_Example.app */;
+			productReference = 607FACD01AFB9204008FA782 /* CentrifugeiOS_Example.app */;
 			productType = "com.apple.product-type.application";
 		};
-		607FACE41AFB9204008FA782 /* CentrifugoiOS_Tests */ = {
+		607FACE41AFB9204008FA782 /* CentrifugeiOS_Tests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "CentrifugoiOS_Tests" */;
+			buildConfigurationList = 607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "CentrifugeiOS_Tests" */;
 			buildPhases = (
 				F7A970C317D648607CFE4595 /* Check Pods Manifest.lock */,
 				607FACE11AFB9204008FA782 /* Sources */,
@@ -207,9 +219,9 @@
 			dependencies = (
 				607FACE71AFB9204008FA782 /* PBXTargetDependency */,
 			);
-			name = CentrifugoiOS_Tests;
+			name = CentrifugeiOS_Tests;
 			productName = Tests;
-			productReference = 607FACE51AFB9204008FA782 /* CentrifugoiOS_Tests.xctest */;
+			productReference = 607FACE51AFB9204008FA782 /* CentrifugeiOS_Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -218,7 +230,7 @@
 		607FACC81AFB9204008FA782 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0720;
+				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = CocoaPods;
 				TargetAttributes = {
@@ -231,7 +243,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 607FACCB1AFB9204008FA782 /* Build configuration list for PBXProject "CentrifugoiOS" */;
+			buildConfigurationList = 607FACCB1AFB9204008FA782 /* Build configuration list for PBXProject "CentrifugeiOS" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -244,8 +256,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				607FACCF1AFB9204008FA782 /* CentrifugoiOS_Example */,
-				607FACE41AFB9204008FA782 /* CentrifugoiOS_Tests */,
+				607FACCF1AFB9204008FA782 /* CentrifugeiOS_Example */,
+				607FACE41AFB9204008FA782 /* CentrifugeiOS_Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -255,9 +267,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
-				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
-				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
+				DFA947E31CCFE57700E06BE9 /* Images.xcassets in Resources */,
+				DFA947EA1CCFE70800E06BE9 /* LaunchScreen.xib in Resources */,
+				DFA947EB1CCFE70800E06BE9 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,7 +295,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CentrifugoiOS_Example/Pods-CentrifugoiOS_Example-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CentrifugeiOS_Example/Pods-CentrifugeiOS_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		53C30FFB2485660AACB4F2A9 /* Check Pods Manifest.lock */ = {
@@ -313,7 +325,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CentrifugoiOS_Tests/Pods-CentrifugoiOS_Tests-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CentrifugeiOS_Tests/Pods-CentrifugeiOS_Tests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D3695F3D6BB14C5DD278A2CA /* Copy Pods Resources */ = {
@@ -328,7 +340,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CentrifugoiOS_Example/Pods-CentrifugoiOS_Example-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CentrifugeiOS_Example/Pods-CentrifugeiOS_Example-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F7A970C317D648607CFE4595 /* Check Pods Manifest.lock */ = {
@@ -358,7 +370,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CentrifugoiOS_Tests/Pods-CentrifugoiOS_Tests-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CentrifugeiOS_Tests/Pods-CentrifugeiOS_Tests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -368,9 +380,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF03AD451CC51CF7006CF54B /* TableViewDataSource.swift in Sources */,
-				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
-				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				DFA947E51CCFE57700E06BE9 /* ViewController.swift in Sources */,
+				DFA947E41CCFE57700E06BE9 /* TableViewDataSource.swift in Sources */,
+				DFA947E01CCFE57700E06BE9 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -389,29 +401,10 @@
 /* Begin PBXTargetDependency section */
 		607FACE71AFB9204008FA782 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 607FACCF1AFB9204008FA782 /* CentrifugoiOS_Example */;
+			target = 607FACCF1AFB9204008FA782 /* CentrifugeiOS_Example */;
 			targetProxy = 607FACE61AFB9204008FA782 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		607FACD91AFB9204008FA782 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				607FACDA1AFB9204008FA782 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		607FACDE1AFB9204008FA782 /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				607FACDF1AFB9204008FA782 /* Base */,
-			);
-			name = LaunchScreen.xib;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		607FACED1AFB9204008FA782 /* Debug */ = {
@@ -498,33 +491,36 @@
 		};
 		607FACF01AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2B615B91A3426921A5A7F1F7 /* Pods-CentrifugoiOS_Example.debug.xcconfig */;
+			baseConfigurationReference = 135C26B99132DFB1BC07A481 /* Pods-CentrifugeiOS_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = CentrifugoiOS/Info.plist;
+				CLANG_ENABLE_MODULES = YES;
+				INFOPLIST_FILE = CentrifugeiOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.CentrifugeiOS-Example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		607FACF11AFB9204008FA782 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2536F7A61B19545409CBF980 /* Pods-CentrifugoiOS_Example.release.xcconfig */;
+			baseConfigurationReference = C5F269F420DCCDE74B4E54A5 /* Pods-CentrifugeiOS_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = CentrifugoiOS/Info.plist;
+				CLANG_ENABLE_MODULES = YES;
+				INFOPLIST_FILE = CentrifugeiOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.CentrifugeiOS-Example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
 		607FACF31AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5EBA3F0B7A38D11946EC691C /* Pods-CentrifugoiOS_Tests.debug.xcconfig */;
+			baseConfigurationReference = 43B68F71967CC843D9E1A086 /* Pods-CentrifugeiOS_Tests.debug.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -543,7 +539,7 @@
 		};
 		607FACF41AFB9204008FA782 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6D446E195C5C6147C9B981B0 /* Pods-CentrifugoiOS_Tests.release.xcconfig */;
+			baseConfigurationReference = 2881904D9F759B915BFBD765 /* Pods-CentrifugeiOS_Tests.release.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -559,7 +555,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		607FACCB1AFB9204008FA782 /* Build configuration list for PBXProject "CentrifugoiOS" */ = {
+		607FACCB1AFB9204008FA782 /* Build configuration list for PBXProject "CentrifugeiOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				607FACED1AFB9204008FA782 /* Debug */,
@@ -568,7 +564,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		607FACEF1AFB9204008FA782 /* Build configuration list for PBXNativeTarget "CentrifugoiOS_Example" */ = {
+		607FACEF1AFB9204008FA782 /* Build configuration list for PBXNativeTarget "CentrifugeiOS_Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				607FACF01AFB9204008FA782 /* Debug */,
@@ -577,7 +573,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "CentrifugoiOS_Tests" */ = {
+		607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "CentrifugeiOS_Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				607FACF31AFB9204008FA782 /* Debug */,

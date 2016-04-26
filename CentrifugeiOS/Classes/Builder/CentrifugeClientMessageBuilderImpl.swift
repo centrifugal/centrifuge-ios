@@ -1,5 +1,5 @@
 //
-//  CentrifugoClientMessageBuilderImpl.swift
+//  CentrifugeClientMessageBuilderImpl.swift
 //  Pods
 //
 //  Created by Herman Saprykin on 18/04/16.
@@ -8,21 +8,21 @@
 
 import IDZSwiftCommonCrypto
 
-protocol CentrifugoClientMessageBuilder {
-    func buildConnectMessage(credentials: CentrifugoCredentials) -> CentrifugoClientMessage
-    func buildDisconnectMessage() -> CentrifugoClientMessage
-    func buildSubscribeMessageTo(channel: String) -> CentrifugoClientMessage
-    func buildSubscribeMessageTo(channel: String, lastMessageUUID: String) -> CentrifugoClientMessage
-    func buildUnsubscribeMessageFrom(channel: String) -> CentrifugoClientMessage
-    func buildPresenceMessage(channel: String) -> CentrifugoClientMessage
-    func buildHistoryMessage(channel: String) -> CentrifugoClientMessage
-    func buildPingMessage() -> CentrifugoClientMessage
-    func buildPublishMessageTo(channel: String, data: [String: AnyObject]) -> CentrifugoClientMessage
+protocol CentrifugeClientMessageBuilder {
+    func buildConnectMessage(credentials: CentrifugeCredentials) -> CentrifugeClientMessage
+    func buildDisconnectMessage() -> CentrifugeClientMessage
+    func buildSubscribeMessageTo(channel: String) -> CentrifugeClientMessage
+    func buildSubscribeMessageTo(channel: String, lastMessageUUID: String) -> CentrifugeClientMessage
+    func buildUnsubscribeMessageFrom(channel: String) -> CentrifugeClientMessage
+    func buildPresenceMessage(channel: String) -> CentrifugeClientMessage
+    func buildHistoryMessage(channel: String) -> CentrifugeClientMessage
+    func buildPingMessage() -> CentrifugeClientMessage
+    func buildPublishMessageTo(channel: String, data: [String: AnyObject]) -> CentrifugeClientMessage
 }
 
-class CentrifugoClientMessageBuilderImpl: CentrifugoClientMessageBuilder {
+class CentrifugeClientMessageBuilderImpl: CentrifugeClientMessageBuilder {
     
-    func buildConnectMessage(credentials: CentrifugoCredentials) -> CentrifugoClientMessage {
+    func buildConnectMessage(credentials: CentrifugeCredentials) -> CentrifugeClientMessage {
         
         let user = credentials.user, timestamp = credentials.timestamp, secret = credentials.secret
         
@@ -37,50 +37,50 @@ class CentrifugoClientMessageBuilderImpl: CentrifugoClientMessageBuilder {
         return buildMessage(.Connect, params: params)
     }
     
-    func buildDisconnectMessage() -> CentrifugoClientMessage {
+    func buildDisconnectMessage() -> CentrifugeClientMessage {
         return buildMessage(.Disconnect, params: [:])
     }
     
-    func buildSubscribeMessageTo(channel: String) -> CentrifugoClientMessage {
+    func buildSubscribeMessageTo(channel: String) -> CentrifugeClientMessage {
         let params = ["channel" : channel]
         return buildMessage(.Subscribe, params: params)
     }
     
-    func buildSubscribeMessageTo(channel: String, lastMessageUUID: String) -> CentrifugoClientMessage {
+    func buildSubscribeMessageTo(channel: String, lastMessageUUID: String) -> CentrifugeClientMessage {
         let params = ["channel" : channel,
                       "recover" : true,
                       "last" : lastMessageUUID]
         return buildMessage(.Subscribe, params: params as! [String : AnyObject])
     }
     
-    func buildUnsubscribeMessageFrom(channel: String) -> CentrifugoClientMessage {
+    func buildUnsubscribeMessageFrom(channel: String) -> CentrifugeClientMessage {
         let params = ["channel" : channel]
         return buildMessage(.Unsubscribe, params: params)
     }
     
-    func buildPublishMessageTo(channel: String, data: [String : AnyObject]) -> CentrifugoClientMessage {
+    func buildPublishMessageTo(channel: String, data: [String : AnyObject]) -> CentrifugeClientMessage {
         let params:[String : AnyObject] = ["channel" : channel,
                                            "data" : data]
         return buildMessage(.Publish, params: params)
     }
     
-    func buildPresenceMessage(channel: String) -> CentrifugoClientMessage {
+    func buildPresenceMessage(channel: String) -> CentrifugeClientMessage {
         let params:[String : AnyObject] = ["channel" : channel]
         return buildMessage(.Presence, params: params)
     }
     
-    func buildHistoryMessage(channel: String) -> CentrifugoClientMessage {
+    func buildHistoryMessage(channel: String) -> CentrifugeClientMessage {
         let params:[String : AnyObject] = ["channel" : channel]
         return buildMessage(.History, params: params)
     }
     
-    func buildPingMessage() -> CentrifugoClientMessage {
+    func buildPingMessage() -> CentrifugeClientMessage {
         return buildMessage(.Ping, params: [:])
     }
     
-    private func buildMessage(method: CentrifugoMethod, params: [String: AnyObject]) -> CentrifugoClientMessage {
+    private func buildMessage(method: CentrifugeMethod, params: [String: AnyObject]) -> CentrifugeClientMessage {
         let uid = generateUUID()
-        let message = CentrifugoClientMessage(uid: uid, method: method, params: params)
+        let message = CentrifugeClientMessage(uid: uid, method: method, params: params)
         return message
     }
     

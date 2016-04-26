@@ -8,31 +8,31 @@
 
 import SwiftWebSocket
 
-typealias CentrifugoBlockingHandler = ([CentrifugoServerMessage]?, NSError?) -> Void
+typealias CentrifugeBlockingHandler = ([CentrifugeServerMessage]?, NSError?) -> Void
 
-class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
-    var ws: CentrifugoWebSocket!
+class CentrifugeClientImpl: NSObject, WebSocketDelegate, CentrifugeClient {
+    var ws: CentrifugeWebSocket!
     var url: String!
-    var creds: CentrifugoCredentials!
-    var builder: CentrifugoClientMessageBuilder!
-    var parser: CentrifugoServerMessageParser!
+    var creds: CentrifugeCredentials!
+    var builder: CentrifugeClientMessageBuilder!
+    var parser: CentrifugeServerMessageParser!
     
-    var delegate: CentrifugoClientDelegate!
+    var delegate: CentrifugeClientDelegate!
     
-    var messageCallbacks = [String : CentrifugoMessageHandler]()
-    var subscription = [String : CentrifugoChannelDelegate]()
+    var messageCallbacks = [String : CentrifugeMessageHandler]()
+    var subscription = [String : CentrifugeChannelDelegate]()
     
     /** Handler is used to process websocket delegate method.
      If it is not nil, it blocks default actions. */
-    var blockingHandler: CentrifugoBlockingHandler?
-    var connectionCompletion: CentrifugoMessageHandler?
+    var blockingHandler: CentrifugeBlockingHandler?
+    var connectionCompletion: CentrifugeMessageHandler?
     
     //MARK: - Public interface
     //MARK: Server related method
-    func connect(completion: CentrifugoMessageHandler) {
+    func connect(completion: CentrifugeMessageHandler) {
         blockingHandler = connectionProcessHandler
         connectionCompletion = completion
-        ws = CentrifugoWebSocket(url)
+        ws = CentrifugeWebSocket(url)
         ws.delegate = self
     }
     
@@ -41,46 +41,46 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         ws.close()
     }
     
-    func ping(completion: CentrifugoMessageHandler) {
+    func ping(completion: CentrifugeMessageHandler) {
         let message = builder.buildPingMessage()
         messageCallbacks[message.uid] = completion
         send(message)
     }
     
     //MARK: Channel related method
-    func subscribe(channel: String, delegate: CentrifugoChannelDelegate, completion: CentrifugoMessageHandler) {
+    func subscribe(channel: String, delegate: CentrifugeChannelDelegate, completion: CentrifugeMessageHandler) {
         let message = builder.buildSubscribeMessageTo(channel)
         subscription[channel] = delegate
         messageCallbacks[message.uid] = completion
         send(message)
     }
 
-    func subscribe(channel: String, delegate: CentrifugoChannelDelegate, lastMessageUID uid: String, completion: CentrifugoMessageHandler) {
+    func subscribe(channel: String, delegate: CentrifugeChannelDelegate, lastMessageUID uid: String, completion: CentrifugeMessageHandler) {
         let message = builder.buildSubscribeMessageTo(channel, lastMessageUUID: uid)
         subscription[channel] = delegate
         messageCallbacks[message.uid] = completion
         send(message)
     }
     
-    func publish(channel: String, data: [String : AnyObject], completion: CentrifugoMessageHandler) {
+    func publish(channel: String, data: [String : AnyObject], completion: CentrifugeMessageHandler) {
         let message = builder.buildPublishMessageTo(channel, data: data)
         messageCallbacks[message.uid] = completion
         send(message)
     }
     
-    func unsubscribe(channel: String, completion: CentrifugoMessageHandler) {
+    func unsubscribe(channel: String, completion: CentrifugeMessageHandler) {
         let message = builder.buildUnsubscribeMessageFrom(channel)
         messageCallbacks[message.uid] = completion
         send(message)
     }
     
-    func presence(channel: String, completion: CentrifugoMessageHandler) {
+    func presence(channel: String, completion: CentrifugeMessageHandler) {
         let message = builder.buildPresenceMessage(channel)
         messageCallbacks[message.uid] = completion
         send(message)
     }
     
-    func history(channel: String, completion: CentrifugoMessageHandler) {
+    func history(channel: String, completion: CentrifugeMessageHandler) {
         let message = builder.buildHistoryMessage(channel)
         messageCallbacks[message.uid] = completion
         send(message)
@@ -91,7 +91,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         subscription[channel] = nil
     }
     
-    func send(message: CentrifugoClientMessage) {
+    func send(message: CentrifugeClientMessage) {
         try! ws.send(message)
     }
     
@@ -111,7 +111,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     /**
      Handler is using while connecting to server.
      */
-    func connectionProcessHandler(messages: [CentrifugoServerMessage]?, error: NSError?) -> Void {
+    func connectionProcessHandler(messages: [CentrifugeServerMessage]?, error: NSError?) -> Void {
         guard let handler = connectionCompletion else {
             assertionFailure("Error: No connectionCompletion")
             return
@@ -141,7 +141,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     /**
      Handler is using while normal working with server.
      */
-    func defaultProcessHandler(messages: [CentrifugoServerMessage]?, error: NSError?) {
+    func defaultProcessHandler(messages: [CentrifugeServerMessage]?, error: NSError?) {
         if let err = error {
             delegate.client(self, didReceiveError: err)
             return
@@ -157,7 +157,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         }
     }
     
-    func defaultProcessHandler(message: CentrifugoServerMessage) {
+    func defaultProcessHandler(message: CentrifugeServerMessage) {
         var handled = false
         if let uid = message.uid where messageCallbacks[uid] == nil {
             assertionFailure("Error: Untracked message is received")
@@ -242,7 +242,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     
     func webSocketClose(code: Int, reason: String, wasClean: Bool) {
         if let handler = blockingHandler {
-            let error = NSError(domain: CentrifugoWebSocketErrorDomain, code: code, userInfo: [NSLocalizedDescriptionKey : reason])
+            let error = NSError(domain: CentrifugeWebSocketErrorDomain, code: code, userInfo: [NSLocalizedDescriptionKey : reason])
             handler(nil, error)
         }
         

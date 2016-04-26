@@ -1,15 +1,15 @@
 import UIKit
 import XCTest
-@testable import CentrifugoiOS
+@testable import CentrifugeiOS
 
-class CentrifugoClientMessageBuilderImplTests: XCTestCase {
+class CentrifugeClientMessageBuilderImplTests: XCTestCase {
     
-    var builder: CentrifugoClientMessageBuilderImpl!
+    var builder: CentrifugeClientMessageBuilderImpl!
     
     override func setUp() {
         super.setUp()
         
-        builder = CentrifugoClientMessageBuilderImpl()
+        builder = CentrifugeClientMessageBuilderImpl()
     }
     
     override func tearDown() {
@@ -19,13 +19,13 @@ class CentrifugoClientMessageBuilderImplTests: XCTestCase {
     
     func testBuildingConnectMessageWithoutInfo() {
         // given
-        let cred = CentrifugoCredentials(secret: "secret", user: "user", timestamp: "timestamp")
+        let cred = CentrifugeCredentials(secret: "secret", user: "user", timestamp: "timestamp")
         
         // when
         let message = builder.buildConnectMessage(cred)
         
         // then
-        XCTAssertEqual(message.method, CentrifugoMethod.Connect)
+        XCTAssertEqual(message.method, CentrifugeMethod.Connect)
         XCTAssertNotNil(message.params["token"])
         XCTAssertNotNil(message.params["user"])
         XCTAssertNotNil(message.params["timestamp"])
@@ -34,13 +34,13 @@ class CentrifugoClientMessageBuilderImplTests: XCTestCase {
     
     func testBuildingConnectMessageWithInfo() {
         // given
-        let cred = CentrifugoCredentials(secret: "secret", user: "user", timestamp: "timestamp", info: "info")
+        let cred = CentrifugeCredentials(secret: "secret", user: "user", timestamp: "timestamp", info: "info")
         
         // when
         let message = builder.buildConnectMessage(cred)
         
         // then
-        XCTAssertEqual(message.method, CentrifugoMethod.Connect)
+        XCTAssertEqual(message.method, CentrifugeMethod.Connect)
         XCTAssertNotNil(message.params["token"])
         XCTAssertNotNil(message.params["user"])
         XCTAssertNotNil(message.params["timestamp"])

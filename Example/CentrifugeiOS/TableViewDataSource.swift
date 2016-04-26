@@ -1,6 +1,6 @@
 //
 //  TableViewDataSource.swift
-//  CentrifugoiOS
+//  CentrifugeiOS
 //
 //  Created by Herman Saprykin on 18/04/16.
 //  Copyright © 2016 CocoaPods. All rights reserved.

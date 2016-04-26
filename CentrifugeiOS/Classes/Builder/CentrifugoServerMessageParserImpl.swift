@@ -1,20 +1,20 @@
 //
-//  CentrifugoServerMessageParserImpl.swift
+//  CentrifugeServerMessageParserImpl.swift
 //  Pods
 //
 //  Created by Herman Saprykin on 19/04/16.
 //
 //
 
-protocol CentrifugoServerMessageParser {
-    func parse(data: NSData) throws -> [CentrifugoServerMessage]
+protocol CentrifugeServerMessageParser {
+    func parse(data: NSData) throws -> [CentrifugeServerMessage]
 }
 
-class CentrifugoServerMessageParserImpl: CentrifugoServerMessageParser {
-    func parse(data: NSData) throws -> [CentrifugoServerMessage] {        
+class CentrifugeServerMessageParserImpl: CentrifugeServerMessageParser {
+    func parse(data: NSData) throws -> [CentrifugeServerMessage] {        
         do {
             let response = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions())
-            var messages = [CentrifugoServerMessage]()
+            var messages = [CentrifugeServerMessage]()
             
             if let infos = response as? [[String : AnyObject]] {
                 for info in infos {
@@ -39,7 +39,7 @@ class CentrifugoServerMessageParserImpl: CentrifugoServerMessageParser {
         }
     }
     
-    func messageParse(info: [String : AnyObject]) -> CentrifugoServerMessage? {
+    func messageParse(info: [String : AnyObject]) -> CentrifugeServerMessage? {
         guard let uid = info["uid"] as? String? else {
             print("Error: Invalid server response: Not valid message format")
             print(info)
@@ -52,7 +52,7 @@ class CentrifugoServerMessageParserImpl: CentrifugoServerMessageParser {
             return nil
         }
         
-        guard let method = CentrifugoMethod(rawValue: methodName) else {
+        guard let method = CentrifugeMethod(rawValue: methodName) else {
             print("Error: Invalid server response: Not valid message format")
             print(info)
             return nil
@@ -69,6 +69,6 @@ class CentrifugoServerMessageParserImpl: CentrifugoServerMessageParser {
             body = bd
         }
         
-        return CentrifugoServerMessage(uid: uid, method: method, error: error, body: body)
+        return CentrifugeServerMessage(uid: uid, method: method, error: error, body: body)
     }
 }

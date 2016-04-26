@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  CentrifugoiOS
+//  CentrifugeiOS
 //
 //  Created by Herman Saprykin on 04/18/2016.
 //  Copyright (c) 2016 Herman Saprykin. All rights reserved.
@@ -8,11 +8,11 @@
 
 import UIKit
 
-import CentrifugoiOS
+import CentrifugeiOS
 
-typealias MessagesCallback = CentrifugoServerMessage -> Void
+typealias MessagesCallback = CentrifugeServerMessage -> Void
 
-class ViewController: UIViewController, CentrifugoChannelDelegate, CentrifugoClientDelegate {
+class ViewController: UIViewController, CentrifugeChannelDelegate, CentrifugeClientDelegate {
     @IBOutlet weak var nickTextField: UITextField!
     @IBOutlet weak var messageTextField: UITextField!
     @IBOutlet weak var tableView: UITableView!
@@ -36,13 +36,13 @@ class ViewController: UIViewController, CentrifugoChannelDelegate, CentrifugoCli
         
         let timestamp = "\(Int(NSDate().timeIntervalSince1970))"
         
-        let creds = CentrifugoCredentials(secret: secret, user: user, timestamp: timestamp)
+        let creds = CentrifugeCredentials(secret: secret, user: user, timestamp: timestamp)
         let url = "wss://centrifugo.herokuapp.com/connection/websocket"
-        client = Centrifugal.client(url, creds: creds, delegate: self)
+        client = Centrifuge.client(url, creds: creds, delegate: self)
     }
     
     //MARK:- Interactions with server
-    var client: CentrifugoClient!
+    var client: CentrifugeClient!
     
     let channel = "jsfiddle-chat"
     let user = "ios-swift"
@@ -54,41 +54,41 @@ class ViewController: UIViewController, CentrifugoChannelDelegate, CentrifugoCli
         }
     }
     
-    //MARK: CentrifugoClientDelegate
-    func client(client: CentrifugoClient, didReceiveError error: NSError) {
+    //MARK: CentrifugeClientDelegate
+    func client(client: CentrifugeClient, didReceiveError error: NSError) {
         showError(error)
     }
     
-    func client(client: CentrifugoClient, didDisconnect message: CentrifugoServerMessage) {
+    func client(client: CentrifugeClient, didDisconnect message: CentrifugeServerMessage) {
         print("didDisconnect message: \(message)")
         datasource.removeAll()
         tableView.reloadData()
     }
     
-    func client(client: CentrifugoClient, didReceiveRefresh message: CentrifugoServerMessage) {
+    func client(client: CentrifugeClient, didReceiveRefresh message: CentrifugeServerMessage) {
         print("didReceiveRefresh message: \(message)")
     }
     
-    //MARK: CentrifugoChannelDelegate
-    func client(client: CentrifugoClient, didReceiveMessageInChannel channel: String, message: CentrifugoServerMessage) {
+    //MARK: CentrifugeChannelDelegate
+    func client(client: CentrifugeClient, didReceiveMessageInChannel channel: String, message: CentrifugeServerMessage) {
         if let data = message.body?["data"] as? [String : AnyObject], input = data["input"] as? String, nick = data["nick"] as? String {
             addItem(nick, subtitle: input)
         }
     }
     
-    func client(client: CentrifugoClient, didReceiveJoinInChannel channel: String, message: CentrifugoServerMessage) {
+    func client(client: CentrifugeClient, didReceiveJoinInChannel channel: String, message: CentrifugeServerMessage) {
         if let data = message.body?["data"] as? [String : AnyObject], user = data["user"] as? String {
             addItem(message.method.rawValue, subtitle: user)
         }
     }
     
-    func client(client: CentrifugoClient, didReceiveLeaveInChannel channel: String, message: CentrifugoServerMessage) {
+    func client(client: CentrifugeClient, didReceiveLeaveInChannel channel: String, message: CentrifugeServerMessage) {
         if let data = message.body?["data"] as? [String : AnyObject], user = data["user"] as? String {
             addItem(message.method.rawValue, subtitle: user)
         }
     }
     
-    func client(client: CentrifugoClient, didReceiveUnsubscribeInChannel channel: String, message: CentrifugoServerMessage) {
+    func client(client: CentrifugeClient, didReceiveUnsubscribeInChannel channel: String, message: CentrifugeServerMessage) {
         print("didReceiveUnsubscribeInChannel \(message)"   )
     }
     
@@ -114,11 +114,11 @@ class ViewController: UIViewController, CentrifugoChannelDelegate, CentrifugoCli
         showAlert("Error", message: "\(error)")
     }
     
-    func showMessage(message: CentrifugoServerMessage) {
+    func showMessage(message: CentrifugeServerMessage) {
         showAlert("Message", message: "\(message)")
     }
     
-    func showResponse(message: CentrifugoServerMessage?, error: NSError?) {
+    func showResponse(message: CentrifugeServerMessage?, error: NSError?) {
         if let msg = message {
             showMessage(msg)
         } else if let err = error {
