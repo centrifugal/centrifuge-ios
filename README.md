@@ -42,9 +42,8 @@ iOS 8.0+
 
 ## Installation
 
-Not ready.
-~~CentrifugeiOS is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:~~
+CentrifugeiOS is available through [CocoaPods](http://cocoapods.org). To install
+it, simply add the following line to your Podfile:
 
 ```ruby
 pod "CentrifugeiOS"
