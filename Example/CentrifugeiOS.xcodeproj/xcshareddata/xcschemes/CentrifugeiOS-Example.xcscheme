@@ -15,23 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-               BuildableName = "CentrifugoiOS_Example.app"
-               BlueprintName = "CentrifugoiOS_Example"
-               ReferencedContainer = "container:CentrifugoiOS.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "607FACE41AFB9204008FA782"
-               BuildableName = "CentrifugoiOS_Tests.xctest"
-               BlueprintName = "CentrifugoiOS_Tests"
-               ReferencedContainer = "container:CentrifugoiOS.xcodeproj">
+               BuildableName = "CentrifugeiOS_Example.app"
+               BlueprintName = "CentrifugeiOS_Example"
+               ReferencedContainer = "container:CentrifugeiOS.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -47,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "607FACE41AFB9204008FA782"
-               BuildableName = "CentrifugoiOS_Tests.xctest"
-               BlueprintName = "CentrifugoiOS_Tests"
-               ReferencedContainer = "container:CentrifugoiOS.xcodeproj">
+               BuildableName = "CentrifugeiOS_Tests.xctest"
+               BlueprintName = "CentrifugeiOS_Tests"
+               ReferencedContainer = "container:CentrifugeiOS.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -57,9 +43,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-            BuildableName = "CentrifugoiOS_Example.app"
-            BlueprintName = "CentrifugoiOS_Example"
-            ReferencedContainer = "container:CentrifugoiOS.xcodeproj">
+            BuildableName = "CentrifugeiOS_Example.app"
+            BlueprintName = "CentrifugeiOS_Example"
+            ReferencedContainer = "container:CentrifugeiOS.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -80,9 +66,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-            BuildableName = "CentrifugoiOS_Example.app"
-            BlueprintName = "CentrifugoiOS_Example"
-            ReferencedContainer = "container:CentrifugoiOS.xcodeproj">
+            BuildableName = "CentrifugeiOS_Example.app"
+            BlueprintName = "CentrifugeiOS_Example"
+            ReferencedContainer = "container:CentrifugeiOS.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -99,9 +85,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-            BuildableName = "CentrifugoiOS_Example.app"
-            BlueprintName = "CentrifugoiOS_Example"
-            ReferencedContainer = "container:CentrifugoiOS.xcodeproj">
+            BuildableName = "CentrifugeiOS_Example.app"
+            BlueprintName = "CentrifugeiOS_Example"
+            ReferencedContainer = "container:CentrifugeiOS.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
