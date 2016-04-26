@@ -180,6 +180,18 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     
     func defaultProcessHandler(message: CentrifugoServerMessage) {
         var handled = false
+        if let uid = message.uid where messageCallbacks[uid] == nil {
+            assertionFailure("Error: Untracked message is received")
+            return
+        }
+        
+        if let uid = message.uid, handler = messageCallbacks[uid] where message.error != nil {
+            let error = NSError.errorWithMessage(message)
+            handler(nil, error)
+            messageCallbacks[uid] = nil
+            return
+        }
+        
         if let uid = message.uid, handler = messageCallbacks[uid] {
             handler(message, nil)
             messageCallbacks[uid] = nil
