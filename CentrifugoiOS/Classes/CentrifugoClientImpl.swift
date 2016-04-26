@@ -27,8 +27,12 @@ public protocol CentrifugoChannelDelegate {
 }
 
 public protocol CentrifugoClient {
+    //MARK: General methods
     func connect(completion: CentrifugoErrorHandler)
+    
+    //MARK: Channel related methods
     func subscribe(channel: String, delegate: CentrifugoChannelDelegate, completion: CentrifugoMessageHandler)
+    func publish(channel: String, data: [String : AnyObject], completion: CentrifugoMessageHandler)
 }
 
 protocol CentrifugoClientUnimplemented {
@@ -71,6 +75,12 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         subscription[channel] = delegate
         messageCallbacks[message.uid] = completion
         
+        send(message)
+    }
+    
+    func publish(channel: String, data: [String : AnyObject], completion: CentrifugoMessageHandler) {
+        let message = builder.buildPublishMessageTo(channel, data: data)
+        messageCallbacks[message.uid] = completion
         send(message)
     }
     

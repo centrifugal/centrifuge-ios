@@ -60,6 +60,13 @@ class ViewController: UIViewController, CentrifugoChannelDelegate, CentrifugoCli
         }
     }
     
+    func publish(text: String) {
+        client.publish(channel, data:  ["nick" : nickName, "input" : text]) { message, error in
+            print("publish message: \(message)")
+            print("publish error: \(error)")
+        }
+    }
+    
     //MARK: CentrifugoClientDelegate
     func client(client: CentrifugoClient, didReceiveError error: NSError) {
         print("\(error)")
@@ -112,6 +119,7 @@ class ViewController: UIViewController, CentrifugoChannelDelegate, CentrifugoCli
     @IBAction func sendButtonDidPress(sender: AnyObject) {
         if let text = messageTextField.text where text.characters.count > 0 {
             messageTextField.text = ""
+            publish(text)
         }
     }
 }

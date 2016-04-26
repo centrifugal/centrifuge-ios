@@ -76,6 +76,34 @@ class CentrifugoClientImplTests: XCTestCase {
         XCTAssertNotNil(client.subscription[channel])
     }
     
+    func testPublishProcessValid() {
+        // given
+        var validMessageDidSend = false
+        
+        let channel = "channelName"
+        
+        let ws = WebSocketMock()
+        client.ws = ws
+        
+        let builder = BuilderMock()
+        client.builder = builder
+        
+        let message = CentrifugoClientMessage.testMessage()
+        
+        builder.buildPublishHandler = { _ in return message }
+        
+        ws.sendHandler = { aMessage in
+            validMessageDidSend = (aMessage == message)
+        }
+        
+        // when
+        client.publish(channel, data: [:]) { _, _ in }
+        
+        // then
+        XCTAssertTrue(validMessageDidSend)
+        XCTAssertNotNil(client.messageCallbacks[message.uid])
+    }
+    
     //MARK: - Helpers
     func testDefaultProcessHandlerProcessError() {
         // given
@@ -427,6 +455,11 @@ class CentrifugoClientImplTests: XCTestCase {
         var buildSubscribeHandler: ( String -> CentrifugoClientMessage )!
         override func buildSubscribeMessageTo(channel: String) -> CentrifugoClientMessage {
             return buildSubscribeHandler(channel)
+        }
+        
+        var buildPublishHandler: ( (String, [String : AnyObject]) -> CentrifugoClientMessage )!
+        override func buildPublishMessageTo(channel: String, data: [String : AnyObject]) -> CentrifugoClientMessage {
+            return buildPublishHandler(channel, data)
         }
     }
     
