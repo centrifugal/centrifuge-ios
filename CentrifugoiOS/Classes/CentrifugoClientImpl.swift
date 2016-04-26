@@ -34,6 +34,8 @@ public protocol CentrifugoClient {
     func subscribe(channel: String, delegate: CentrifugoChannelDelegate, completion: CentrifugoMessageHandler)
     func publish(channel: String, data: [String : AnyObject], completion: CentrifugoMessageHandler)
     func unsubscribe(channel: String, completion: CentrifugoMessageHandler)
+    func history(channel: String, completion: CentrifugoMessageHandler)
+    func presence(channel: String, completion: CentrifugoMessageHandler)
 }
 
 protocol CentrifugoClientUnimplemented {
@@ -62,6 +64,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     var connectionCompletion: CentrifugoErrorHandler?
     
     //MARK: - Public interface
+    //MARK: Server related method
     func connect(completion: CentrifugoErrorHandler) {
         blockingHandler = connectionProcessHandler
         connectionCompletion = completion
@@ -69,6 +72,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         ws.open()
     }
     
+    //MARK: Channel related method
     func subscribe(channel: String, delegate: CentrifugoChannelDelegate, completion: CentrifugoMessageHandler) {
         let message = builder.buildSubscribeMessageTo(channel)
         
@@ -86,6 +90,18 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     
     func unsubscribe(channel: String, completion: CentrifugoMessageHandler) {
         let message = builder.buildUnsubscribeMessageFrom(channel)
+        messageCallbacks[message.uid] = completion
+        send(message)
+    }
+    
+    func presence(channel: String, completion: CentrifugoMessageHandler) {
+        let message = builder.buildPresenceMessage(channel)
+        messageCallbacks[message.uid] = completion
+        send(message)
+    }
+    
+    func history(channel: String, completion: CentrifugoMessageHandler) {
+        let message = builder.buildHistoryMessage(channel)
         messageCallbacks[message.uid] = completion
         send(message)
     }

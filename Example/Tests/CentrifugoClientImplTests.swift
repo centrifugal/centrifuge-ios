@@ -106,6 +106,60 @@ class CentrifugoClientImplTests: XCTestCase {
         XCTAssertNotNil(client.messageCallbacks[message.uid])
     }
     
+    func testHistoryProcessValid() {
+        // given
+        var validMessageDidSend = false
+        
+        let channel = "channelName"
+        
+        let ws = WebSocketMock()
+        client.ws = ws
+        
+        let builder = BuilderMock()
+        client.builder = builder
+        
+        let message = CentrifugoClientMessage.testMessage()
+        
+        builder.buildHistoryHandler = { _ in return message }
+        
+        ws.sendHandler = { aMessage in
+            validMessageDidSend = (aMessage == message)
+        }
+        
+        // when
+        client.history(channel) { _, _ in }
+        
+        // then
+        XCTAssertTrue(validMessageDidSend)
+    }
+    
+    func testPresenceProcessValid() {
+        // given
+        var validMessageDidSend = false
+        
+        let channel = "channelName"
+        
+        let ws = WebSocketMock()
+        client.ws = ws
+        
+        let builder = BuilderMock()
+        client.builder = builder
+        
+        let message = CentrifugoClientMessage.testMessage()
+        
+        builder.buildPresenceHandler = { _ in return message }
+        
+        ws.sendHandler = { aMessage in
+            validMessageDidSend = (aMessage == message)
+        }
+        
+        // when
+        client.presence(channel) { _, _ in }
+        
+        // then
+        XCTAssertTrue(validMessageDidSend)
+    }
+    
     func testPublishProcessValid() {
         // given
         var validMessageDidSend = false
@@ -501,6 +555,16 @@ class CentrifugoClientImplTests: XCTestCase {
         var buildPublishHandler: ( (String, [String : AnyObject]) -> CentrifugoClientMessage )!
         override func buildPublishMessageTo(channel: String, data: [String : AnyObject]) -> CentrifugoClientMessage {
             return buildPublishHandler(channel, data)
+        }
+        
+        var buildHistoryHandler: ( String -> CentrifugoClientMessage )!
+        override func buildHistoryMessage(channel: String) -> CentrifugoClientMessage {
+            return buildHistoryHandler(channel)
+        }
+        
+        var buildPresenceHandler: ( String -> CentrifugoClientMessage )!
+        override func buildPresenceMessage(channel: String) -> CentrifugoClientMessage {
+            return buildPresenceHandler(channel)
         }
     }
     
