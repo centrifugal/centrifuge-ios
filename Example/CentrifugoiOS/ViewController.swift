@@ -12,7 +12,7 @@ import CentrifugoiOS
 
 typealias MessagesCallback = CentrifugoServerMessage -> Void
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, CentrifugoChannelDelegate {
     @IBOutlet weak var nickTextField: UITextField!
     @IBOutlet weak var messageTextField: UITextField!
     @IBOutlet weak var tableView: UITableView!
@@ -55,9 +55,18 @@ class ViewController: UIViewController {
         client = Centrifugal.client(url, creds: creds)
         client.connect { (error) in
             print("connect error: \(error)")
+            
+            self.client.subscribe("jsfiddle-chat", delegate: self, completion: { (message, error) in
+                print("subscribe error: \(error)")
+                print("subscribe message: \(message)")
+            })
         }
     }
     
+    func client(client: CentrifugoClient, didReceiveInChannel channel: String, message: CentrifugoServerMessage) {
+        print("channel: \(channel)")
+        print("message: \(message)")
+    }
     
     //MARK:- Server response handlers
     

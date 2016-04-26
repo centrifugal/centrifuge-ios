@@ -21,7 +21,7 @@ protocol CentrifugoClientDelegate {
 
 public protocol CentrifugoChannelDelegate {
     func client(client: CentrifugoClient, didReceiveInChannel channel: String, message: CentrifugoServerMessage)
-    }
+}
 
 public protocol CentrifugoClient {
     func connect(completion: CentrifugoErrorHandler)
@@ -50,7 +50,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     var subscription = [String : CentrifugoChannelDelegate]()
     
     /** Handler is used to process websocket delegate method.
-        If it is not nil, it blocks default actions. */
+     If it is not nil, it blocks default actions. */
     var blockingHandler: CentrifugoBlockingHandler?
     var connectionCompletion: CentrifugoErrorHandler?
     
@@ -67,7 +67,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         
         subscription[channel] = delegate
         messageCallbacks[message.uid] = completion
-
+        
         send(message)
     }
     
@@ -87,7 +87,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     
     //MARK: - Handlers
     /**
-     Handler is using during connection to server.
+     Handler is using while connecting to server.
      */
     func connectionProcessHandler(messages: [CentrifugoServerMessage]?, error: NSError?) -> Void {
         guard let handler = connectionCompletion else {
@@ -118,8 +118,8 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     
     /**
      Handler is using while normal working with server.
-    */
-    func defaultProcessHandler(messages: [CentrifugoServerMessage]?, error: NSError?) -> Void {
+     */
+    func defaultProcessHandler(messages: [CentrifugoServerMessage]?, error: NSError?) {
         if let err = error {
             delegate.client(self, didReceiveError: err)
             return
@@ -131,11 +131,21 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         }
         
         for message in msgs {
-            switch message.method {
-
-            default:
-                assertionFailure("Error: Invalid method type")
-            }
+            defaultProcessHandler(message)
+        }
+    }
+    
+    func defaultProcessHandler(message: CentrifugoServerMessage) {
+        if let uid = message.uid, handler = messageCallbacks[uid] {
+            handler(message, nil)
+            messageCallbacks[uid] = nil
+            return
+        }
+        
+        switch message.method {
+        default:
+            print(message)
+            assertionFailure("Error: Invalid method type")
         }
     }
     
@@ -148,7 +158,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     func webSocketMessageText(text: String) {
         let data = text.dataUsingEncoding(NSUTF8StringEncoding)!
         let messages = try! parser.parse(data)
-
+        
         if let handler = blockingHandler {
             handler(messages, nil)
         }
@@ -165,7 +175,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
     func webSocketError(error: NSError) {
         if let handler = blockingHandler {
             handler(nil, error)
-        }        
+        }
     }
 }
 

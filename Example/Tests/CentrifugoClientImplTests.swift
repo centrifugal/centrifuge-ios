@@ -91,6 +91,23 @@ class CentrifugoClientImplTests: XCTestCase {
         XCTAssertEqual(delegate.receivedError, expectedError)
     }
     
+    func testDefaultProcessHandlerCallsMessageCallbacksAndRemoveCallback() {
+        // given
+        let expectedMessage = CentrifugoServerMessage.testMessage()
+        var receivedMessage: CentrifugoServerMessage!
+        
+        client.messageCallbacks[expectedMessage.uid!] = { message, _ in
+            receivedMessage = message
+        }
+        
+        // when
+        client.defaultProcessHandler([expectedMessage], error: nil)
+        
+        // then
+        XCTAssertEqual(expectedMessage, receivedMessage)
+        XCTAssertNil(client.messageCallbacks[expectedMessage.uid!])
+    }
+    
     func testConnectionProcessHandlerResetsStateIfError() {
         // given
         let error = NSError(domain: "", code: 1, userInfo: nil)
