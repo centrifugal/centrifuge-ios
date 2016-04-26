@@ -102,6 +102,37 @@ class CentrifugoClientImplTests: XCTestCase {
         XCTAssertNotNil(client.subscription[channel])
     }
     
+    func testSubscribeWithRecoveryProcessValid() {
+        // given
+        var validMessageDidSend = false
+        let uid = NSUUID().UUIDString
+        
+        let channel = "channelName"
+        let delegate = ChannelDelegateMock()
+        
+        let ws = WebSocketMock()
+        client.ws = ws
+        
+        let builder = BuilderMock()
+        client.builder = builder
+        
+        let message = CentrifugoClientMessage.testMessage()
+        
+        builder.buildSubscribeWithRecoveryHandler = { _, _ in return message }
+        
+        ws.sendHandler = { aMessage in
+            validMessageDidSend = (aMessage == message)
+        }
+        
+        // when
+        client.subscribe(channel, delegate: delegate, lastMessageUID: uid) { _, _ in }
+        
+        // then
+        XCTAssertTrue(validMessageDidSend)
+        XCTAssertNotNil(client.messageCallbacks[message.uid])
+        XCTAssertNotNil(client.subscription[channel])
+    }
+    
     func testUnubscribeProcessValid() {
         // given
         var validMessageDidSend = false
@@ -599,6 +630,11 @@ class CentrifugoClientImplTests: XCTestCase {
         var buildSubscribeHandler: ( String -> CentrifugoClientMessage )!
         override func buildSubscribeMessageTo(channel: String) -> CentrifugoClientMessage {
             return buildSubscribeHandler(channel)
+        }
+        
+        var buildSubscribeWithRecoveryHandler: ( (String, String) -> CentrifugoClientMessage )!
+        override func buildSubscribeMessageTo(channel: String, lastMessageUUID: String) -> CentrifugoClientMessage {
+            return buildSubscribeWithRecoveryHandler(channel, lastMessageUUID)
         }
         
         var buildUnsubscribeHandler: ( String -> CentrifugoClientMessage )!

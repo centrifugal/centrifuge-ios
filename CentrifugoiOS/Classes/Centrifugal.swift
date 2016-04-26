@@ -9,6 +9,7 @@
 public protocol CentrifugoClientMessageBuilder {
     func buildConnectMessage(credentials: CentrifugoCredentials) -> CentrifugoClientMessage
     func buildSubscribeMessageTo(channel: String) -> CentrifugoClientMessage
+    func buildSubscribeMessageTo(channel: String, lastMessageUUID: String) -> CentrifugoClientMessage
     func buildUnsubscribeMessageFrom(channel: String) -> CentrifugoClientMessage
     func buildPresenceMessage(channel: String) -> CentrifugoClientMessage
     func buildHistoryMessage(channel: String) -> CentrifugoClientMessage

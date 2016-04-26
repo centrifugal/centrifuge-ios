@@ -31,6 +31,13 @@ class CentrifugoClientMessageBuilderImpl: CentrifugoClientMessageBuilder {
         return buildMessage(.Subscribe, params: params)
     }
     
+    func buildSubscribeMessageTo(channel: String, lastMessageUUID: String) -> CentrifugoClientMessage {
+        let params = ["channel" : channel,
+                      "recover" : true,
+                      "last" : lastMessageUUID]
+        return buildMessage(.Subscribe, params: params as! [String : AnyObject])
+    }
+    
     func buildUnsubscribeMessageFrom(channel: String) -> CentrifugoClientMessage {
         let params = ["channel" : channel]
         return buildMessage(.Unsubscribe, params: params)
