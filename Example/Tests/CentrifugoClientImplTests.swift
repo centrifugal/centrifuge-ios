@@ -79,7 +79,7 @@ class CentrifugoClientImplTests: XCTestCase {
         }
         
         // when
-        client.disconnect { _, _ in }
+        client.disconnect()
         
         // then
         XCTAssertTrue(closeDidCall)

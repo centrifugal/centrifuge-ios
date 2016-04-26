@@ -22,7 +22,7 @@ public protocol CentrifugoChannelDelegate {
 public protocol CentrifugoClient {
     //MARK: General methods
     func connect(completion: CentrifugoMessageHandler)
-    func disconnect(completion: CentrifugoMessageHandler)
+    func disconnect()
     func ping(completion: CentrifugoMessageHandler)
 
     //MARK: Channel related methods

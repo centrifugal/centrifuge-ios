@@ -36,7 +36,7 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         ws.delegate = self
     }
     
-    func disconnect(completion: CentrifugoMessageHandler) {
+    func disconnect() {
         ws.delegate = nil
         ws.close()
     }

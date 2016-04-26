@@ -149,7 +149,7 @@ class ViewController: UIViewController, CentrifugoChannelDelegate, CentrifugoCli
         alert.addAction(connect)
         
         let disconnect = UIAlertAction(title: "Disconnect", style: .Default) { _ in
-            self.client.disconnect{_, _ in}
+            self.client.disconnect()
         }
         alert.addAction(disconnect)
         
