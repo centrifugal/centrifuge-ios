@@ -46,6 +46,32 @@ class CentrifugoClientImplTests: XCTestCase {
         XCTAssertNotNil(client.connectionCompletion)
     }
     
+    func testPingProcessValid() {
+        // given
+        var validMessageDidSend = false
+
+        let ws = WebSocketMock()
+        let builder = BuilderMock()
+        
+        client.builder = builder
+        client.ws = ws
+        
+        let message = CentrifugoClientMessage.testMessage()
+        
+        builder.buildPingHandler = { _ in return message }
+        
+        ws.sendHandler = { aMessage in
+            validMessageDidSend = (aMessage == message)
+        }
+        
+        // when
+        client.ping { _, _ in }
+        
+        // then
+        XCTAssertTrue(validMessageDidSend)
+        XCTAssertNotNil(client.messageCallbacks[message.uid])
+    }
+    
     func testSubscribeProcessValid() {
         // given
         var validMessageDidSend = false
@@ -540,6 +566,11 @@ class CentrifugoClientImplTests: XCTestCase {
         var buildConnectHandler: ( CentrifugoCredentials -> CentrifugoClientMessage )!
         override func buildConnectMessage(credentials: CentrifugoCredentials) -> CentrifugoClientMessage {
             return buildConnectHandler(credentials)
+        }
+        
+        var buildPingHandler: ( Void -> CentrifugoClientMessage )!
+        override func buildPingMessage() -> CentrifugoClientMessage {
+            return buildPingHandler()
         }
         
         var buildSubscribeHandler: ( String -> CentrifugoClientMessage )!

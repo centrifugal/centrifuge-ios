@@ -36,11 +36,11 @@ public protocol CentrifugoClient {
     func unsubscribe(channel: String, completion: CentrifugoMessageHandler)
     func history(channel: String, completion: CentrifugoMessageHandler)
     func presence(channel: String, completion: CentrifugoMessageHandler)
+    func ping(completion: CentrifugoMessageHandler)
 }
 
 protocol CentrifugoClientUnimplemented {
     func disconnect(completion: CentrifugoErrorHandler)
-    func ping(completion: CentrifugoErrorHandler)
     
     var delegate: CentrifugoClientDelegate? {get set}
     var connected: Bool {get}
@@ -72,13 +72,17 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         ws.open()
     }
     
+    func ping(completion: CentrifugoMessageHandler) {
+        let message = builder.buildPingMessage()
+        messageCallbacks[message.uid] = completion
+        send(message)
+    }
+    
     //MARK: Channel related method
     func subscribe(channel: String, delegate: CentrifugoChannelDelegate, completion: CentrifugoMessageHandler) {
         let message = builder.buildSubscribeMessageTo(channel)
-        
         subscription[channel] = delegate
         messageCallbacks[message.uid] = completion
-        
         send(message)
     }
     
