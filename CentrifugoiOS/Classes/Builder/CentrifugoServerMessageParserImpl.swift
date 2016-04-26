@@ -6,19 +6,12 @@
 //
 //
 
+protocol CentrifugoServerMessageParser {
+    func parse(data: NSData) throws -> [CentrifugoServerMessage]
+}
+
 class CentrifugoServerMessageParserImpl: CentrifugoServerMessageParser {
-    func parse(data: Any) throws -> [CentrifugoServerMessage] {
-     
-        guard let text = data as? String else {
-            //TODO: add error thrown
-            return []
-        }
-        
-        guard let data = text.dataUsingEncoding(NSUTF8StringEncoding) else {
-            //TODO: add error thrown
-            return []
-        }
-        
+    func parse(data: NSData) throws -> [CentrifugoServerMessage] {        
         do {
             let response = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions())
             var messages = [CentrifugoServerMessage]()
@@ -41,6 +34,7 @@ class CentrifugoServerMessageParserImpl: CentrifugoServerMessageParser {
             
         }catch {
             //TODO: add error thrown
+            assertionFailure("Error: Invalid message json")
             return []
         }
     }

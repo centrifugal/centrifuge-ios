@@ -6,27 +6,26 @@
 //
 //
 
-public protocol CentrifugoClientMessageBuilder {
-    func buildConnectMessage(credentials: CentrifugoCredentials) -> CentrifugoClientMessage
-    func buildSubscribeMessageTo(channel: String) -> CentrifugoClientMessage
-    func buildUnsubscribeMessageFrom(channel: String) -> CentrifugoClientMessage
-    func buildPresenceMessage(channel: String) -> CentrifugoClientMessage
-    func buildHistoryMessage(channel: String) -> CentrifugoClientMessage
-    func buildPingMessage() -> CentrifugoClientMessage
-    func buildPublishMessageTo(channel: String, data: [String: AnyObject]) -> CentrifugoClientMessage
+public let CentrifugoErrorDomain = "com.centrifugo.error.domain"
+public let CentrifugoWebSocketErrorDomain = "com.centrifugo.error.domain.websocket"
+public let CentrifugoErrorMessageKey = "com.centrifugo.error.messagekey"
+
+public enum CentrifugoErrorCode: Int {
+    case CentrifugoMessageWithError
 }
 
-public protocol CentrifugoServerMessageParser {
-    func parse(data: Any) throws -> [CentrifugoServerMessage]
-}
+public typealias CentrifugoMessageHandler = (CentrifugoServerMessage?, NSError?) -> Void
 
 public class Centrifugal {
-    public class func messageBuilder() -> CentrifugoClientMessageBuilder {
-        return CentrifugoClientMessageBuilderImpl()
-    }
-    
-    public class func messageParser() -> CentrifugoServerMessageParser {
-        return CentrifugoServerMessageParserImpl()
+    public class func client(url: String, creds: CentrifugoCredentials, delegate: CentrifugoClientDelegate) -> CentrifugoClient {
+        let client = CentrifugoClientImpl()
+        client.builder = CentrifugoClientMessageBuilderImpl()
+        client.parser = CentrifugoServerMessageParserImpl()
+        client.creds = creds
+        client.url = url
+        // TODO: Check references cycle
+        client.delegate = delegate
+        
+        return client
     }
 }
-

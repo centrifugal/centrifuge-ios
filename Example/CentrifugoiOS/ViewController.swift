@@ -8,12 +8,11 @@
 
 import UIKit
 
-import SwiftWebSocket
 import CentrifugoiOS
 
 typealias MessagesCallback = CentrifugoServerMessage -> Void
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, CentrifugoChannelDelegate, CentrifugoClientDelegate {
     @IBOutlet weak var nickTextField: UITextField!
     @IBOutlet weak var messageTextField: UITextField!
     @IBOutlet weak var tableView: UITableView!
@@ -35,112 +34,96 @@ class ViewController: UIViewController {
         
         tableView.dataSource = datasource
         
-        open()
+        let timestamp = "\(Int(NSDate().timeIntervalSince1970))"
+        
+        let creds = CentrifugoCredentials(secret: secret, user: user, timestamp: timestamp)
+        let url = "wss://centrifugo.herokuapp.com/connection/websocket"
+        client = Centrifugal.client(url, creds: creds, delegate: self)
     }
-
-    //MARK:- Interactions with server
-    let ws = WebSocket()
-    let builder = Centrifugal.messageBuilder()
-    let parser = Centrifugal.messageParser()
     
-    var callbacks = [String : MessagesCallback]()
+    //MARK:- Interactions with server
+    var client: CentrifugoClient!
     
     let channel = "jsfiddle-chat"
     let user = "ios-swift"
     let secret = "secret"
-    let url = "wss://centrifugo.herokuapp.com/connection/websocket"
-    
-    func open() {
-        ws.event.message = message
-        ws.event.open = connect
-        ws.event.error = showError
-        
-        ws.open(url)
-    }
-    
-    func message(data: Any) {
-        let messages = try! parser.parse(data)
-        eachMessage(handleError(present(handleCallback)))(messages)
-    }
 
-    func connect() {
-        let timestamp = "\(Int(NSDate().timeIntervalSince1970))"
-        
-        let cred = CentrifugoCredentials(secret: secret, user: user, timestamp: timestamp)
-        let message = builder.buildConnectMessage(cred)
-        
-        callbacks[message.uid] = { _ in
-            self.subscribe()
-        }
-        
-        try! ws.send(message)
-    }
-    
     func publish(text: String) {
-        let message = builder.buildPublishMessageTo(channel, data: ["nick" : nickName, "input" : text])
-        try! ws.send(message)
-    }
-    
-    func subscribe() {
-        let message = builder.buildSubscribeMessageTo(channel)
-        try! ws.send(message)
-    }
-    
-    //MARK:- Server response handlers
-    
-    func eachMessage(handler: (MessagesCallback)) -> ([CentrifugoServerMessage] -> Void) {
-        return { messages in
-            for message in messages {
-                handler(message)
-            }
+        client.publish(channel, data:  ["nick" : nickName, "input" : text]) { message, error in
+            print("publish message: \(message)")
         }
     }
     
-    func handleError(handler: (MessagesCallback)) -> (MessagesCallback) {
-        return { message in
-            if let error = message.error {
-                self.showError(error)
-            } else {
-                handler(message)
-            }
+    //MARK: CentrifugoClientDelegate
+    func client(client: CentrifugoClient, didReceiveError error: NSError) {
+        showError(error)
+    }
+    
+    func client(client: CentrifugoClient, didDisconnect message: CentrifugoServerMessage) {
+        print("didDisconnect message: \(message)")
+        datasource.removeAll()
+        tableView.reloadData()
+    }
+    
+    func client(client: CentrifugoClient, didReceiveRefresh message: CentrifugoServerMessage) {
+        print("didReceiveRefresh message: \(message)")
+    }
+    
+    //MARK: CentrifugoChannelDelegate
+    func client(client: CentrifugoClient, didReceiveMessageInChannel channel: String, message: CentrifugoServerMessage) {
+        if let data = message.body?["data"] as? [String : AnyObject], input = data["input"] as? String, nick = data["nick"] as? String {
+            addItem(nick, subtitle: input)
         }
     }
     
-    func present(handler: (MessagesCallback)) -> (MessagesCallback) {
-        let addItem: ((String,String) -> Void) = { title, subtitle in
-            self.datasource.addItem(TableViewItem(title: title, subtitle: subtitle))
-            self.tableView.reloadData()
+    func client(client: CentrifugoClient, didReceiveJoinInChannel channel: String, message: CentrifugoServerMessage) {
+        if let data = message.body?["data"] as? [String : AnyObject], user = data["user"] as? String {
+            addItem(message.method.rawValue, subtitle: user)
         }
+    }
+    
+    func client(client: CentrifugoClient, didReceiveLeaveInChannel channel: String, message: CentrifugoServerMessage) {
+        if let data = message.body?["data"] as? [String : AnyObject], user = data["user"] as? String {
+            addItem(message.method.rawValue, subtitle: user)
+        }
+    }
+    
+    func client(client: CentrifugoClient, didReceiveUnsubscribeInChannel channel: String, message: CentrifugoServerMessage) {
+        print("didReceiveUnsubscribeInChannel \(message)"   )
+    }
+    
+    //MARK: Presentation
+    func addItem(title: String, subtitle: String) {
+        self.datasource.addItem(TableViewItem(title: title, subtitle: subtitle))
+        self.tableView.reloadData()
+    }
+    
+    
+    func showAlert(title: String, message: String) {
+        let vc = UIAlertController(title: title, message: message, preferredStyle: .Alert)
         
-        return { message in
-            switch message.method {
-            case .Join, .Leave:
-                if let data = message.body?["data"] as? [String : AnyObject], user = data["user"] as? String {
-                    addItem(message.method.rawValue, user)
-                }
-            case .Message:
-                if let data = message.body?["data"] as? [String : AnyObject], input = data["input"] as? String, nick = data["nick"] as? String {
-                    addItem(nick, input)
-                }
-            default:
-                print("")
-            }
-            
-            handler(message)
+        let close = UIAlertAction(title: "Close", style: .Cancel) { _ in
+            vc.dismissViewControllerAnimated(true, completion: nil)
         }
+        vc.addAction(close)
+        
+        showViewController(vc, sender: self)
     }
-    
-    func handleCallback(message: CentrifugoServerMessage){
-        if let uid = message.uid, handler = self.callbacks[uid] {
-            handler(message)
-            self.callbacks.removeValueForKey(uid)
-        }
-    }
-
     
     func showError(error: Any) {
-        let vc = UIAlertController(title: "Error", message: "\(error)", preferredStyle: .Alert)
-        showViewController(vc, sender: self)
+        showAlert("Error", message: "\(error)")
+    }
+    
+    func showMessage(message: CentrifugoServerMessage) {
+        showAlert("Message", message: "\(message)")
+    }
+    
+    func showResponse(message: CentrifugoServerMessage?, error: NSError?) {
+        if let msg = message {
+            showMessage(msg)
+        } else if let err = error {
+            showError(err)
+        }
     }
     
     //MARK:- Interactions with user
@@ -150,6 +133,52 @@ class ViewController: UIViewController {
             messageTextField.text = ""
             publish(text)
         }
+    }
+    
+    @IBAction func actionButtonDidPress() {
+        let alert = UIAlertController(title: "Choose command", message: nil, preferredStyle: .ActionSheet)
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { _ in
+            alert.dismissViewControllerAnimated(true, completion: nil)
+        }
+        alert.addAction(cancel)
+        
+        let connect = UIAlertAction(title: "Connect", style: .Default) { _ in
+            self.client.connect(self.showResponse)
+        }
+        alert.addAction(connect)
+        
+        let disconnect = UIAlertAction(title: "Disconnect", style: .Default) { _ in
+            self.client.disconnect()
+        }
+        alert.addAction(disconnect)
+        
+        let ping = UIAlertAction(title: "Ping", style: .Default) { _ in
+            self.client.ping(self.showResponse)
+        }
+        alert.addAction(ping)
+        
+        let subscribe = UIAlertAction(title: "Subscribe to \(channel)", style: .Default) { _ in
+            self.client.subscribe(self.channel, delegate: self, completion: self.showResponse)
+        }
+        alert.addAction(subscribe)
+        
+        let unsubscribe = UIAlertAction(title: "Unsubscribe from \(channel)", style: .Default) { _ in
+            self.client.unsubscribe(self.channel, completion: self.showResponse)
+        }
+        alert.addAction(unsubscribe)
+        
+        let history = UIAlertAction(title: "History \(channel)", style: .Default) { _ in
+            self.client.history(self.channel, completion: self.showResponse)
+        }
+        alert.addAction(history)
+        
+        let presence = UIAlertAction(title: "Presence \(channel)", style: .Default) { _ in
+            self.client.presence(self.channel, completion:self.showResponse)
+        }
+        alert.addAction(presence)
+        
+        presentViewController(alert, animated: true, completion: nil)
     }
 }
 

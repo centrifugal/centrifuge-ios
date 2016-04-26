@@ -15,6 +15,8 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* CentrifugoClientMessageBuilderImplTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* CentrifugoClientMessageBuilderImplTests.swift */; };
 		DF03AD451CC51CF7006CF54B /* TableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF03AD441CC51CF7006CF54B /* TableViewDataSource.swift */; };
+		DF8487C41CCE121B0048559B /* CentrifugoClientImplTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8487C31CCE121B0048559B /* CentrifugoClientImplTests.swift */; };
+		DF8487C61CCE15900048559B /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF8487C51CCE15900048559B /* Helpers.swift */; };
 		FD4544F0DC7DEF254FFD70DE /* Pods_CentrifugoiOS_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 69659195C779884768FA33BB /* Pods_CentrifugoiOS_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -48,6 +50,8 @@
 		CE54B77814FB0BA2016B9E4F /* CentrifugoiOS.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = CentrifugoiOS.podspec; path = ../CentrifugoiOS.podspec; sourceTree = "<group>"; };
 		D926C63825E212F492907348 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		DF03AD441CC51CF7006CF54B /* TableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewDataSource.swift; sourceTree = "<group>"; };
+		DF8487C31CCE121B0048559B /* CentrifugoClientImplTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CentrifugoClientImplTests.swift; sourceTree = "<group>"; };
+		DF8487C51CCE15900048559B /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		F959058C8699B78BBF25295F /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -138,7 +142,9 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				DF8487C31CCE121B0048559B /* CentrifugoClientImplTests.swift */,
 				607FACEB1AFB9204008FA782 /* CentrifugoClientMessageBuilderImplTests.swift */,
+				DF8487C51CCE15900048559B /* Helpers.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
 			);
 			path = Tests;
@@ -372,6 +378,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DF8487C41CCE121B0048559B /* CentrifugoClientImplTests.swift in Sources */,
+				DF8487C61CCE15900048559B /* Helpers.swift in Sources */,
 				607FACEC1AFB9204008FA782 /* CentrifugoClientMessageBuilderImplTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

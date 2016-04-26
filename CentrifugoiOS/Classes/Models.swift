@@ -27,6 +27,15 @@ public struct CentrifugoServerMessage {
     public let body: [String : AnyObject]?
 }
 
+extension CentrifugoServerMessage: Equatable {}
+
+public func ==(lhs: CentrifugoServerMessage, rhs: CentrifugoServerMessage) -> Bool {
+    if let luid = lhs.uid, ruid = rhs.uid {
+        return luid == ruid
+    }
+    return false
+}
+
 public struct CentrifugoCredentials {
     let secret : String
     let user : String
@@ -54,4 +63,20 @@ public enum CentrifugoMethod : String {
     case Message = "message"
     case Refresh = "refresh"
     case Ping = "ping"
+}
+
+class CentrifugoWrapper<T> {
+    var value: T
+    init(theValue: T) {
+        value = theValue
+    }
+}
+
+extension NSError {
+    static func errorWithMessage(message: CentrifugoServerMessage) -> NSError {
+        let error = NSError(domain: CentrifugoErrorDomain,
+                            code: CentrifugoErrorCode.CentrifugoMessageWithError.rawValue,
+                            userInfo: [NSLocalizedDescriptionKey : message.error!, CentrifugoErrorMessageKey : CentrifugoWrapper(theValue: message)])
+        return error
+    }
 }

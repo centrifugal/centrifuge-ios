@@ -6,8 +6,19 @@
 //
 //
 
-import Foundation
 import IDZSwiftCommonCrypto
+
+protocol CentrifugoClientMessageBuilder {
+    func buildConnectMessage(credentials: CentrifugoCredentials) -> CentrifugoClientMessage
+    func buildDisconnectMessage() -> CentrifugoClientMessage
+    func buildSubscribeMessageTo(channel: String) -> CentrifugoClientMessage
+    func buildSubscribeMessageTo(channel: String, lastMessageUUID: String) -> CentrifugoClientMessage
+    func buildUnsubscribeMessageFrom(channel: String) -> CentrifugoClientMessage
+    func buildPresenceMessage(channel: String) -> CentrifugoClientMessage
+    func buildHistoryMessage(channel: String) -> CentrifugoClientMessage
+    func buildPingMessage() -> CentrifugoClientMessage
+    func buildPublishMessageTo(channel: String, data: [String: AnyObject]) -> CentrifugoClientMessage
+}
 
 class CentrifugoClientMessageBuilderImpl: CentrifugoClientMessageBuilder {
     
@@ -26,9 +37,20 @@ class CentrifugoClientMessageBuilderImpl: CentrifugoClientMessageBuilder {
         return buildMessage(.Connect, params: params)
     }
     
+    func buildDisconnectMessage() -> CentrifugoClientMessage {
+        return buildMessage(.Disconnect, params: [:])
+    }
+    
     func buildSubscribeMessageTo(channel: String) -> CentrifugoClientMessage {
         let params = ["channel" : channel]
         return buildMessage(.Subscribe, params: params)
+    }
+    
+    func buildSubscribeMessageTo(channel: String, lastMessageUUID: String) -> CentrifugoClientMessage {
+        let params = ["channel" : channel,
+                      "recover" : true,
+                      "last" : lastMessageUUID]
+        return buildMessage(.Subscribe, params: params as! [String : AnyObject])
     }
     
     func buildUnsubscribeMessageFrom(channel: String) -> CentrifugoClientMessage {
