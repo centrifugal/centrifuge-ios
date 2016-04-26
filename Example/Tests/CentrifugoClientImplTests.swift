@@ -150,6 +150,49 @@ class CentrifugoClientImplTests: XCTestCase {
         XCTAssertEqual(expectedChannel, receivedChannel)
     }
     
+    func testDefaultProcessHandlerCallsLeaveChannelDelegate() {
+        // given
+        let expectedChannel = "myChannel"
+        var receivedChannel = ""
+        
+        let message = CentrifugoServerMessage(uid: nil, method: .Leave, error: nil, body: ["channel" : expectedChannel])
+        
+        let delegate = ChannelDelegateMock()
+        delegate.leaveHandler = { _, channel, _ in
+            receivedChannel = channel
+        }
+        
+        client.subscription[expectedChannel] = delegate
+        
+        // when
+        client.defaultProcessHandler([message], error: nil)
+        
+        // then
+        XCTAssertEqual(expectedChannel, receivedChannel)
+    }
+    
+    func testDefaultProcessHandlerCallsUnsubscribeChannelDelegate() {
+        // given
+        let expectedChannel = "myChannel"
+        var receivedChannel = ""
+        
+        let message = CentrifugoServerMessage(uid: nil, method: .Unsubscribe, error: nil, body: ["channel" : expectedChannel])
+        
+        let delegate = ChannelDelegateMock()
+        delegate.unsubscribeHandler = { _, channel, _ in
+            receivedChannel = channel
+        }
+        
+        client.subscription[expectedChannel] = delegate
+        
+        // when
+        client.defaultProcessHandler([message], error: nil)
+        
+        // then
+        XCTAssertEqual(expectedChannel, receivedChannel)
+        XCTAssertNil(client.subscription[expectedChannel])
+    }
+    
     func testConnectionProcessHandlerResetsStateIfError() {
         // given
         let error = NSError(domain: "", code: 1, userInfo: nil)
@@ -416,6 +459,8 @@ class CentrifugoClientImplTests: XCTestCase {
     class ChannelDelegateMock: CentrifugoChannelDelegate {
         var messageHandler: ( (CentrifugoClient, String, CentrifugoServerMessage) -> Void )!
         var joinHandler: ( (CentrifugoClient, String, CentrifugoServerMessage) -> Void )!
+        var leaveHandler: ( (CentrifugoClient, String, CentrifugoServerMessage) -> Void )!
+        var unsubscribeHandler: ( (CentrifugoClient, String, CentrifugoServerMessage) -> Void )!
         
         func client(client: CentrifugoClient, didReceiveMessageInChannel channel: String, message: CentrifugoServerMessage) {
             messageHandler(client, channel, message)
@@ -423,6 +468,14 @@ class CentrifugoClientImplTests: XCTestCase {
         
         func client(client: CentrifugoClient, didReceiveJoinInChannel channel: String, message: CentrifugoServerMessage) {
             joinHandler(client, channel, message)
+        }
+        
+        func client(client: CentrifugoClient, didReceiveLeaveInChannel channel: String, message: CentrifugoServerMessage) {
+            leaveHandler(client, channel, message)
+        }
+        
+        func client(client: CentrifugoClient, didReceiveUnsubscribeInChannel channel: String, message: CentrifugoServerMessage) {
+            unsubscribeHandler(client, channel, message)
         }
     }
 }

@@ -86,6 +86,16 @@ class ViewController: UIViewController, CentrifugoChannelDelegate, CentrifugoCli
         }
     }
     
+    func client(client: CentrifugoClient, didReceiveLeaveInChannel channel: String, message: CentrifugoServerMessage) {
+        if let data = message.body?["data"] as? [String : AnyObject], user = data["user"] as? String {
+            addItem(message.method.rawValue, subtitle: user)
+        }
+    }
+    
+    func client(client: CentrifugoClient, didReceiveUnsubscribeInChannel channel: String, message: CentrifugoServerMessage) {
+        print(message)
+    }
+    
     //MARK: Presentation
     func addItem(title: String, subtitle: String) {
         self.datasource.addItem(TableViewItem(title: title, subtitle: subtitle))

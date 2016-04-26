@@ -22,6 +22,8 @@ public protocol CentrifugoClientDelegate {
 public protocol CentrifugoChannelDelegate {
     func client(client: CentrifugoClient, didReceiveMessageInChannel channel: String, message: CentrifugoServerMessage)
     func client(client: CentrifugoClient, didReceiveJoinInChannel channel: String, message: CentrifugoServerMessage)
+    func client(client: CentrifugoClient, didReceiveLeaveInChannel channel: String, message: CentrifugoServerMessage)
+    func client(client: CentrifugoClient, didReceiveUnsubscribeInChannel channel: String, message: CentrifugoServerMessage)
 }
 
 public protocol CentrifugoClient {
@@ -151,6 +153,15 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         case .Join:
             if let channel = message.body?["channel"] as? String, delegate = subscription[channel] {
                 delegate.client(self, didReceiveJoinInChannel: channel, message: message)
+            }
+        case .Leave:
+            if let channel = message.body?["channel"] as? String, delegate = subscription[channel] {
+                delegate.client(self, didReceiveLeaveInChannel: channel, message: message)
+            }
+        case .Unsubscribe:
+            if let channel = message.body?["channel"] as? String, delegate = subscription[channel] {
+                delegate.client(self, didReceiveUnsubscribeInChannel: channel, message: message)
+                subscription[channel] = nil
             }
         default:
             print(message)
