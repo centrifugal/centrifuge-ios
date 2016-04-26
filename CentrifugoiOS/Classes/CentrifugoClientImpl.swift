@@ -147,22 +147,30 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         
         switch message.method {
         case .Message:
-            if let channel = message.body?["channel"] as? String, delegate = subscription[channel] {
-                delegate.client(self, didReceiveMessageInChannel: channel, message: message)
+            guard let channel = message.body?["channel"] as? String, delegate = subscription[channel] else {
+                assertionFailure("Error: Invalid \(message.method) handler")
+                return
             }
+            delegate.client(self, didReceiveMessageInChannel: channel, message: message)
         case .Join:
-            if let channel = message.body?["channel"] as? String, delegate = subscription[channel] {
-                delegate.client(self, didReceiveJoinInChannel: channel, message: message)
+            guard let channel = message.body?["channel"] as? String, delegate = subscription[channel] else {
+                assertionFailure("Error: Invalid \(message.method) handler")
+                return
             }
+            delegate.client(self, didReceiveJoinInChannel: channel, message: message)
         case .Leave:
-            if let channel = message.body?["channel"] as? String, delegate = subscription[channel] {
-                delegate.client(self, didReceiveLeaveInChannel: channel, message: message)
+            guard let channel = message.body?["channel"] as? String, delegate = subscription[channel] else {
+                assertionFailure("Error: Invalid \(message.method) handler")
+                return
             }
+            delegate.client(self, didReceiveLeaveInChannel: channel, message: message)
         case .Unsubscribe:
-            if let channel = message.body?["channel"] as? String, delegate = subscription[channel] {
-                delegate.client(self, didReceiveUnsubscribeInChannel: channel, message: message)
-                subscription[channel] = nil
+            guard let channel = message.body?["channel"] as? String, delegate = subscription[channel] else {
+                assertionFailure("Error: Invalid \(message.method) handler")
+                return
             }
+            delegate.client(self, didReceiveUnsubscribeInChannel: channel, message: message)
+            subscription[channel] = nil
         default:
             print(message)
             assertionFailure("Error: Invalid method type")
