@@ -12,7 +12,7 @@ import CentrifugoiOS
 
 typealias MessagesCallback = CentrifugoServerMessage -> Void
 
-class ViewController: UIViewController, CentrifugoChannelDelegate {
+class ViewController: UIViewController, CentrifugoChannelDelegate, CentrifugoClientDelegate {
     @IBOutlet weak var nickTextField: UITextField!
     @IBOutlet weak var messageTextField: UITextField!
     @IBOutlet weak var tableView: UITableView!
@@ -39,20 +39,17 @@ class ViewController: UIViewController, CentrifugoChannelDelegate {
     
     //MARK:- Interactions with server
     var client: CentrifugoClient!
-    var callbacks = [String : MessagesCallback]()
     
     let channel = "jsfiddle-chat"
     let user = "ios-swift"
     let secret = "secret"
-    
-//  eachMessage(handleError(present(handleCallback)))(messages)
     
     func connect() {
         let timestamp = "\(Int(NSDate().timeIntervalSince1970))"
         
         let creds = CentrifugoCredentials(secret: secret, user: user, timestamp: timestamp)
         let url = "wss://centrifugo.herokuapp.com/connection/websocket"
-        client = Centrifugal.client(url, creds: creds)
+        client = Centrifugal.client(url, creds: creds, delegate: self)
         client.connect { (error) in
             print("connect error: \(error)")
             
@@ -63,62 +60,37 @@ class ViewController: UIViewController, CentrifugoChannelDelegate {
         }
     }
     
-    func client(client: CentrifugoClient, didReceiveInChannel channel: String, message: CentrifugoServerMessage) {
-        print("channel: \(channel)")
-        print("message: \(message)")
+    //MARK: CentrifugoClientDelegate
+    func client(client: CentrifugoClient, didReceiveError error: NSError) {
+        print("\(error)")
     }
     
-    //MARK:- Server response handlers
+    func client(client: CentrifugoClient, didDisconnect: Any) {
+        print("disconnect")
+    }
     
-    func eachMessage(handler: (MessagesCallback)) -> ([CentrifugoServerMessage] -> Void) {
-        return { messages in
-            for message in messages {
-                handler(message)
-            }
+    func client(client: CentrifugoClient, didReceiveRefresh: Any) {
+        print("refresh")
+    }
+    
+    //MARK: CentrifugoChannelDelegate
+    func client(client: CentrifugoClient, didReceiveMessageInChannel channel: String, message: CentrifugoServerMessage) {
+        if let data = message.body?["data"] as? [String : AnyObject], input = data["input"] as? String, nick = data["nick"] as? String {
+            addItem(nick, subtitle: input)
         }
     }
     
-    func handleError(handler: (MessagesCallback)) -> (MessagesCallback) {
-        return { message in
-            if let error = message.error {
-                self.showError(error)
-            } else {
-                handler(message)
-            }
+    func client(client: CentrifugoClient, didReceiveJoinInChannel channel: String, message: CentrifugoServerMessage) {
+        if let data = message.body?["data"] as? [String : AnyObject], user = data["user"] as? String {
+            addItem(message.method.rawValue, subtitle: user)
         }
     }
     
-    func present(handler: (MessagesCallback)) -> (MessagesCallback) {
-        let addItem: ((String,String) -> Void) = { title, subtitle in
-            self.datasource.addItem(TableViewItem(title: title, subtitle: subtitle))
-            self.tableView.reloadData()
-        }
-        
-        return { message in
-            switch message.method {
-            case .Join, .Leave:
-                if let data = message.body?["data"] as? [String : AnyObject], user = data["user"] as? String {
-                    addItem(message.method.rawValue, user)
-                }
-            case .Message:
-                if let data = message.body?["data"] as? [String : AnyObject], input = data["input"] as? String, nick = data["nick"] as? String {
-                    addItem(nick, input)
-                }
-            default:
-                print("")
-            }
-            
-            handler(message)
-        }
+    //MARK: Presentation
+    func addItem(title: String, subtitle: String) {
+        self.datasource.addItem(TableViewItem(title: title, subtitle: subtitle))
+        self.tableView.reloadData()
     }
-    
-    func handleCallback(message: CentrifugoServerMessage){
-        if let uid = message.uid, handler = self.callbacks[uid] {
-            handler(message)
-            self.callbacks.removeValueForKey(uid)
-        }
-    }
-    
     
     func showError(error: Any) {
         let vc = UIAlertController(title: "Error", message: "\(error)", preferredStyle: .Alert)

@@ -108,6 +108,48 @@ class CentrifugoClientImplTests: XCTestCase {
         XCTAssertNil(client.messageCallbacks[expectedMessage.uid!])
     }
     
+    func testDefaultProcessHandlerCallsMessageChannelDelegate() {
+        // given
+        let expectedChannel = "myChannel"
+        var receivedChannel = ""
+        
+        let message = CentrifugoServerMessage(uid: nil, method: .Message, error: nil, body: ["channel" : expectedChannel])
+        
+        let delegate = ChannelDelegateMock()
+        delegate.messageHandler = { _, channel, _ in
+            receivedChannel = channel
+        }
+        
+        client.subscription[expectedChannel] = delegate
+        
+        // when
+        client.defaultProcessHandler([message], error: nil)
+        
+        // then
+        XCTAssertEqual(expectedChannel, receivedChannel)
+    }
+    
+    func testDefaultProcessHandlerCallsJoinChannelDelegate() {
+        // given
+        let expectedChannel = "myChannel"
+        var receivedChannel = ""
+        
+        let message = CentrifugoServerMessage(uid: nil, method: .Join, error: nil, body: ["channel" : expectedChannel])
+        
+        let delegate = ChannelDelegateMock()
+        delegate.joinHandler = { _, channel, _ in
+            receivedChannel = channel
+        }
+        
+        client.subscription[expectedChannel] = delegate
+        
+        // when
+        client.defaultProcessHandler([message], error: nil)
+        
+        // then
+        XCTAssertEqual(expectedChannel, receivedChannel)
+    }
+    
     func testConnectionProcessHandlerResetsStateIfError() {
         // given
         let error = NSError(domain: "", code: 1, userInfo: nil)
@@ -373,9 +415,14 @@ class CentrifugoClientImplTests: XCTestCase {
     
     class ChannelDelegateMock: CentrifugoChannelDelegate {
         var messageHandler: ( (CentrifugoClient, String, CentrifugoServerMessage) -> Void )!
+        var joinHandler: ( (CentrifugoClient, String, CentrifugoServerMessage) -> Void )!
         
-        func client(client: CentrifugoClient, didReceiveInChannel channel: String, message: CentrifugoServerMessage) {
-                messageHandler(client, channel, message)
+        func client(client: CentrifugoClient, didReceiveMessageInChannel channel: String, message: CentrifugoServerMessage) {
+            messageHandler(client, channel, message)
+        }
+        
+        func client(client: CentrifugoClient, didReceiveJoinInChannel channel: String, message: CentrifugoServerMessage) {
+            joinHandler(client, channel, message)
         }
     }
 }

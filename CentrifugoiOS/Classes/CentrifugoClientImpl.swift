@@ -13,14 +13,15 @@ public typealias CentrifugoMessageHandler = (CentrifugoServerMessage?, NSError?)
 typealias CentrifugoHandler = (Void -> Void)
 public typealias CentrifugoErrorHandler = (NSError? -> Void)
 
-protocol CentrifugoClientDelegate {
+public protocol CentrifugoClientDelegate {
     func client(client: CentrifugoClient, didReceiveError error:NSError)
     func client(client: CentrifugoClient, didReceiveRefresh: Any)
     func client(client: CentrifugoClient, didDisconnect: Any)
 }
 
 public protocol CentrifugoChannelDelegate {
-    func client(client: CentrifugoClient, didReceiveInChannel channel: String, message: CentrifugoServerMessage)
+    func client(client: CentrifugoClient, didReceiveMessageInChannel channel: String, message: CentrifugoServerMessage)
+    func client(client: CentrifugoClient, didReceiveJoinInChannel channel: String, message: CentrifugoServerMessage)
 }
 
 public protocol CentrifugoClient {
@@ -143,6 +144,14 @@ class CentrifugoClientImpl: NSObject, WebSocketDelegate, CentrifugoClient {
         }
         
         switch message.method {
+        case .Message:
+            if let channel = message.body?["channel"] as? String, delegate = subscription[channel] {
+                delegate.client(self, didReceiveMessageInChannel: channel, message: message)
+            }
+        case .Join:
+            if let channel = message.body?["channel"] as? String, delegate = subscription[channel] {
+                delegate.client(self, didReceiveJoinInChannel: channel, message: message)
+            }
         default:
             print(message)
             assertionFailure("Error: Invalid method type")
