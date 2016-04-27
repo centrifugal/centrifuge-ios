@@ -7,7 +7,7 @@
 
 ## Example
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first. You could chat with [here](http://jsfiddle.net/FZambia/yG7Uw/) and command from [Centrifugal web](https://Centrifuge.herokuapp.com/)
+To run the example project, clone the repo, and run `pod install` from the Example directory first. You could chat with [here](http://jsfiddle.net/FZambia/yG7Uw/) and command from [Centrifugal web](https://centrifugo.herokuapp.com/)
 
 ## Usage
 
@@ -17,7 +17,7 @@ Create client:
 let timestamp = "\(Int(NSDate().timeIntervalSince1970))"
 
 let creds = CentrifugeCredentials(secret: secret, user: user, timestamp: timestamp)
-let url = "wss://Centrifuge.herokuapp.com/connection/websocket"
+let url = "wss://centrifugo.herokuapp.com/connection/websocket"
 client = Centrifuge.client(url, creds: creds, delegate: self)
 ```
 Connect to server:
