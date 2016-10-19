@@ -17,5 +17,5 @@ Pod::Spec.new do |s|
   s.source_files = 'CentrifugeiOS/Classes/**/*'
 
   s.dependency 'SwiftWebSocket', '~> 2.6'
-  s.dependency 'IDZSwiftCommonCrypto', '~> 0.7'
+  s.dependency 'IDZSwiftCommonCrypto', '~> 0.8.1'
 end
