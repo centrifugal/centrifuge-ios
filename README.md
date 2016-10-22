@@ -7,7 +7,7 @@
 
 ## Example
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first. You could chat with [here](http://jsfiddle.net/FZambia/yG7Uw/) and command from [Centrifugal web](https://Centrifuge.herokuapp.com/)
+To run the example project, clone the repo, and run `pod install` from the Example directory first. You could chat with [here](http://jsfiddle.net/FZambia/yG7Uw/) and command from [Centrifugal web](https://centrifugo.herokuapp.com/)
 
 ## Usage
 
@@ -17,7 +17,7 @@ Create client:
 let timestamp = "\(Int(NSDate().timeIntervalSince1970))"
 
 let creds = CentrifugeCredentials(secret: secret, user: user, timestamp: timestamp)
-let url = "wss://Centrifuge.herokuapp.com/connection/websocket"
+let url = "wss://centrifugo.herokuapp.com/connection/websocket"
 client = Centrifuge.client(url, creds: creds, delegate: self)
 ```
 Connect to server:
@@ -37,14 +37,13 @@ See the example project and [docs](https://fzambia.gitbooks.io/centrifugal/conte
 
 ## Requirements
 
-Swift 2.2
-iOS 8.0+
+* Version 0.1.0: Swift 2.2, iOS 8.0+
+* Version 1.0.0: Swift 2.3, iOS 8.0+
 
 ## Installation
 
-Not ready.
-~~CentrifugeiOS is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:~~
+CentrifugeiOS is available through [CocoaPods](http://cocoapods.org). To install
+it, simply add the following line to your Podfile:
 
 ```ruby
 pod "CentrifugeiOS"
@@ -52,7 +51,7 @@ pod "CentrifugeiOS"
 
 ## Author
 
-Herman Saprykin, saprykin.h@gmail.com
+German Saprykin, saprykin.h@gmail.com
 
 ## License
 
