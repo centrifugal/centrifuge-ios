@@ -38,7 +38,7 @@ See the example project and [docs](https://fzambia.gitbooks.io/centrifugal/conte
 ## Requirements
 
 * Version 0.1.0: Swift 2.2, iOS 8.0+
-* Version 0.2.0: Swift 2.3, iOS 8.0+
+* Version 1.0.0: Swift 2.3, iOS 8.0+
 
 ## Installation
 
@@ -51,7 +51,7 @@ pod "CentrifugeiOS"
 
 ## Author
 
-Herman Saprykin, saprykin.h@gmail.com
+German Saprykin, saprykin.h@gmail.com
 
 ## License
 
