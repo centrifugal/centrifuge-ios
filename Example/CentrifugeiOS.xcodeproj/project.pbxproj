@@ -187,12 +187,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 607FACEF1AFB9204008FA782 /* Build configuration list for PBXNativeTarget "CentrifugeiOS_Example" */;
 			buildPhases = (
-				53C30FFB2485660AACB4F2A9 /* Check Pods Manifest.lock */,
+				53C30FFB2485660AACB4F2A9 /* [CP] Check Pods Manifest.lock */,
 				607FACCC1AFB9204008FA782 /* Sources */,
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
-				52D32607063DF07BF4EAE227 /* Embed Pods Frameworks */,
-				D3695F3D6BB14C5DD278A2CA /* Copy Pods Resources */,
+				52D32607063DF07BF4EAE227 /* [CP] Embed Pods Frameworks */,
+				D3695F3D6BB14C5DD278A2CA /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -207,12 +207,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "CentrifugeiOS_Tests" */;
 			buildPhases = (
-				F7A970C317D648607CFE4595 /* Check Pods Manifest.lock */,
+				F7A970C317D648607CFE4595 /* [CP] Check Pods Manifest.lock */,
 				607FACE11AFB9204008FA782 /* Sources */,
 				607FACE21AFB9204008FA782 /* Frameworks */,
 				607FACE31AFB9204008FA782 /* Resources */,
-				F7C77600DD5EC9486A927B36 /* Embed Pods Frameworks */,
-				C82D15DBF4CD35FC4A384A43 /* Copy Pods Resources */,
+				F7C77600DD5EC9486A927B36 /* [CP] Embed Pods Frameworks */,
+				C82D15DBF4CD35FC4A384A43 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -283,14 +283,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		52D32607063DF07BF4EAE227 /* Embed Pods Frameworks */ = {
+		52D32607063DF07BF4EAE227 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -298,29 +298,29 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CentrifugeiOS_Example/Pods-CentrifugeiOS_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		53C30FFB2485660AACB4F2A9 /* Check Pods Manifest.lock */ = {
+		53C30FFB2485660AACB4F2A9 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		C82D15DBF4CD35FC4A384A43 /* Copy Pods Resources */ = {
+		C82D15DBF4CD35FC4A384A43 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -328,14 +328,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CentrifugeiOS_Tests/Pods-CentrifugeiOS_Tests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D3695F3D6BB14C5DD278A2CA /* Copy Pods Resources */ = {
+		D3695F3D6BB14C5DD278A2CA /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -343,29 +343,29 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CentrifugeiOS_Example/Pods-CentrifugeiOS_Example-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F7A970C317D648607CFE4595 /* Check Pods Manifest.lock */ = {
+		F7A970C317D648607CFE4595 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		F7C77600DD5EC9486A927B36 /* Embed Pods Frameworks */ = {
+		F7C77600DD5EC9486A927B36 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -444,7 +444,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -482,7 +482,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
