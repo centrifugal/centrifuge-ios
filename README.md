@@ -18,7 +18,7 @@ let timestamp = "\(Int(NSDate().timeIntervalSince1970))"
 
 let creds = CentrifugeCredentials(secret: secret, user: user, timestamp: timestamp)
 let url = "wss://centrifugo.herokuapp.com/connection/websocket"
-client = Centrifuge.client(url, creds: creds, delegate: self)
+client = Centrifuge.client(url: url, creds: creds, delegate: self)
 ```
 Connect to server:
 ```swift
@@ -26,11 +26,11 @@ client.connect { message, error in }
 ```
 Subscribe to channel:
 ```swift
-client.subscribe(channel, delegate: delegate) { message, error in }
+client.subscribe(toChannel: channel, delegate: delegate) { message, error in }
 ```
 Publish: 
 ```swift
-client.publish(channel, data:  data) { message, error in }
+client.publish(toChannel: channel, data:  data) { message, error in }
 ```
 
 See the example project and [docs](https://fzambia.gitbooks.io/centrifugal/content/server/client_protocol.html) for more information.
@@ -40,6 +40,7 @@ See the example project and [docs](https://fzambia.gitbooks.io/centrifugal/conte
 * Version 0.1.0: Swift 2.2, iOS 8.0+
 * Version 1.0.0: Swift 2.3, iOS 8.0+, Xcode 7
 * Version 2.0.0: Swift 2.3, iOS 9.3+, Xcode 8
+* Version 3.0.0: Swift 3.0, iOS 9.3+, Xcode 8
 
 ## Installation
 
