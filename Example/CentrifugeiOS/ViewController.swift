@@ -10,7 +10,7 @@ import UIKit
 
 import CentrifugeiOS
 
-typealias MessagesCallback = CentrifugeServerMessage -> Void
+typealias MessagesCallback = (CentrifugeServerMessage) -> Void
 
 class ViewController: UIViewController, CentrifugeChannelDelegate, CentrifugeClientDelegate {
     @IBOutlet weak var nickTextField: UITextField!
@@ -21,7 +21,7 @@ class ViewController: UIViewController, CentrifugeChannelDelegate, CentrifugeCli
     
     var nickName: String {
         get {
-            if let nick = self.nickTextField.text where nick.characters.count > 0 {
+            if let nick = self.nickTextField.text, nick.characters.count > 0 {
                 return nick
             }else {
                 return "anonymous"
@@ -34,11 +34,11 @@ class ViewController: UIViewController, CentrifugeChannelDelegate, CentrifugeCli
         
         tableView.dataSource = datasource
         
-        let timestamp = "\(Int(NSDate().timeIntervalSince1970))"
+        let timestamp = "\(Int(Date().timeIntervalSince1970))"
         
         let creds = CentrifugeCredentials(secret: secret, user: user, timestamp: timestamp)
         let url = "wss://centrifugo.herokuapp.com/connection/websocket"
-        client = Centrifuge.client(url, creds: creds, delegate: self)
+        client = Centrifuge.client(url: url, creds: creds, delegate: self)
     }
     
     //MARK:- Interactions with server
@@ -48,77 +48,77 @@ class ViewController: UIViewController, CentrifugeChannelDelegate, CentrifugeCli
     let user = "ios-swift"
     let secret = "secret"
 
-    func publish(text: String) {
-        client.publish(channel, data:  ["nick" : nickName, "input" : text]) { message, error in
+    func publish(_ text: String) {
+        client.publish(toChannel: channel, data:  ["nick" : nickName, "input" : text]) { message, error in
             print("publish message: \(message)")
         }
     }
     
     //MARK: CentrifugeClientDelegate
-    func client(client: CentrifugeClient, didReceiveError error: NSError) {
+    func client(_ client: CentrifugeClient, didReceiveError error: NSError) {
         showError(error)
     }
     
-    func client(client: CentrifugeClient, didDisconnect message: CentrifugeServerMessage) {
+    func client(_ client: CentrifugeClient, didDisconnect message: CentrifugeServerMessage) {
         print("didDisconnect message: \(message)")
         datasource.removeAll()
         tableView.reloadData()
     }
     
-    func client(client: CentrifugeClient, didReceiveRefresh message: CentrifugeServerMessage) {
+    func client(_ client: CentrifugeClient, didReceiveRefresh message: CentrifugeServerMessage) {
         print("didReceiveRefresh message: \(message)")
     }
     
     //MARK: CentrifugeChannelDelegate
-    func client(client: CentrifugeClient, didReceiveMessageInChannel channel: String, message: CentrifugeServerMessage) {
-        if let data = message.body?["data"] as? [String : AnyObject], input = data["input"] as? String, nick = data["nick"] as? String {
+    func client(_ client: CentrifugeClient, didReceiveMessageInChannel channel: String, message: CentrifugeServerMessage) {
+        if let data = message.body?["data"] as? [String : AnyObject], let input = data["input"] as? String, let nick = data["nick"] as? String {
             addItem(nick, subtitle: input)
         }
     }
     
-    func client(client: CentrifugeClient, didReceiveJoinInChannel channel: String, message: CentrifugeServerMessage) {
-        if let data = message.body?["data"] as? [String : AnyObject], user = data["user"] as? String {
+    func client(_ client: CentrifugeClient, didReceiveJoinInChannel channel: String, message: CentrifugeServerMessage) {
+        if let data = message.body?["data"] as? [String : AnyObject], let user = data["user"] as? String {
             addItem(message.method.rawValue, subtitle: user)
         }
     }
     
-    func client(client: CentrifugeClient, didReceiveLeaveInChannel channel: String, message: CentrifugeServerMessage) {
-        if let data = message.body?["data"] as? [String : AnyObject], user = data["user"] as? String {
+    func client(_ client: CentrifugeClient, didReceiveLeaveInChannel channel: String, message: CentrifugeServerMessage) {
+        if let data = message.body?["data"] as? [String : AnyObject], let user = data["user"] as? String {
             addItem(message.method.rawValue, subtitle: user)
         }
     }
     
-    func client(client: CentrifugeClient, didReceiveUnsubscribeInChannel channel: String, message: CentrifugeServerMessage) {
+    func client(_ client: CentrifugeClient, didReceiveUnsubscribeInChannel channel: String, message: CentrifugeServerMessage) {
         print("didReceiveUnsubscribeInChannel \(message)"   )
     }
     
     //MARK: Presentation
-    func addItem(title: String, subtitle: String) {
+    func addItem(_ title: String, subtitle: String) {
         self.datasource.addItem(TableViewItem(title: title, subtitle: subtitle))
         self.tableView.reloadData()
     }
     
     
-    func showAlert(title: String, message: String) {
-        let vc = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+    func showAlert(_ title: String, message: String) {
+        let vc = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
-        let close = UIAlertAction(title: "Close", style: .Cancel) { _ in
-            vc.dismissViewControllerAnimated(true, completion: nil)
+        let close = UIAlertAction(title: "Close", style: .cancel) { _ in
+            vc.dismiss(animated: true, completion: nil)
         }
         vc.addAction(close)
         
-        showViewController(vc, sender: self)
+        show(vc, sender: self)
     }
     
-    func showError(error: Any) {
+    func showError(_ error: Any) {
         showAlert("Error", message: "\(error)")
     }
     
-    func showMessage(message: CentrifugeServerMessage) {
+    func showMessage(_ message: CentrifugeServerMessage) {
         showAlert("Message", message: "\(message)")
     }
     
-    func showResponse(message: CentrifugeServerMessage?, error: NSError?) {
+    func showResponse(_ message: CentrifugeServerMessage?, error: NSError?) {
         if let msg = message {
             showMessage(msg)
         } else if let err = error {
@@ -128,57 +128,57 @@ class ViewController: UIViewController, CentrifugeChannelDelegate, CentrifugeCli
     
     //MARK:- Interactions with user
     
-    @IBAction func sendButtonDidPress(sender: AnyObject) {
-        if let text = messageTextField.text where text.characters.count > 0 {
+    @IBAction func sendButtonDidPress(_ sender: AnyObject) {
+        if let text = messageTextField.text, text.characters.count > 0 {
             messageTextField.text = ""
             publish(text)
         }
     }
     
     @IBAction func actionButtonDidPress() {
-        let alert = UIAlertController(title: "Choose command", message: nil, preferredStyle: .ActionSheet)
+        let alert = UIAlertController(title: "Choose command", message: nil, preferredStyle: .actionSheet)
         
-        let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { _ in
-            alert.dismissViewControllerAnimated(true, completion: nil)
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+            alert.dismiss(animated: true, completion: nil)
         }
         alert.addAction(cancel)
         
-        let connect = UIAlertAction(title: "Connect", style: .Default) { _ in
-            self.client.connect(self.showResponse)
+        let connect = UIAlertAction(title: "Connect", style: .default) { _ in
+            self.client.connect(withCompletion: self.showResponse)
         }
         alert.addAction(connect)
         
-        let disconnect = UIAlertAction(title: "Disconnect", style: .Default) { _ in
+        let disconnect = UIAlertAction(title: "Disconnect", style: .default) { _ in
             self.client.disconnect()
         }
         alert.addAction(disconnect)
         
-        let ping = UIAlertAction(title: "Ping", style: .Default) { _ in
-            self.client.ping(self.showResponse)
+        let ping = UIAlertAction(title: "Ping", style: .default) { _ in
+            self.client.ping(withCompletion: self.showResponse)
         }
         alert.addAction(ping)
         
-        let subscribe = UIAlertAction(title: "Subscribe to \(channel)", style: .Default) { _ in
-            self.client.subscribe(self.channel, delegate: self, completion: self.showResponse)
+        let subscribe = UIAlertAction(title: "Subscribe to \(channel)", style: .default) { _ in
+            self.client.subscribe(toChannel: self.channel, delegate: self, completion: self.showResponse)
         }
         alert.addAction(subscribe)
         
-        let unsubscribe = UIAlertAction(title: "Unsubscribe from \(channel)", style: .Default) { _ in
-            self.client.unsubscribe(self.channel, completion: self.showResponse)
+        let unsubscribe = UIAlertAction(title: "Unsubscribe from \(channel)", style: .default) { _ in
+            self.client.unsubscribe(fromChannel: self.channel, completion: self.showResponse)
         }
         alert.addAction(unsubscribe)
         
-        let history = UIAlertAction(title: "History \(channel)", style: .Default) { _ in
-            self.client.history(self.channel, completion: self.showResponse)
+        let history = UIAlertAction(title: "History \(channel)", style: .default) { _ in
+            self.client.history(ofChannel: self.channel, completion: self.showResponse)
         }
         alert.addAction(history)
         
-        let presence = UIAlertAction(title: "Presence \(channel)", style: .Default) { _ in
-            self.client.presence(self.channel, completion:self.showResponse)
+        let presence = UIAlertAction(title: "Presence \(channel)", style: .default) { _ in
+            self.client.presence(inChannel: self.channel, completion:self.showResponse)
         }
         alert.addAction(presence)
         
-        presentViewController(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
 }
 

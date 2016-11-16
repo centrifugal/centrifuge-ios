@@ -7,25 +7,25 @@
 //
 
 protocol CentrifugeServerMessageParser {
-    func parse(data: NSData) throws -> [CentrifugeServerMessage]
+    func parse(data: Data) throws -> [CentrifugeServerMessage]
 }
 
 class CentrifugeServerMessageParserImpl: CentrifugeServerMessageParser {
-    func parse(data: NSData) throws -> [CentrifugeServerMessage] {        
+    func parse(data: Data) throws -> [CentrifugeServerMessage] {        
         do {
-            let response = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions())
+            let response = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions())
             var messages = [CentrifugeServerMessage]()
             
             if let infos = response as? [[String : AnyObject]] {
                 for info in infos {
-                    if let message = messageParse(info){
+                    if let message = messageParse(info: info){
                         messages.append(message)
                     }
                 }
             }
             
             if let info = response as? [String : AnyObject] {
-                if let message = messageParse(info){
+                if let message = messageParse(info: info){
                     messages.append(message)
                 }
             }

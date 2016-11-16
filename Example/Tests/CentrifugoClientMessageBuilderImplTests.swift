@@ -22,7 +22,7 @@ class CentrifugeClientMessageBuilderImplTests: XCTestCase {
         let cred = CentrifugeCredentials(secret: "secret", user: "user", timestamp: "timestamp")
         
         // when
-        let message = builder.buildConnectMessage(cred)
+        let message = builder.buildConnectMessage(credentials: cred)
         
         // then
         XCTAssertEqual(message.method, CentrifugeMethod.Connect)
@@ -37,7 +37,7 @@ class CentrifugeClientMessageBuilderImplTests: XCTestCase {
         let cred = CentrifugeCredentials(secret: "secret", user: "user", timestamp: "timestamp", info: "info")
         
         // when
-        let message = builder.buildConnectMessage(cred)
+        let message = builder.buildConnectMessage(credentials: cred)
         
         // then
         XCTAssertEqual(message.method, CentrifugeMethod.Connect)
