@@ -583,7 +583,7 @@ class CentrifugeClientImplTests: XCTestCase {
             handlerCalled = true
         }
         // when
-        client.webSocketMessageText(text: "")
+        client.webSocketMessageText("")
         
         // then
         XCTAssertTrue(handlerCalled)
@@ -603,7 +603,7 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         // when
-        client.webSocketMessageText(text: text)
+        client.webSocketMessageText(text)
         
         // then
         XCTAssertTrue(handlerCalled)
@@ -630,7 +630,7 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         // when
-        client.webSocketMessageText(text: text)
+        client.webSocketMessageText(text)
         
         // then
         XCTAssertTrue(validMessagesDidReceive)
