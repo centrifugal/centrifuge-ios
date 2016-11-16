@@ -119,7 +119,7 @@ class CentrifugeClientImplTests: XCTestCase {
     func testSubscribeWithRecoveryProcessValid() {
         // given
         var validMessageDidSend = false
-        let uid = NSUUID().UUIDString
+        let uid = UUID().uuidString
         
         let channel = "channelName"
         let delegate = ChannelDelegateMock()
@@ -278,7 +278,7 @@ class CentrifugeClientImplTests: XCTestCase {
         // given
         let channel = "myChannel"
         
-        let message = CentrifugeServerMessage(uid: NSUUID().UUIDString, method: .Publish, error: "decription", body: ["channel":channel])
+        let message = CentrifugeServerMessage(uid: UUID().UUIDString, method: .Publish, error: "decription", body: ["channel":channel])
         
         var receivedMessage: CentrifugeServerMessage?
         var receivedError: NSError?
@@ -422,7 +422,7 @@ class CentrifugeClientImplTests: XCTestCase {
         let expectedChannel = "myChannel"
         var receivedChannel = ""
         var handlerCalled = false
-        let uid = NSUUID().UUIDString
+        let uid = UUID().uuidString
         
         let message = CentrifugeServerMessage(uid: uid, method: .Unsubscribe, error: nil, body: ["channel" : expectedChannel])
         
@@ -448,7 +448,7 @@ class CentrifugeClientImplTests: XCTestCase {
     func testDefaultProcessHandlerCallsDisconnectChannelDelegateAndHandler() {
         // given
         var handlerCalled = false
-        let uid = NSUUID().UUIDString
+        let uid = UUID().uuidString
         
         let message = CentrifugeServerMessage(uid: uid, method: .Disconnect, error: nil, body: [ : ])
         
@@ -683,73 +683,73 @@ class CentrifugeClientImplTests: XCTestCase {
     
     //MARK: - Helpers
     class WebSocketMock: CentrifugeWebSocket {
-        var openHandler: (String -> Void)?
-        var closeHandler: (Void -> Void)?
-        var sendHandler: (CentrifugeClientMessage -> Void)?
+        var openHandler: ((String) -> Void)?
+        var closeHandler: ((Void) -> Void)?
+        var sendHandler: ((CentrifugeClientMessage) -> Void)?
         
-        override func open(url: String) {
+        override func open(_ url: String) {
             self.openHandler?(url)
         }
         
-        override func close(code : Int = 1000, reason : String = "Normal Closure"){
+        override func close(_ code : Int = 1000, reason : String = "Normal Closure"){
             self.closeHandler?()
         }
         
-        override func send(message: CentrifugeClientMessage) throws {
+        override func send(_ message: CentrifugeClientMessage) throws {
             self.sendHandler?(message)
         }
     }
     
     class BuilderMock: CentrifugeClientMessageBuilderImpl {
-        var buildConnectHandler: ( CentrifugeCredentials -> CentrifugeClientMessage )!
-        override func buildConnectMessage(credentials: CentrifugeCredentials) -> CentrifugeClientMessage {
+        var buildConnectHandler: ( (CentrifugeCredentials) -> CentrifugeClientMessage )!
+        override func buildConnectMessage(_ credentials: CentrifugeCredentials) -> CentrifugeClientMessage {
             return buildConnectHandler(credentials)
         }
         
-        var buildPingHandler: ( Void -> CentrifugeClientMessage )!
+        var buildPingHandler: ( (Void) -> CentrifugeClientMessage )!
         override func buildPingMessage() -> CentrifugeClientMessage {
             return buildPingHandler()
         }
         
-        var buildDisconnectHandler: ( Void -> CentrifugeClientMessage )!
+        var buildDisconnectHandler: ( (Void) -> CentrifugeClientMessage )!
         override func buildDisconnectMessage() -> CentrifugeClientMessage {
             return buildDisconnectHandler()
         }
         
-        var buildSubscribeHandler: ( String -> CentrifugeClientMessage )!
-        override func buildSubscribeMessageTo(channel: String) -> CentrifugeClientMessage {
+        var buildSubscribeHandler: ( (String) -> CentrifugeClientMessage )!
+        override func buildSubscribeMessageTo(_ channel: String) -> CentrifugeClientMessage {
             return buildSubscribeHandler(channel)
         }
         
         var buildSubscribeWithRecoveryHandler: ( (String, String) -> CentrifugeClientMessage )!
-        override func buildSubscribeMessageTo(channel: String, lastMessageUUID: String) -> CentrifugeClientMessage {
+        override func buildSubscribeMessageTo(_ channel: String, lastMessageUUID: String) -> CentrifugeClientMessage {
             return buildSubscribeWithRecoveryHandler(channel, lastMessageUUID)
         }
         
-        var buildUnsubscribeHandler: ( String -> CentrifugeClientMessage )!
-        override func buildUnsubscribeMessageFrom(channel: String) -> CentrifugeClientMessage {
+        var buildUnsubscribeHandler: ( (String) -> CentrifugeClientMessage )!
+        override func buildUnsubscribeMessageFrom(_ channel: String) -> CentrifugeClientMessage {
             return buildUnsubscribeHandler(channel)
         }
         
         var buildPublishHandler: ( (String, [String : AnyObject]) -> CentrifugeClientMessage )!
-        override func buildPublishMessageTo(channel: String, data: [String : AnyObject]) -> CentrifugeClientMessage {
+        override func buildPublishMessageTo(_ channel: String, data: [String : AnyObject]) -> CentrifugeClientMessage {
             return buildPublishHandler(channel, data)
         }
         
-        var buildHistoryHandler: ( String -> CentrifugeClientMessage )!
-        override func buildHistoryMessage(channel: String) -> CentrifugeClientMessage {
+        var buildHistoryHandler: ( (String) -> CentrifugeClientMessage )!
+        override func buildHistoryMessage(_ channel: String) -> CentrifugeClientMessage {
             return buildHistoryHandler(channel)
         }
         
-        var buildPresenceHandler: ( String -> CentrifugeClientMessage )!
-        override func buildPresenceMessage(channel: String) -> CentrifugeClientMessage {
+        var buildPresenceHandler: ( (String) -> CentrifugeClientMessage )!
+        override func buildPresenceMessage(_ channel: String) -> CentrifugeClientMessage {
             return buildPresenceHandler(channel)
         }
     }
     
     class ParserMock: CentrifugeServerMessageParserImpl {
-        var parseHandler: ( (NSData) -> [CentrifugeServerMessage] )?
-        override func parse(data: NSData) throws -> [CentrifugeServerMessage] {
+        var parseHandler: ( (Data) -> [CentrifugeServerMessage] )?
+        override func parse(_ data: NSData) throws -> [CentrifugeServerMessage] {
             if let handler = parseHandler {
                 return handler(data)
             } else {
@@ -767,17 +767,17 @@ class CentrifugeClientImplTests: XCTestCase {
         var refreshtDidCall = false
         var refreshMessage:CentrifugeServerMessage!
         
-        func client(client: CentrifugeClient, didReceiveRefresh message: CentrifugeServerMessage) {
+        func client(_ client: CentrifugeClient, didReceiveRefresh message: CentrifugeServerMessage) {
             refreshtDidCall = true
             refreshMessage = message
         }
         
-        func client(client: CentrifugeClient, didDisconnect message: CentrifugeServerMessage) {
+        func client(_ client: CentrifugeClient, didDisconnect message: CentrifugeServerMessage) {
             disconnectDidCall = true
             disconnectMessage = message
         }
         
-        func client(client: CentrifugeClient, didReceiveError error: NSError) {
+        func client(_ client: CentrifugeClient, didReceiveError error: NSError) {
             receivedError = error
         }
     }
@@ -788,19 +788,19 @@ class CentrifugeClientImplTests: XCTestCase {
         var leaveHandler: ( (CentrifugeClient, String, CentrifugeServerMessage) -> Void )!
         var unsubscribeHandler: ( (CentrifugeClient, String, CentrifugeServerMessage) -> Void )!
         
-        func client(client: CentrifugeClient, didReceiveMessageInChannel channel: String, message: CentrifugeServerMessage) {
+        func client(_ client: CentrifugeClient, didReceiveMessageInChannel channel: String, message: CentrifugeServerMessage) {
             messageHandler(client, channel, message)
         }
         
-        func client(client: CentrifugeClient, didReceiveJoinInChannel channel: String, message: CentrifugeServerMessage) {
+        func client(_ client: CentrifugeClient, didReceiveJoinInChannel channel: String, message: CentrifugeServerMessage) {
             joinHandler(client, channel, message)
         }
         
-        func client(client: CentrifugeClient, didReceiveLeaveInChannel channel: String, message: CentrifugeServerMessage) {
+        func client(_ client: CentrifugeClient, didReceiveLeaveInChannel channel: String, message: CentrifugeServerMessage) {
             leaveHandler(client, channel, message)
         }
         
-        func client(client: CentrifugeClient, didReceiveUnsubscribeInChannel channel: String, message: CentrifugeServerMessage) {
+        func client(_ client: CentrifugeClient, didReceiveUnsubscribeInChannel channel: String, message: CentrifugeServerMessage) {
             unsubscribeHandler(client, channel, message)
         }
     }
@@ -817,7 +817,7 @@ extension CentrifugeServerMessage {
     static func testMessage() -> CentrifugeServerMessage {
         return CentrifugeServerMessage(uid: NSUUID().UUIDString, method: .Connect, error: nil, body: [:])
     }
-    static func errorMessage(decription: String) -> CentrifugeServerMessage {
+    static func errorMessage(_ decription: String) -> CentrifugeServerMessage {
         return CentrifugeServerMessage(uid: NSUUID().UUIDString, method: .Connect, error: decription, body: [:])
     }
 }

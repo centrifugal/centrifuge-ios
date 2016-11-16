@@ -17,7 +17,7 @@ protocol CentrifugeClientMessageBuilder {
     func buildPresenceMessage(channel: String) -> CentrifugeClientMessage
     func buildHistoryMessage(channel: String) -> CentrifugeClientMessage
     func buildPingMessage() -> CentrifugeClientMessage
-    func buildPublishMessageTo(channel: String, data: [String: AnyObject]) -> CentrifugeClientMessage
+    func buildPublishMessageTo(channel: String, data: [String: Any]) -> CentrifugeClientMessage
 }
 
 class CentrifugeClientMessageBuilderImpl: CentrifugeClientMessageBuilder {
@@ -28,87 +28,69 @@ class CentrifugeClientMessageBuilderImpl: CentrifugeClientMessageBuilder {
         
         var params = ["user" : user,
                       "timestamp" : timestamp,
-                      "token" : createToken("\(user)\(timestamp)", key: secret)]
+                      "token" : createToken(string: "\(user)\(timestamp)", key: secret)]
         
         if let info = credentials.info {
             params["info"] = info
         }
         
-        return buildMessage(.Connect, params: params)
+        return buildMessage(method: .Connect, params: params)
     }
     
     func buildDisconnectMessage() -> CentrifugeClientMessage {
-        return buildMessage(.Disconnect, params: [:])
+        return buildMessage(method: .Disconnect, params: [:])
     }
     
     func buildSubscribeMessageTo(channel: String) -> CentrifugeClientMessage {
         let params = ["channel" : channel]
-        return buildMessage(.Subscribe, params: params)
+        return buildMessage(method: .Subscribe, params: params)
     }
     
     func buildSubscribeMessageTo(channel: String, lastMessageUUID: String) -> CentrifugeClientMessage {
-        let params = ["channel" : channel,
+        let params: [String : Any] = ["channel" : channel,
                       "recover" : true,
                       "last" : lastMessageUUID]
-        return buildMessage(.Subscribe, params: params as! [String : AnyObject])
+        return buildMessage(method: .Subscribe, params: params)
     }
     
     func buildUnsubscribeMessageFrom(channel: String) -> CentrifugeClientMessage {
         let params = ["channel" : channel]
-        return buildMessage(.Unsubscribe, params: params)
+        return buildMessage(method: .Unsubscribe, params: params)
     }
     
-    func buildPublishMessageTo(channel: String, data: [String : AnyObject]) -> CentrifugeClientMessage {
-        let params:[String : AnyObject] = ["channel" : channel,
-                                           "data" : data]
-        return buildMessage(.Publish, params: params)
+    func buildPublishMessageTo(channel: String, data: [String : Any]) -> CentrifugeClientMessage {
+        let params = ["channel" : channel,
+                      "data" : data] as [String : Any]
+        return buildMessage(method: .Publish, params: params)
     }
     
     func buildPresenceMessage(channel: String) -> CentrifugeClientMessage {
-        let params:[String : AnyObject] = ["channel" : channel]
-        return buildMessage(.Presence, params: params)
+        let params = ["channel" : channel]
+        return buildMessage(method: .Presence, params: params)
     }
     
     func buildHistoryMessage(channel: String) -> CentrifugeClientMessage {
-        let params:[String : AnyObject] = ["channel" : channel]
-        return buildMessage(.History, params: params)
+        let params = ["channel" : channel]
+        return buildMessage(method: .History, params: params)
     }
     
     func buildPingMessage() -> CentrifugeClientMessage {
-        return buildMessage(.Ping, params: [:])
+        return buildMessage(method: .Ping, params: [:])
     }
     
-    private func buildMessage(method: CentrifugeMethod, params: [String: AnyObject]) -> CentrifugeClientMessage {
+    private func buildMessage(method: CentrifugeMethod, params: [String: Any]) -> CentrifugeClientMessage {
         let uid = generateUUID()
         let message = CentrifugeClientMessage(uid: uid, method: method, params: params)
         return message
     }
     
     private func generateUUID() -> String {
-        return NSUUID().UUIDString
+        return NSUUID().uuidString
     }
     
     private func createToken(string: String, key: String) -> String {
-        let hexKey = hexadecimalStringFromData(key.dataUsingEncoding(NSUTF8StringEncoding)!)
-        let hexString = hexadecimalStringFromData(string.dataUsingEncoding(NSUTF8StringEncoding)!)
-        
-        let keys5 = arrayFromHexString(hexKey)
-        let datas5 = arrayFromHexString(hexString)
-        
-        let hmacs5 = HMAC(algorithm:.SHA256, key:keys5).update(datas5)?.final()
-        let token = hexStringFromArray(hmacs5!)
+        let hmacs5 = HMAC(algorithm:.sha256, key:key).update(string: string)?.final()
+        let token = hexString(fromArray: hmacs5!)
         return token
-    }
-    
-    private func hexadecimalStringFromData(data: NSData) -> String{
-        var bytes = [UInt8](count: data.length, repeatedValue: 0)
-        data.getBytes(&bytes, length: data.length)
-        
-        let hexString = NSMutableString()
-        for byte in bytes {
-            hexString.appendFormat("%02x", UInt(byte))
-        }
-        
-        return String(hexString)
     }
 }

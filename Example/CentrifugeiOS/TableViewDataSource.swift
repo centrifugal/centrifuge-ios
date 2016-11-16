@@ -14,33 +14,33 @@ struct TableViewItem {
 }
 
 extension UITableViewCell {
-    func configureWithItem(item : TableViewItem) {
+    func configureWithItem(_ item : TableViewItem) {
         self.textLabel?.text = item.title
         self.detailTextLabel?.text = item.subtitle
     }
 }
 
 class TableViewDataSource : NSObject, UITableViewDataSource {
-    private var items = [TableViewItem]()
+    fileprivate var items = [TableViewItem]()
     
     func removeAll() {
         items.removeAll()
     }
     
-    func addItem(item: TableViewItem) {
+    func addItem(_ item: TableViewItem) {
         items.append(item)
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("LeftDetail", forIndexPath: indexPath)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "LeftDetail", for: indexPath)
         cell.configureWithItem(items[indexPath.row])
         return cell
     }
