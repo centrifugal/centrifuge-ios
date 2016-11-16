@@ -92,7 +92,7 @@ class CentrifugeClientImpl: NSObject, WebSocketDelegate, CentrifugeClient {
     }
     
     func send(message: CentrifugeClientMessage) {
-        try! ws.send(message)
+        try! ws.send(centrifugeMessage: message)
     }
     
     func setupConnectedState() {
@@ -229,7 +229,7 @@ class CentrifugeClientImpl: NSObject, WebSocketDelegate, CentrifugeClient {
         send(message: message)
     }
     
-    func webSocketMessageText(text: String) {
+    func webSocketMessageText(_ text: String) {
         let data = text.data(using: String.Encoding.utf8)!
         let messages = try! parser.parse(data: data)
         messages.forEach { message in

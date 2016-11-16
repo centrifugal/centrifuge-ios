@@ -9,12 +9,13 @@
 import SwiftWebSocket
 
 class CentrifugeWebSocket: WebSocket {
-    func send(message: CentrifugeClientMessage) throws {
+    
+    func send(centrifugeMessage message: CentrifugeClientMessage) throws {
         let dict: [String:Any] = ["uid" : message.uid,
-                                        "method" : message.method.rawValue,
-                                        "params" : message.params]
+                                  "method" : message.method.rawValue,
+                                  "params" : message.params]
         let data = try JSONSerialization.data(withJSONObject: dict, options: JSONSerialization.WritingOptions())
-
+        
         send(data: data)
     }
 }

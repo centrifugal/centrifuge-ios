@@ -695,7 +695,7 @@ class CentrifugeClientImplTests: XCTestCase {
             self.closeHandler?()
         }
         
-        override func send(message: CentrifugeClientMessage) throws {
+        override func send(centrifugeMessage message: CentrifugeClientMessage) throws {
             self.sendHandler?(message)
         }
     }
