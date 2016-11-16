@@ -108,7 +108,7 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         // when
-        client.subscribe(channel, delegate: delegate) { _, _ in }
+        client.subscribe(toChannel: channel, delegate: delegate) { _, _ in }
         
         // then
         XCTAssertTrue(validMessageDidSend)
@@ -139,7 +139,7 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         // when
-        client.subscribe(channel, delegate: delegate, lastMessageUID: uid) { _, _ in }
+        client.subscribe(toChannel: channel, delegate: delegate, lastMessageUID: uid) { _, _ in }
         
         // then
         XCTAssertTrue(validMessageDidSend)
@@ -170,7 +170,7 @@ class CentrifugeClientImplTests: XCTestCase {
         client.subscription[channel] = ChannelDelegateMock()
         
         // when
-        client.unsubscribe(channel) { _, _ in }
+        client.unsubscribe(fromChannel: channel) { _, _ in }
         
         // then
         XCTAssertTrue(validMessageDidSend)
@@ -198,7 +198,7 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         // when
-        client.history(channel) { _, _ in }
+        client.history(ofChannel: channel) { _, _ in }
         
         // then
         XCTAssertTrue(validMessageDidSend)
@@ -225,7 +225,7 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         // when
-        client.presence(channel) { _, _ in }
+        client.presence(inChannel: channel) { _, _ in }
         
         // then
         XCTAssertTrue(validMessageDidSend)
@@ -252,7 +252,7 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         // when
-        client.publish(channel, data: [:]) { _, _ in }
+        client.publish(toChannel: channel, data: [:]) { _, _ in }
         
         // then
         XCTAssertTrue(validMessageDidSend)
@@ -268,7 +268,7 @@ class CentrifugeClientImplTests: XCTestCase {
         client.delegate = delegate
         
         // when
-        client.defaultProcessHandler(nil, error: expectedError)
+        client.defaultProcessHandler(messages: nil, error: expectedError)
         
         // then
         XCTAssertEqual(delegate.receivedError, expectedError)
@@ -278,7 +278,7 @@ class CentrifugeClientImplTests: XCTestCase {
         // given
         let channel = "myChannel"
         
-        let message = CentrifugeServerMessage(uid: UUID().UUIDString, method: .Publish, error: "decription", body: ["channel":channel])
+        let message = CentrifugeServerMessage(uid: UUID().uuidString, method: .Publish, error: "decription", body: ["channel":channel])
         
         var receivedMessage: CentrifugeServerMessage?
         var receivedError: NSError?
@@ -289,7 +289,7 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         // when
-        client.defaultProcessHandler([message], error: nil)
+        client.defaultProcessHandler(messages: [message], error: nil)
         
         // then
         XCTAssertNil(receivedMessage)
@@ -307,7 +307,7 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         // when
-        client.defaultProcessHandler([expectedMessage], error: nil)
+        client.defaultProcessHandler(messages: [expectedMessage], error: nil)
         
         // then
         XCTAssertEqual(expectedMessage, receivedMessage)
@@ -329,7 +329,7 @@ class CentrifugeClientImplTests: XCTestCase {
         client.subscription[expectedChannel] = delegate
         
         // when
-        client.defaultProcessHandler([message], error: nil)
+        client.defaultProcessHandler(messages: [message], error: nil)
         
         // then
         XCTAssertEqual(expectedChannel, receivedChannel)
@@ -352,7 +352,7 @@ class CentrifugeClientImplTests: XCTestCase {
             closeDidCall = true
         }
         // when
-        client.defaultProcessHandler([message], error: nil)
+        client.defaultProcessHandler(messages: [message], error: nil)
         
         // then
         XCTAssertTrue(delegate.disconnectDidCall)
@@ -369,7 +369,7 @@ class CentrifugeClientImplTests: XCTestCase {
         client.delegate = delegate
         
         // when
-        client.defaultProcessHandler([message], error: nil)
+        client.defaultProcessHandler(messages: [message], error: nil)
         
         // then
         XCTAssertTrue(delegate.refreshtDidCall)
@@ -390,7 +390,7 @@ class CentrifugeClientImplTests: XCTestCase {
         client.subscription[expectedChannel] = delegate
         
         // when
-        client.defaultProcessHandler([message], error: nil)
+        client.defaultProcessHandler(messages: [message], error: nil)
         
         // then
         XCTAssertEqual(expectedChannel, receivedChannel)
@@ -411,7 +411,7 @@ class CentrifugeClientImplTests: XCTestCase {
         client.subscription[expectedChannel] = delegate
         
         // when
-        client.defaultProcessHandler([message], error: nil)
+        client.defaultProcessHandler(messages: [message], error: nil)
         
         // then
         XCTAssertEqual(expectedChannel, receivedChannel)
@@ -437,7 +437,7 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         // when
-        client.defaultProcessHandler([message], error: nil)
+        client.defaultProcessHandler(messages: [message], error: nil)
         
         // then
         XCTAssert(handlerCalled)
@@ -462,7 +462,7 @@ class CentrifugeClientImplTests: XCTestCase {
         client.ws = WebSocketMock()
         
         // when
-        client.defaultProcessHandler([message], error: nil)
+        client.defaultProcessHandler(messages: [message], error: nil)
         
         // then
         XCTAssertTrue(handlerCalled)
@@ -479,7 +479,7 @@ class CentrifugeClientImplTests: XCTestCase {
         client.blockingHandler = client.connectionProcessHandler
         
         // when
-        client.connectionProcessHandler(nil, error: error)
+        client.connectionProcessHandler(messages: nil, error: error)
         
         // then
         XCTAssertNil(client.blockingHandler)
@@ -496,7 +496,7 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         // when
-        client.connectionProcessHandler(nil, error: expectedError)
+        client.connectionProcessHandler(messages: nil, error: expectedError)
         
         // then
         XCTAssertEqual(receivedError, expectedError)
@@ -513,7 +513,7 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         // when
-        client.connectionProcessHandler([CentrifugeServerMessage.testMessage()], error: nil)
+        client.connectionProcessHandler(messages: [CentrifugeServerMessage.testMessage()], error: nil)
         
         // then
         XCTAssertNil(receivedError)
@@ -533,7 +533,7 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         // when
-        client.connectionProcessHandler([message], error: nil)
+        client.connectionProcessHandler(messages: [message], error: nil)
         
         // then
         XCTAssertEqual(receivedError.code, CentrifugeErrorCode.CentrifugeMessageWithError.rawValue)
@@ -583,7 +583,7 @@ class CentrifugeClientImplTests: XCTestCase {
             handlerCalled = true
         }
         // when
-        client.webSocketMessageText("")
+        client.webSocketMessageText(text: "")
         
         // then
         XCTAssertTrue(handlerCalled)
@@ -603,7 +603,7 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         // when
-        client.webSocketMessageText(text)
+        client.webSocketMessageText(text: text)
         
         // then
         XCTAssertTrue(handlerCalled)
@@ -630,7 +630,7 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         // when
-        client.webSocketMessageText(text)
+        client.webSocketMessageText(text: text)
         
         // then
         XCTAssertTrue(validMessagesDidReceive)
@@ -695,14 +695,14 @@ class CentrifugeClientImplTests: XCTestCase {
             self.closeHandler?()
         }
         
-        override func send(_ message: CentrifugeClientMessage) throws {
+        override func send(message: CentrifugeClientMessage) throws {
             self.sendHandler?(message)
         }
     }
     
     class BuilderMock: CentrifugeClientMessageBuilderImpl {
         var buildConnectHandler: ( (CentrifugeCredentials) -> CentrifugeClientMessage )!
-        override func buildConnectMessage(_ credentials: CentrifugeCredentials) -> CentrifugeClientMessage {
+        override func buildConnectMessage(credentials: CentrifugeCredentials) -> CentrifugeClientMessage {
             return buildConnectHandler(credentials)
         }
         
@@ -717,39 +717,39 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         var buildSubscribeHandler: ( (String) -> CentrifugeClientMessage )!
-        override func buildSubscribeMessageTo(_ channel: String) -> CentrifugeClientMessage {
+        override func buildSubscribeMessageTo(channel: String) -> CentrifugeClientMessage {
             return buildSubscribeHandler(channel)
         }
         
         var buildSubscribeWithRecoveryHandler: ( (String, String) -> CentrifugeClientMessage )!
-        override func buildSubscribeMessageTo(_ channel: String, lastMessageUUID: String) -> CentrifugeClientMessage {
+        override func buildSubscribeMessageTo(channel: String, lastMessageUUID: String) -> CentrifugeClientMessage {
             return buildSubscribeWithRecoveryHandler(channel, lastMessageUUID)
         }
         
         var buildUnsubscribeHandler: ( (String) -> CentrifugeClientMessage )!
-        override func buildUnsubscribeMessageFrom(_ channel: String) -> CentrifugeClientMessage {
+        override func buildUnsubscribeMessageFrom(channel: String) -> CentrifugeClientMessage {
             return buildUnsubscribeHandler(channel)
         }
         
-        var buildPublishHandler: ( (String, [String : AnyObject]) -> CentrifugeClientMessage )!
-        override func buildPublishMessageTo(_ channel: String, data: [String : AnyObject]) -> CentrifugeClientMessage {
+        var buildPublishHandler: ( (String, [String : Any]) -> CentrifugeClientMessage )!
+        override func buildPublishMessageTo(channel: String, data: [String : Any]) -> CentrifugeClientMessage {
             return buildPublishHandler(channel, data)
         }
         
         var buildHistoryHandler: ( (String) -> CentrifugeClientMessage )!
-        override func buildHistoryMessage(_ channel: String) -> CentrifugeClientMessage {
+        override func buildHistoryMessage(channel: String) -> CentrifugeClientMessage {
             return buildHistoryHandler(channel)
         }
         
         var buildPresenceHandler: ( (String) -> CentrifugeClientMessage )!
-        override func buildPresenceMessage(_ channel: String) -> CentrifugeClientMessage {
+        override func buildPresenceMessage(channel: String) -> CentrifugeClientMessage {
             return buildPresenceHandler(channel)
         }
     }
     
     class ParserMock: CentrifugeServerMessageParserImpl {
         var parseHandler: ( (Data) -> [CentrifugeServerMessage] )?
-        override func parse(_ data: NSData) throws -> [CentrifugeServerMessage] {
+        override func parse(data: Data) throws -> [CentrifugeServerMessage] {
             if let handler = parseHandler {
                 return handler(data)
             } else {
@@ -809,16 +809,16 @@ class CentrifugeClientImplTests: XCTestCase {
 
 extension CentrifugeClientMessage {
     static func testMessage() -> CentrifugeClientMessage {
-        return CentrifugeClientMessage(uid: NSUUID().UUIDString, method: .Connect, params: [:])
+        return CentrifugeClientMessage(uid: NSUUID().uuidString, method: .Connect, params: [:])
     }
 }
 
 extension CentrifugeServerMessage {
     static func testMessage() -> CentrifugeServerMessage {
-        return CentrifugeServerMessage(uid: NSUUID().UUIDString, method: .Connect, error: nil, body: [:])
+        return CentrifugeServerMessage(uid: NSUUID().uuidString, method: .Connect, error: nil, body: [:])
     }
     static func errorMessage(_ decription: String) -> CentrifugeServerMessage {
-        return CentrifugeServerMessage(uid: NSUUID().UUIDString, method: .Connect, error: decription, body: [:])
+        return CentrifugeServerMessage(uid: NSUUID().uuidString, method: .Connect, error: decription, body: [:])
     }
 }
 

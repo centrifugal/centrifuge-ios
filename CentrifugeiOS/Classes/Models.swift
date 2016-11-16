@@ -24,7 +24,7 @@ public struct CentrifugeServerMessage {
     public let uid: String?
     public let method: CentrifugeMethod
     public let error: String?
-    public let body: [String : AnyObject]?
+    public let body: [String : Any]?
 }
 
 extension CentrifugeServerMessage: Equatable {}
