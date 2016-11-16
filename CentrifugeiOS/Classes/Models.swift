@@ -11,7 +11,7 @@ import Foundation
 public struct CentrifugeClientMessage {
     public let uid: String
     public let method: CentrifugeMethod
-    public let params: [String : AnyObject]
+    public let params: [String : Any]
 }
 
 extension CentrifugeClientMessage: Equatable {}
@@ -24,13 +24,13 @@ public struct CentrifugeServerMessage {
     public let uid: String?
     public let method: CentrifugeMethod
     public let error: String?
-    public let body: [String : AnyObject]?
+    public let body: [String : Any]?
 }
 
 extension CentrifugeServerMessage: Equatable {}
 
 public func ==(lhs: CentrifugeServerMessage, rhs: CentrifugeServerMessage) -> Bool {
-    if let luid = lhs.uid, ruid = rhs.uid {
+    if let luid = lhs.uid, let ruid = rhs.uid {
         return luid == ruid
     }
     return false
