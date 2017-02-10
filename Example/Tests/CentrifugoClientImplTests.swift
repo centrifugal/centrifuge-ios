@@ -806,7 +806,6 @@ class CentrifugeClientImplTests: XCTestCase {
     }
 }
 
-
 extension CentrifugeClientMessage {
     static func testMessage() -> CentrifugeClientMessage {
         return CentrifugeClientMessage(uid: NSUUID().uuidString, method: .Connect, params: [:])
@@ -824,6 +823,6 @@ extension CentrifugeServerMessage {
 
 extension CentrifugeCredentials {
     static func testCreds() -> CentrifugeCredentials {
-        return CentrifugeCredentials(secret: "testSecret", user: "testUser", timestamp: "1234567898")
+        return CentrifugeCredentials(token: "testToken", user: "testUser", timestamp: "1234567898")
     }
 }

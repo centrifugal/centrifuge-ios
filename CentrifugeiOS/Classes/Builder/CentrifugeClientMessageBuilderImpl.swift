@@ -6,7 +6,6 @@
 //
 //
 
-import IDZSwiftCommonCrypto
 
 protocol CentrifugeClientMessageBuilder {
     func buildConnectMessage(credentials: CentrifugeCredentials) -> CentrifugeClientMessage
@@ -24,11 +23,11 @@ class CentrifugeClientMessageBuilderImpl: CentrifugeClientMessageBuilder {
     
     func buildConnectMessage(credentials: CentrifugeCredentials) -> CentrifugeClientMessage {
         
-        let user = credentials.user, timestamp = credentials.timestamp, secret = credentials.secret
+        let user = credentials.user, timestamp = credentials.timestamp, token = credentials.token
         
         var params = ["user" : user,
                       "timestamp" : timestamp,
-                      "token" : createToken(string: "\(user)\(timestamp)", key: secret)]
+                      "token" : token]
         
         if let info = credentials.info {
             params["info"] = info
@@ -87,10 +86,5 @@ class CentrifugeClientMessageBuilderImpl: CentrifugeClientMessageBuilder {
     private func generateUUID() -> String {
         return NSUUID().uuidString
     }
-    
-    private func createToken(string: String, key: String) -> String {
-        let hmacs5 = HMAC(algorithm:.sha256, key:key).update(string: string)?.final()
-        let token = hexString(fromArray: hmacs5!)
-        return token
-    }
+
 }
