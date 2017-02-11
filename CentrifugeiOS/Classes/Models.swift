@@ -37,13 +37,13 @@ public func ==(lhs: CentrifugeServerMessage, rhs: CentrifugeServerMessage) -> Bo
 }
 
 public struct CentrifugeCredentials {
-    let secret : String
+    let token : String
     let user : String
     let timestamp : String
     let info: String?
     
-    public init(secret: String, user: String, timestamp:String, info: String? = nil) {
-        self.secret = secret
+    public init(token: String, user: String, timestamp:String, info: String? = nil) {
+        self.token = token
         self.user = user
         self.timestamp = timestamp
         self.info = info

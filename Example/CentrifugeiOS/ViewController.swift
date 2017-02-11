@@ -35,8 +35,9 @@ class ViewController: UIViewController, CentrifugeChannelDelegate, CentrifugeCli
         tableView.dataSource = datasource
         
         let timestamp = "\(Int(Date().timeIntervalSince1970))"
+        let token =  Centrifuge.createToken(string: "\(user)\(timestamp)", key: secret)
         
-        let creds = CentrifugeCredentials(secret: secret, user: user, timestamp: timestamp)
+        let creds = CentrifugeCredentials(token: token, user: user, timestamp: timestamp)
         let url = "wss://centrifugo.herokuapp.com/connection/websocket"
         client = Centrifuge.client(url: url, creds: creds, delegate: self)
     }

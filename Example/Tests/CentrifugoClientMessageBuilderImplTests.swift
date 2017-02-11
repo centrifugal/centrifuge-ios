@@ -19,14 +19,14 @@ class CentrifugeClientMessageBuilderImplTests: XCTestCase {
     
     func testBuildingConnectMessageWithoutInfo() {
         // given
-        let cred = CentrifugeCredentials(secret: "secret", user: "user", timestamp: "timestamp")
+        let cred = CentrifugeCredentials(token: "token", user: "user", timestamp: "timestamp")
         
         // when
         let message = builder.buildConnectMessage(credentials: cred)
         
         // then
         XCTAssertEqual(message.method, CentrifugeMethod.Connect)
-        XCTAssertNotNil(message.params["token"])
+        XCTAssertEqual(message.params["token"] as? String, "token")
         XCTAssertNotNil(message.params["user"])
         XCTAssertNotNil(message.params["timestamp"])
         XCTAssertNil(message.params["info"])
@@ -34,14 +34,14 @@ class CentrifugeClientMessageBuilderImplTests: XCTestCase {
     
     func testBuildingConnectMessageWithInfo() {
         // given
-        let cred = CentrifugeCredentials(secret: "secret", user: "user", timestamp: "timestamp", info: "info")
+        let cred = CentrifugeCredentials(token: "token", user: "user", timestamp: "timestamp", info: "info")
         
         // when
         let message = builder.buildConnectMessage(credentials: cred)
         
         // then
         XCTAssertEqual(message.method, CentrifugeMethod.Connect)
-        XCTAssertNotNil(message.params["token"])
+        XCTAssertEqual(message.params["token"] as? String, "token")
         XCTAssertNotNil(message.params["user"])
         XCTAssertNotNil(message.params["timestamp"])
         XCTAssertNotNil(message.params["info"])

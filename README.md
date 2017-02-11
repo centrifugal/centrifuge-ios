@@ -14,11 +14,13 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 Create client: 
 
 ```swift
-let timestamp = "\(Int(NSDate().timeIntervalSince1970))"
-
-let creds = CentrifugeCredentials(secret: secret, user: user, timestamp: timestamp)
+let timestamp = "\(Int(Date().timeIntervalSince1970))"
+let token =  Centrifuge.createToken(string: "\(user)\(timestamp)", key: secret)
+        
+let creds = CentrifugeCredentials(token: token, user: user, timestamp: timestamp)
 let url = "wss://centrifugo.herokuapp.com/connection/websocket"
 client = Centrifuge.client(url: url, creds: creds, delegate: self)
+
 ```
 Connect to server:
 ```swift
