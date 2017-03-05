@@ -17,7 +17,7 @@ class CentrifugeClientImpl: NSObject, WebSocketDelegate, CentrifugeClient {
     var builder: CentrifugeClientMessageBuilder!
     var parser: CentrifugeServerMessageParser!
     
-    var delegate: CentrifugeClientDelegate!
+    weak var delegate: CentrifugeClientDelegate?
     
     var messageCallbacks = [String : CentrifugeMessageHandler]()
     var subscription = [String : CentrifugeChannelDelegate]()
@@ -143,7 +143,7 @@ class CentrifugeClientImpl: NSObject, WebSocketDelegate, CentrifugeClient {
      */
     func defaultProcessHandler(messages: [CentrifugeServerMessage]?, error: NSError?) {
         if let err = error {
-            delegate.client(self, didReceiveError: err)
+            delegate?.client(self, didReceiveError: err)
             return
         }
         
@@ -212,13 +212,12 @@ class CentrifugeClientImpl: NSObject, WebSocketDelegate, CentrifugeClient {
             
         // Client events
         case .Disconnect:
-            delegate.client(self, didDisconnect: message)
+            delegate?.client(self, didDisconnect: message)
             ws.close()
             resetState()
         case .Refresh:
-            delegate.client(self, didReceiveRefresh: message)
+            delegate?.client(self, didReceiveRefresh: message)
         default:
-            print(message)
             assertionFailure("Error: Invalid method type")
         }
     }
@@ -232,9 +231,7 @@ class CentrifugeClientImpl: NSObject, WebSocketDelegate, CentrifugeClient {
     func webSocketMessageText(_ text: String) {
         let data = text.data(using: String.Encoding.utf8)!
         let messages = try! parser.parse(data: data)
-        messages.forEach { message in
-            print(message)
-        }
+
         if let handler = blockingHandler {
             handler(messages, nil)
         }

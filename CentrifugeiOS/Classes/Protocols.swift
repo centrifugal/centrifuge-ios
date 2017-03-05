@@ -6,7 +6,7 @@
 //
 //
 
-public protocol CentrifugeClientDelegate {
+public protocol CentrifugeClientDelegate: class {
     func client(_ client: CentrifugeClient, didReceiveError error:NSError)
     func client(_ client: CentrifugeClient, didReceiveRefresh: CentrifugeServerMessage)
     func client(_ client: CentrifugeClient, didDisconnect: CentrifugeServerMessage)
