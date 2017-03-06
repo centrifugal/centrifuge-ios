@@ -1,5 +1,4 @@
 language: objective-c
-cache: cocoapods
 podfile: Example/Podfile
 osx_image: xcode8.2
 rvm:
@@ -9,5 +8,5 @@ before_install:
 - travis_wait pod repo update --silent
 - pod install --project-directory=Example
 script:
-- set -o pipefail && xcodebuild test -workspace Example/CentrifugeiOS.xcworkspace -scheme CentrifugeiOS-Example -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 5' ONLY_ACTIVE_ARCH=NO | xcpretty
+- set -o pipefail && xcodebuild test -workspace Example/CentrifugeiOS.xcworkspace -scheme CentrifugeiOS-Example -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=10.0,name=iPhone SE' ONLY_ACTIVE_ARCH=NO | xcpretty
 - pod lib lint
