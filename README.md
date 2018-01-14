@@ -43,7 +43,8 @@ See the example project and [docs](https://fzambia.gitbooks.io/centrifugal/conte
 * Version 1.0.0: Swift 2.3, iOS 8.0+, Xcode 7
 * Version 2.0.0: Swift 2.3, iOS 9.3+, Xcode 8
 * Version 3.0.0: Swift 3.0, iOS 9.3+, Xcode 8
-
+* Version 4.0.0: Swift 4.0, iOS 9.3+, Xcode 9
+	
 ## Installation
 
 CentrifugeiOS is available through [CocoaPods](http://cocoapods.org). To install
