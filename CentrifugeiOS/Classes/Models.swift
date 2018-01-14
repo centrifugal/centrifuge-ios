@@ -51,18 +51,18 @@ public struct CentrifugeCredentials {
 }
 
 public enum CentrifugeMethod : String {
-    case Connect = "connect"
-    case Disconnect = "disconnect"
-    case Subscribe = "subscribe"
-    case Unsubscribe = "unsubscribe"
-    case Publish = "publish"
-    case Presence = "presence"
-    case History = "history"
-    case Join = "join"
-    case Leave = "leave"
-    case Message = "message"
-    case Refresh = "refresh"
-    case Ping = "ping"
+    case сonnect = "connect"
+    case disconnect = "disconnect"
+    case subscribe = "subscribe"
+    case unsubscribe = "unsubscribe"
+    case publish = "publish"
+    case presence = "presence"
+    case history = "history"
+    case     = "join"
+    case leave = "leave"
+    case message = "message"
+    case refresh = "refresh"
+    case ping = "ping"
 }
 
 class CentrifugeWrapper<T> {

@@ -277,7 +277,7 @@ class CentrifugeClientImplTests: XCTestCase {
         // given
         let channel = "myChannel"
         
-        let message = CentrifugeServerMessage(uid: UUID().uuidString, method: .Publish, error: "decription", body: ["channel":channel])
+        let message = CentrifugeServerMessage(uid: UUID().uuidString, method: .publish, error: "decription", body: ["channel":channel])
         
         var receivedMessage: CentrifugeServerMessage?
         var receivedError: NSError?
@@ -318,7 +318,7 @@ class CentrifugeClientImplTests: XCTestCase {
         let expectedChannel = "myChannel"
         var receivedChannel = ""
         
-        let message = CentrifugeServerMessage(uid: nil, method: .Message, error: nil, body: ["channel" : expectedChannel])
+        let message = CentrifugeServerMessage(uid: nil, method: .message, error: nil, body: ["channel" : expectedChannel])
         
         let delegate = ChannelDelegateMock()
         delegate.messageHandler = { _, channel, _ in
@@ -336,7 +336,7 @@ class CentrifugeClientImplTests: XCTestCase {
     
     func testDefaultProcessHandlerProcessesDisconnect() {
         // given
-        let message = CentrifugeServerMessage(uid: nil, method: .Disconnect, error: nil, body: [ : ])
+        let message = CentrifugeServerMessage(uid: nil, method: .disconnect, error: nil, body: [ : ])
         var closeDidCall = false
         let delegate = ClientDelegateMock()
         client.delegate = delegate
@@ -362,7 +362,7 @@ class CentrifugeClientImplTests: XCTestCase {
     
     func testDefaultProcessHandlerCallsRefreshClientDelegate() {
         // given
-        let message = CentrifugeServerMessage(uid: nil, method: .Refresh, error: nil, body: [ : ])
+        let message = CentrifugeServerMessage(uid: nil, method: .refresh, error: nil, body: [ : ])
         
         let delegate = ClientDelegateMock()
         client.delegate = delegate
@@ -379,7 +379,7 @@ class CentrifugeClientImplTests: XCTestCase {
         let expectedChannel = "myChannel"
         var receivedChannel = ""
         
-        let message = CentrifugeServerMessage(uid: nil, method: .Join, error: nil, body: ["channel" : expectedChannel])
+        let message = CentrifugeServerMessage(uid: nil, method: .join, error: nil, body: ["channel" : expectedChannel])
         
         let delegate = ChannelDelegateMock()
         delegate.joinHandler = { _, channel, _ in
@@ -400,7 +400,7 @@ class CentrifugeClientImplTests: XCTestCase {
         let expectedChannel = "myChannel"
         var receivedChannel = ""
         
-        let message = CentrifugeServerMessage(uid: nil, method: .Leave, error: nil, body: ["channel" : expectedChannel])
+        let message = CentrifugeServerMessage(uid: nil, method: .leave, error: nil, body: ["channel" : expectedChannel])
         
         let delegate = ChannelDelegateMock()
         delegate.leaveHandler = { _, channel, _ in
@@ -423,7 +423,7 @@ class CentrifugeClientImplTests: XCTestCase {
         var handlerCalled = false
         let uid = UUID().uuidString
         
-        let message = CentrifugeServerMessage(uid: uid, method: .Unsubscribe, error: nil, body: ["channel" : expectedChannel])
+        let message = CentrifugeServerMessage(uid: uid, method: .unsubscribe, error: nil, body: ["channel" : expectedChannel])
         
         let delegate = ChannelDelegateMock()
         delegate.unsubscribeHandler = { _, channel, _ in
@@ -449,7 +449,7 @@ class CentrifugeClientImplTests: XCTestCase {
         var handlerCalled = false
         let uid = UUID().uuidString
         
-        let message = CentrifugeServerMessage(uid: uid, method: .Disconnect, error: nil, body: [ : ])
+        let message = CentrifugeServerMessage(uid: uid, method: .disconnect, error: nil, body: [ : ])
         
         let delegate = ClientDelegateMock()
         
@@ -806,16 +806,16 @@ class CentrifugeClientImplTests: XCTestCase {
 
 extension CentrifugeClientMessage {
     static func testMessage() -> CentrifugeClientMessage {
-        return CentrifugeClientMessage(uid: NSUUID().uuidString, method: .Connect, params: [:])
+        return CentrifugeClientMessage(uid: NSUUID().uuidString, method: .сonnect, params: [:])
     }
 }
 
 extension CentrifugeServerMessage {
     static func testMessage() -> CentrifugeServerMessage {
-        return CentrifugeServerMessage(uid: NSUUID().uuidString, method: .Connect, error: nil, body: [:])
+        return CentrifugeServerMessage(uid: NSUUID().uuidString, method: .сonnect, error: nil, body: [:])
     }
     static func errorMessage(_ decription: String) -> CentrifugeServerMessage {
-        return CentrifugeServerMessage(uid: NSUUID().uuidString, method: .Connect, error: decription, body: [:])
+        return CentrifugeServerMessage(uid: NSUUID().uuidString, method: .сonnect, error: decription, body: [:])
     }
 }
 

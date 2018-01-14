@@ -181,32 +181,32 @@ class CentrifugeClientImpl: NSObject, CentrifugeClient, WebSocketDelegate {
             handled = true
         }
         
-        if (handled && (message.method != .Unsubscribe && message.method != .Disconnect)) {
+        if (handled && (message.method != .unsubscribe && message.method != .disconnect)) {
             return
         }
         
         switch message.method {
             
         // Channel events
-        case .Message:
+        case .message:
             guard let channel = message.body?["channel"] as? String, let delegate = subscription[channel] else {
                 assertionFailure("Error: Invalid \(message.method) handler")
                 return
             }
             delegate.client(self, didReceiveMessageInChannel: channel, message: message)
-        case .Join:
+        case .join:
             guard let channel = message.body?["channel"] as? String, let delegate = subscription[channel] else {
                 assertionFailure("Error: Invalid \(message.method) handler")
                 return
             }
             delegate.client(self, didReceiveJoinInChannel: channel, message: message)
-        case .Leave:
+        case .leave:
             guard let channel = message.body?["channel"] as? String, let delegate = subscription[channel] else {
                 assertionFailure("Error: Invalid \(message.method) handler")
                 return
             }
             delegate.client(self, didReceiveLeaveInChannel: channel, message: message)
-        case .Unsubscribe:
+        case .unsubscribe:
             guard let channel = message.body?["channel"] as? String, let delegate = subscription[channel] else {
                 assertionFailure("Error: Invalid \(message.method) handler")
                 return
@@ -215,11 +215,11 @@ class CentrifugeClientImpl: NSObject, CentrifugeClient, WebSocketDelegate {
             unsubscribeFrom(channel: channel)
             
         // Client events
-        case .Disconnect:
+        case .disconnect:
             delegate?.client(self, didDisconnect: message)
             ws.disconnect()
             resetState()
-        case .Refresh:
+        case .refresh:
             delegate?.client(self, didReceiveRefresh: message)
         default:
             assertionFailure("Error: Invalid method type")
