@@ -2,8 +2,8 @@
 //  ViewController.swift
 //  CentrifugeiOS
 //
-//  Created by Herman Saprykin on 04/18/2016.
-//  Copyright (c) 2016 Herman Saprykin. All rights reserved.
+//  Created by German Saprykin on 04/18/2016.
+//  Copyright (c) 2016 German Saprykin. All rights reserved.
 //
 
 import UIKit
@@ -21,7 +21,7 @@ class ViewController: UIViewController, CentrifugeChannelDelegate, CentrifugeCli
     
     var nickName: String {
         get {
-            if let nick = self.nickTextField.text, nick.characters.count > 0 {
+            if let nick = self.nickTextField.text, nick.count > 0 {
                 return nick
             }else {
                 return "anonymous"
@@ -51,7 +51,7 @@ class ViewController: UIViewController, CentrifugeChannelDelegate, CentrifugeCli
 
     func publish(_ text: String) {
         client.publish(toChannel: channel, data:  ["nick" : nickName, "input" : text]) { message, error in
-            print("publish message: \(message)")
+            print("publish message: \(String(describing: message))")
         }
     }
     
@@ -130,7 +130,7 @@ class ViewController: UIViewController, CentrifugeChannelDelegate, CentrifugeCli
     //MARK:- Interactions with user
     
     @IBAction func sendButtonDidPress(_ sender: AnyObject) {
-        if let text = messageTextField.text, text.characters.count > 0 {
+        if let text = messageTextField.text, text.count > 0 {
             messageTextField.text = ""
             publish(text)
         }

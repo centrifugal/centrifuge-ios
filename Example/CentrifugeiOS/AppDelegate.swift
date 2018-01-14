@@ -2,8 +2,8 @@
 //  AppDelegate.swift
 //  CentrifugeiOS
 //
-//  Created by Herman Saprykin on 04/18/2016.
-//  Copyright (c) 2016 Herman Saprykin. All rights reserved.
+//  Created by German Saprykin on 04/18/2016.
+//  Copyright (c) 2016 German Saprykin. All rights reserved.
 //
 
 import UIKit

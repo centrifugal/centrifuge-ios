@@ -1,21 +1,10 @@
+platform :ios, '9.3'
 use_frameworks!
 
 target 'CentrifugeiOS_Example' do
-  pod 'CentrifugeiOS', :path => '../'
+    pod 'CentrifugeiOS', :path => '../'
 end
 
 target 'CentrifugeiOS_Tests' do
-  pod 'CentrifugeiOS', :path => '../'
-end
-
-post_install do |installer|
-    installer.pods_project.targets.each do |target|
-        target.build_configurations.each do |configuration|
-            target.build_settings(configuration.name)['SWIFT_VERSION'] = '3.0'
-
-            if target.name == 'CentrifugeiOS'
-                target.build_settings(configuration.name)['ENABLE_TESTABILITY'] = 'YES'
-            end
-        end
-    end
+    pod 'CentrifugeiOS', :path => '../'
 end

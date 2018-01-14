@@ -2,12 +2,12 @@
 //  CentrifugeClientImplTests.swift
 //  CentrifugeiOS
 //
-//  Created by Herman Saprykin on 25/04/16.
+//  Created by German Saprykin on 25/04/16.
 //  Copyright © 2016 CocoaPods. All rights reserved.
 //
 
 import XCTest
-import SwiftWebSocket
+import Starscream
 @testable import CentrifugeiOS
 
 class CentrifugeClientImplTests: XCTestCase {
@@ -18,7 +18,7 @@ class CentrifugeClientImplTests: XCTestCase {
     override func setUp() {
         super.setUp()
         parser = ParserMock()
-
+        
         client = CentrifugeClientImpl()
         client.parser = parser
     }
@@ -30,11 +30,11 @@ class CentrifugeClientImplTests: XCTestCase {
     //MARK: - Public interface
     func testConnectCallsWebSocketOpenAndSetupsHandler() {
         // given
-        let url = "asdasd"
+        let url = "https://example.com"
         client.url = url
         
         // when
-        client.connect { _ in }
+        client.connect { _,_  in }
         
         // then
         XCTAssertNotNil(client.ws.delegate)
@@ -53,7 +53,7 @@ class CentrifugeClientImplTests: XCTestCase {
         
         let message = CentrifugeClientMessage.testMessage()
         
-        builder.buildPingHandler = { _ in return message }
+        builder.buildPingHandler = {  return message }
         
         ws.sendHandler = { aMessage in
             validMessageDidSend = (aMessage == message)
@@ -76,14 +76,13 @@ class CentrifugeClientImplTests: XCTestCase {
         ws.delegate = client
         ws.closeHandler = {
             closeDidCall = true
-        }
+            } as (() -> Void)
         
         // when
         client.disconnect()
         
         // then
         XCTAssertTrue(closeDidCall)
-        XCTAssertNil(ws.delegate)
     }
     
     func testSubscribeProcessValid() {
@@ -245,7 +244,7 @@ class CentrifugeClientImplTests: XCTestCase {
         
         let message = CentrifugeClientMessage.testMessage()
         
-        builder.buildPublishHandler = { _ in return message }
+        builder.buildPublishHandler = { _,_  in return message }
         
         ws.sendHandler = { aMessage in
             validMessageDidSend = (aMessage == message)
@@ -350,7 +349,7 @@ class CentrifugeClientImplTests: XCTestCase {
         
         ws.closeHandler = {
             closeDidCall = true
-        }
+            } as (() -> Void)
         // when
         client.defaultProcessHandler(messages: [message], error: nil)
         
@@ -473,9 +472,8 @@ class CentrifugeClientImplTests: XCTestCase {
     func testConnectionProcessHandlerResetsStateIfError() {
         // given
         let error = NSError(domain: "", code: 1, userInfo: nil)
-
-        client.connectionCompletion = { _ in
-        }
+        
+        client.connectionCompletion = { _, _  in}
         client.blockingHandler = client.connectionProcessHandler
         
         // when
@@ -569,7 +567,7 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         // when
-        client.webSocketOpen()
+        client.websocketDidConnect(socket: ws)
         
         // then
         XCTAssertTrue(validMessageDidSend)
@@ -583,7 +581,7 @@ class CentrifugeClientImplTests: XCTestCase {
             handlerCalled = true
         }
         // when
-        client.webSocketMessageText("")
+        client.websocketDidReceiveMessage(socket: WebSocketMock(), text: "")
         
         // then
         XCTAssertTrue(handlerCalled)
@@ -603,7 +601,7 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         // when
-        client.webSocketMessageText(text)
+        client.websocketDidReceiveMessage(socket: WebSocketMock(), text: text)
         
         // then
         XCTAssertTrue(handlerCalled)
@@ -630,7 +628,7 @@ class CentrifugeClientImplTests: XCTestCase {
         }
         
         // when
-        client.webSocketMessageText(text)
+        client.websocketDidReceiveMessage(socket: WebSocketMock(), text: text)
         
         // then
         XCTAssertTrue(validMessagesDidReceive)
@@ -639,64 +637,64 @@ class CentrifugeClientImplTests: XCTestCase {
     func testClientWebSocketCloseUsesHandler() {
         // given
         var handlerCalled = false
-        let code = 111
-        let reason = "Hello, world"
-        
-        var receivedCode = -1
-        var receivedReason = ""
+        var receivedError: Error?
         
         client.blockingHandler = { _, error in
-            if let err = error {
-                receivedCode = err.code
-                receivedReason = err.localizedDescription
-            }
-            
             handlerCalled = true
+            receivedError = error
         }
         
         // when
-        client.webSocketClose(code, reason: reason, wasClean: true)
+        client.websocketDidDisconnect(socket: WebSocketMock(), error: nil)
         
         // then
         XCTAssertTrue(handlerCalled)
-        XCTAssertEqual(receivedReason, reason)
-        XCTAssertEqual(receivedCode, code)
+        XCTAssertNil(receivedError)
     }
     
     func testClientWebSocketErrorUsesHandler() {
         // given
         var handlerCalled = false
         var receivedError: NSError?
-        let error = NSError(domain: "", code: 0, userInfo: nil)
+        let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Hello"])
         
         client.blockingHandler = { _, error in
             handlerCalled = true
             receivedError = error
         }
         // when
-        client.webSocketError(error)
+        client.websocketDidDisconnect(socket: WebSocketMock(), error: error)
         
         // then
         XCTAssertTrue(handlerCalled)
-        XCTAssertEqual(receivedError, error)
+        XCTAssertEqual(receivedError?.localizedDescription, "Hello")
     }
     
     //MARK: - Helpers
-    class WebSocketMock: CentrifugeWebSocket {
-        var openHandler: ((String) -> Void)?
-        var closeHandler: ((Void) -> Void)?
+    class WebSocketMock: WebSocket {
+        var openHandler: (() -> Void)?
+        var closeHandler: (() -> Void)?
         var sendHandler: ((CentrifugeClientMessage) -> Void)?
         
-        override func open(_ url: String) {
-            self.openHandler?(url)
+        init() {
+            let url = URL(string:"https://example.com")!
+            let request = URLRequest(url: url)
+            super.init(request: request)
         }
         
-        override func close(_ code : Int = 1000, reason : String = "Normal Closure"){
-            self.closeHandler?()
+        
+        override func connect() {
+            openHandler?()
         }
         
-        override func send(centrifugeMessage message: CentrifugeClientMessage) throws {
-            self.sendHandler?(message)
+        override func disconnect(forceTimeout: TimeInterval? = nil, closeCode: UInt16 = CloseCode.normal.rawValue) {
+            closeHandler?()
+        }
+        
+        override func write(data: Data, completion: (() -> ())? = nil) {
+            let dict = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+            let message = CentrifugeClientMessage(uid: dict["uid"] as! String, method: CentrifugeMethod(rawValue: dict["method"] as! String)!, params: dict["params"] as! [String:Any])
+            sendHandler?(message)
         }
     }
     
@@ -706,12 +704,12 @@ class CentrifugeClientImplTests: XCTestCase {
             return buildConnectHandler(credentials)
         }
         
-        var buildPingHandler: ( (Void) -> CentrifugeClientMessage )!
+        var buildPingHandler: ( () -> CentrifugeClientMessage )!
         override func buildPingMessage() -> CentrifugeClientMessage {
             return buildPingHandler()
         }
         
-        var buildDisconnectHandler: ( (Void) -> CentrifugeClientMessage )!
+        var buildDisconnectHandler: ( () -> CentrifugeClientMessage )!
         override func buildDisconnectMessage() -> CentrifugeClientMessage {
             return buildDisconnectHandler()
         }

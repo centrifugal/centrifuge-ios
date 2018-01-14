@@ -2,7 +2,7 @@
 //  Centrifugal.swift
 //  Pods
 //
-//  Created by Herman Saprykin on 18/04/16.
+//  Created by German Saprykin on 18/04/16.
 //
 //
 
@@ -25,7 +25,6 @@ public class Centrifuge {
         client.parser = CentrifugeServerMessageParserImpl()
         client.creds = creds
         client.url = url
-        // TODO: Check references cycle
         client.delegate = delegate
         
         return client
