@@ -58,7 +58,7 @@ public enum CentrifugeMethod : String {
     case publish = "publish"
     case presence = "presence"
     case history = "history"
-    case     = "join"
+    case join = "join"
     case leave = "leave"
     case message = "message"
     case refresh = "refresh"
