@@ -2,16 +2,16 @@
 //  Clients.swift
 //  Pods
 //
-//  Created by Herman Saprykin on 20/04/16.
+//  Created by German Saprykin on 20/04/16.
 //
 //
 
-import SwiftWebSocket
+import Starscream
 
 typealias CentrifugeBlockingHandler = ([CentrifugeServerMessage]?, NSError?) -> Void
 
-class CentrifugeClientImpl: NSObject, WebSocketDelegate, CentrifugeClient {
-    var ws: CentrifugeWebSocket!
+class CentrifugeClientImpl: NSObject, CentrifugeClient, WebSocketDelegate {
+    var ws: WebSocket!
     var url: String!
     var creds: CentrifugeCredentials!
     var builder: CentrifugeClientMessageBuilder!
@@ -32,13 +32,13 @@ class CentrifugeClientImpl: NSObject, WebSocketDelegate, CentrifugeClient {
     func connect(withCompletion completion: @escaping CentrifugeMessageHandler) {
         blockingHandler = connectionProcessHandler
         connectionCompletion = completion
-        ws = CentrifugeWebSocket(url)
+        ws = WebSocket(url: URL(string: url)!)
         ws.delegate = self
+        ws.connect()
     }
     
     func disconnect() {
-        ws.delegate = nil
-        ws.close()
+        ws.disconnect()
     }
     
     func ping(withCompletion completion: @escaping CentrifugeMessageHandler) {
@@ -54,7 +54,7 @@ class CentrifugeClientImpl: NSObject, WebSocketDelegate, CentrifugeClient {
         messageCallbacks[message.uid] = completion
         send(message: message)
     }
-
+    
     func subscribe(toChannel channel: String, delegate: CentrifugeChannelDelegate, lastMessageUID uid: String, completion: @escaping CentrifugeMessageHandler) {
         let message = builder.buildSubscribeMessageTo(channel: channel, lastMessageUUID: uid)
         subscription[channel] = delegate
@@ -92,7 +92,11 @@ class CentrifugeClientImpl: NSObject, WebSocketDelegate, CentrifugeClient {
     }
     
     func send(message: CentrifugeClientMessage) {
-        try! ws.send(centrifugeMessage: message)
+        let dict: [String:Any] = ["uid" : message.uid,
+                                  "method" : message.method.rawValue,
+                                  "params" : message.params]
+        let data = try! JSONSerialization.data(withJSONObject: dict, options: JSONSerialization.WritingOptions())
+        ws.write(data: data)
     }
     
     func setupConnectedState() {
@@ -177,32 +181,32 @@ class CentrifugeClientImpl: NSObject, WebSocketDelegate, CentrifugeClient {
             handled = true
         }
         
-        if (handled && (message.method != .Unsubscribe && message.method != .Disconnect)) {
+        if (handled && (message.method != .unsubscribe && message.method != .disconnect)) {
             return
         }
         
         switch message.method {
             
         // Channel events
-        case .Message:
+        case .message:
             guard let channel = message.body?["channel"] as? String, let delegate = subscription[channel] else {
                 assertionFailure("Error: Invalid \(message.method) handler")
                 return
             }
             delegate.client(self, didReceiveMessageInChannel: channel, message: message)
-        case .Join:
+        case .join:
             guard let channel = message.body?["channel"] as? String, let delegate = subscription[channel] else {
                 assertionFailure("Error: Invalid \(message.method) handler")
                 return
             }
             delegate.client(self, didReceiveJoinInChannel: channel, message: message)
-        case .Leave:
+        case .leave:
             guard let channel = message.body?["channel"] as? String, let delegate = subscription[channel] else {
                 assertionFailure("Error: Invalid \(message.method) handler")
                 return
             }
             delegate.client(self, didReceiveLeaveInChannel: channel, message: message)
-        case .Unsubscribe:
+        case .unsubscribe:
             guard let channel = message.body?["channel"] as? String, let delegate = subscription[channel] else {
                 assertionFailure("Error: Invalid \(message.method) handler")
                 return
@@ -211,11 +215,11 @@ class CentrifugeClientImpl: NSObject, WebSocketDelegate, CentrifugeClient {
             unsubscribeFrom(channel: channel)
             
         // Client events
-        case .Disconnect:
+        case .disconnect:
             delegate?.client(self, didDisconnect: message)
-            ws.close()
+            ws.disconnect()
             resetState()
-        case .Refresh:
+        case .refresh:
             delegate?.client(self, didReceiveRefresh: message)
         default:
             assertionFailure("Error: Invalid method type")
@@ -223,31 +227,35 @@ class CentrifugeClientImpl: NSObject, WebSocketDelegate, CentrifugeClient {
     }
     
     //MARK: - WebSocketDelegate
-    func webSocketOpen() {
+    
+    func websocketDidConnect(socket: WebSocketClient) {
         let message = builder.buildConnectMessage(credentials: creds)
         send(message: message)
     }
     
-    func webSocketMessageText(_ text: String) {
+    func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
+        guard let handler = blockingHandler else { return }
+        var err: NSError?
+        if let localizedDescription = error?.localizedDescription {
+            err = NSError(domain: CentrifugeWebSocketErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey : localizedDescription])
+        }
+        handler(nil, err)
+    }
+    
+    func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
         let data = text.data(using: String.Encoding.utf8)!
         let messages = try! parser.parse(data: data)
-
+        
         if let handler = blockingHandler {
             handler(messages, nil)
         }
     }
     
-    func webSocketClose(_ code: Int, reason: String, wasClean: Bool) {
-        if let handler = blockingHandler {
-            let error = NSError(domain: CentrifugeWebSocketErrorDomain, code: code, userInfo: [NSLocalizedDescriptionKey : reason])
-            handler(nil, error)
-        }
+    func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
+        let messages = try! parser.parse(data: data)
         
-    }
-    
-    func webSocketError(_ error: NSError) {
         if let handler = blockingHandler {
-            handler(nil, error)
+            handler(messages, nil)
         }
     }
 }

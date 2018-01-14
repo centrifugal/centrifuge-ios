@@ -2,7 +2,7 @@
 //  CentrifugeClientMessageBuilderImpl.swift
 //  Pods
 //
-//  Created by Herman Saprykin on 18/04/16.
+//  Created by German Saprykin on 18/04/16.
 //
 //
 
@@ -33,48 +33,48 @@ class CentrifugeClientMessageBuilderImpl: CentrifugeClientMessageBuilder {
             params["info"] = info
         }
         
-        return buildMessage(method: .Connect, params: params)
+        return buildMessage(method: .сonnect, params: params)
     }
     
     func buildDisconnectMessage() -> CentrifugeClientMessage {
-        return buildMessage(method: .Disconnect, params: [:])
+        return buildMessage(method: .disconnect, params: [:])
     }
     
     func buildSubscribeMessageTo(channel: String) -> CentrifugeClientMessage {
         let params = ["channel" : channel]
-        return buildMessage(method: .Subscribe, params: params)
+        return buildMessage(method: .subscribe, params: params)
     }
     
     func buildSubscribeMessageTo(channel: String, lastMessageUUID: String) -> CentrifugeClientMessage {
         let params: [String : Any] = ["channel" : channel,
                       "recover" : true,
                       "last" : lastMessageUUID]
-        return buildMessage(method: .Subscribe, params: params)
+        return buildMessage(method: .subscribe, params: params)
     }
     
     func buildUnsubscribeMessageFrom(channel: String) -> CentrifugeClientMessage {
         let params = ["channel" : channel]
-        return buildMessage(method: .Unsubscribe, params: params)
+        return buildMessage(method: .unsubscribe, params: params)
     }
     
     func buildPublishMessageTo(channel: String, data: [String : Any]) -> CentrifugeClientMessage {
         let params = ["channel" : channel,
                       "data" : data] as [String : Any]
-        return buildMessage(method: .Publish, params: params)
+        return buildMessage(method: .publish, params: params)
     }
     
     func buildPresenceMessage(channel: String) -> CentrifugeClientMessage {
         let params = ["channel" : channel]
-        return buildMessage(method: .Presence, params: params)
+        return buildMessage(method: .presence, params: params)
     }
     
     func buildHistoryMessage(channel: String) -> CentrifugeClientMessage {
         let params = ["channel" : channel]
-        return buildMessage(method: .History, params: params)
+        return buildMessage(method: .history, params: params)
     }
     
     func buildPingMessage() -> CentrifugeClientMessage {
-        return buildMessage(method: .Ping, params: [:])
+        return buildMessage(method: .ping, params: [:])
     }
     
     private func buildMessage(method: CentrifugeMethod, params: [String: Any]) -> CentrifugeClientMessage {

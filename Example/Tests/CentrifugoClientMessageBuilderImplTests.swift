@@ -25,7 +25,7 @@ class CentrifugeClientMessageBuilderImplTests: XCTestCase {
         let message = builder.buildConnectMessage(credentials: cred)
         
         // then
-        XCTAssertEqual(message.method, CentrifugeMethod.Connect)
+        XCTAssertEqual(message.method, CentrifugeMethod.сonnect)
         XCTAssertEqual(message.params["token"] as? String, "token")
         XCTAssertNotNil(message.params["user"])
         XCTAssertNotNil(message.params["timestamp"])
@@ -40,7 +40,7 @@ class CentrifugeClientMessageBuilderImplTests: XCTestCase {
         let message = builder.buildConnectMessage(credentials: cred)
         
         // then
-        XCTAssertEqual(message.method, CentrifugeMethod.Connect)
+        XCTAssertEqual(message.method, CentrifugeMethod.сonnect)
         XCTAssertEqual(message.params["token"] as? String, "token")
         XCTAssertNotNil(message.params["user"])
         XCTAssertNotNil(message.params["timestamp"])

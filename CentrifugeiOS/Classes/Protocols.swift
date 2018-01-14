@@ -2,7 +2,7 @@
 //  Protocols.swift
 //  Pods
 //
-//  Created by Herman Saprykin on 26/04/16.
+//  Created by German Saprykin on 26/04/16.
 //
 //
 
