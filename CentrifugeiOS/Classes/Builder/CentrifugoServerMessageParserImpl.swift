@@ -2,7 +2,7 @@
 //  CentrifugeServerMessageParserImpl.swift
 //  Pods
 //
-//  Created by Herman Saprykin on 19/04/16.
+//  Created by German Saprykin on 19/04/16.
 //
 //
 
@@ -41,20 +41,14 @@ class CentrifugeServerMessageParserImpl: CentrifugeServerMessageParser {
     
     func messageParse(info: [String : AnyObject]) -> CentrifugeServerMessage? {
         guard let uid = info["uid"] as? String? else {
-            print("Error: Invalid server response: Not valid message format")
-            print(info)
             return nil
         }
         
         guard let methodName = info["method"] as? String else {
-            print("Error: Invalid server response: Not valid message format")
-            print(info)
             return nil
         }
         
         guard let method = CentrifugeMethod(rawValue: methodName) else {
-            print("Error: Invalid server response: Not valid message format")
-            print(info)
             return nil
         }
         var error: String?
