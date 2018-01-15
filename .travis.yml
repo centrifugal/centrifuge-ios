@@ -9,3 +9,4 @@ before_install:
 script:
 - set -o pipefail && xcodebuild test -workspace Example/CentrifugeiOS.xcworkspace -scheme CentrifugeiOS-Example -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=10.0,name=iPhone SE' ONLY_ACTIVE_ARCH=NO | xcpretty
 - pod lib lint --allow-warnings
+- carthage build --no-skip-current --platform iOS
