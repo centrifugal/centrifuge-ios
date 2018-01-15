@@ -7,33 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D4804CEB200CDF7E00FBBD3D /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4804CEA200CDF7E00FBBD3D /* Starscream.framework */; };
 		D492AD2D1FA0AF97003E92FA /* CentrifugeiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = D492AD2B1FA0AF97003E92FA /* CentrifugeiOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D492AD401FA0B00C003E92FA /* Centrifuge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D492AD361FA0B00C003E92FA /* Centrifuge.swift */; };
 		D492AD411FA0B00C003E92FA /* CentrifugeClientImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D492AD371FA0B00C003E92FA /* CentrifugeClientImpl.swift */; };
-		D492AD421FA0B00C003E92FA /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = D492AD381FA0B00C003E92FA /* .gitkeep */; };
 		D492AD431FA0B00C003E92FA /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = D492AD391FA0B00C003E92FA /* Models.swift */; };
 		D492AD441FA0B00C003E92FA /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = D492AD3A1FA0B00C003E92FA /* Protocols.swift */; };
-		D492AD451FA0B00C003E92FA /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = D492AD3B1FA0B00C003E92FA /* WebSocket.swift */; };
 		D492AD461FA0B00C003E92FA /* CentrifugeClientMessageBuilderImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D492AD3D1FA0B00C003E92FA /* CentrifugeClientMessageBuilderImpl.swift */; };
 		D492AD471FA0B00C003E92FA /* CentrifugoServerMessageParserImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D492AD3E1FA0B00C003E92FA /* CentrifugoServerMessageParserImpl.swift */; };
 		D492AD4A1FA0B639003E92FA /* IDZSwiftCommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D492AD481FA0B639003E92FA /* IDZSwiftCommonCrypto.framework */; };
-		D492AD4B1FA0B639003E92FA /* SwiftWebSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D492AD491FA0B639003E92FA /* SwiftWebSocket.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D4804CEA200CDF7E00FBBD3D /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
 		D492AD281FA0AF97003E92FA /* CentrifugeiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CentrifugeiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D492AD2B1FA0AF97003E92FA /* CentrifugeiOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CentrifugeiOS.h; sourceTree = "<group>"; };
 		D492AD2C1FA0AF97003E92FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D492AD361FA0B00C003E92FA /* Centrifuge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Centrifuge.swift; sourceTree = "<group>"; };
 		D492AD371FA0B00C003E92FA /* CentrifugeClientImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CentrifugeClientImpl.swift; sourceTree = "<group>"; };
-		D492AD381FA0B00C003E92FA /* .gitkeep */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 		D492AD391FA0B00C003E92FA /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		D492AD3A1FA0B00C003E92FA /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
-		D492AD3B1FA0B00C003E92FA /* WebSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
 		D492AD3D1FA0B00C003E92FA /* CentrifugeClientMessageBuilderImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CentrifugeClientMessageBuilderImpl.swift; sourceTree = "<group>"; };
 		D492AD3E1FA0B00C003E92FA /* CentrifugoServerMessageParserImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CentrifugoServerMessageParserImpl.swift; sourceTree = "<group>"; };
 		D492AD481FA0B639003E92FA /* IDZSwiftCommonCrypto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IDZSwiftCommonCrypto.framework; path = Carthage/Build/iOS/IDZSwiftCommonCrypto.framework; sourceTree = "<group>"; };
-		D492AD491FA0B639003E92FA /* SwiftWebSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftWebSocket.framework; path = Carthage/Build/iOS/SwiftWebSocket.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,8 +37,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D492AD4B1FA0B639003E92FA /* SwiftWebSocket.framework in Frameworks */,
 				D492AD4A1FA0B639003E92FA /* IDZSwiftCommonCrypto.framework in Frameworks */,
+				D4804CEB200CDF7E00FBBD3D /* Starscream.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,8 +48,8 @@
 		D492AD1E1FA0AF97003E92FA = {
 			isa = PBXGroup;
 			children = (
+				D4804CEA200CDF7E00FBBD3D /* Starscream.framework */,
 				D492AD481FA0B639003E92FA /* IDZSwiftCommonCrypto.framework */,
-				D492AD491FA0B639003E92FA /* SwiftWebSocket.framework */,
 				D492AD2A1FA0AF97003E92FA /* CentrifugeiOS */,
 				D492AD291FA0AF97003E92FA /* Products */,
 			);
@@ -82,10 +78,8 @@
 			children = (
 				D492AD361FA0B00C003E92FA /* Centrifuge.swift */,
 				D492AD371FA0B00C003E92FA /* CentrifugeClientImpl.swift */,
-				D492AD381FA0B00C003E92FA /* .gitkeep */,
 				D492AD391FA0B00C003E92FA /* Models.swift */,
 				D492AD3A1FA0B00C003E92FA /* Protocols.swift */,
-				D492AD3B1FA0B00C003E92FA /* WebSocket.swift */,
 				D492AD3C1FA0B00C003E92FA /* Builder */,
 			);
 			path = Classes;
@@ -168,7 +162,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D492AD421FA0B00C003E92FA /* .gitkeep in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,7 +178,6 @@
 				D492AD401FA0B00C003E92FA /* Centrifuge.swift in Sources */,
 				D492AD441FA0B00C003E92FA /* Protocols.swift in Sources */,
 				D492AD461FA0B00C003E92FA /* CentrifugeClientMessageBuilderImpl.swift in Sources */,
-				D492AD451FA0B00C003E92FA /* WebSocket.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
