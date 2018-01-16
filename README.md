@@ -4,6 +4,7 @@
 [![Version](https://img.shields.io/cocoapods/v/CentrifugeiOS.svg?style=flat)](http://cocoapods.org/pods/CentrifugeiOS)
 [![License](https://img.shields.io/cocoapods/l/CentrifugeiOS.svg?style=flat)](http://cocoapods.org/pods/CentrifugeiOS)
 [![Platform](https://img.shields.io/cocoapods/p/CentrifugeiOS.svg?style=flat)](http://cocoapods.org/pods/CentrifugeiOS)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 ## Example
 
@@ -47,12 +48,23 @@ See the example project and [docs](https://fzambia.gitbooks.io/centrifugal/conte
 	
 ## Installation
 
+### CocoaPods
+
 CentrifugeiOS is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
 pod "CentrifugeiOS"
 ```
+
+### Carthage
+
+Add the following to your Cartfile:
+
+```
+github "centrifugal/centrifuge-ios"
+```
+Then run `carthage update`.
 
 ## Author
 
