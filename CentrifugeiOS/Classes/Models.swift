@@ -76,7 +76,7 @@ extension NSError {
     static func errorWithMessage(message: CentrifugeServerMessage) -> NSError {
         let error = NSError(domain: CentrifugeErrorDomain,
                             code: CentrifugeErrorCode.CentrifugeMessageWithError.rawValue,
-                            userInfo: [NSLocalizedDescriptionKey : message.error!, CentrifugeErrorMessageKey : CentrifugeWrapper(theValue: message)])
+                            userInfo: [NSLocalizedDescriptionKey : message.error ?? "", CentrifugeErrorMessageKey : CentrifugeWrapper(theValue: message)])
         return error
     }
 }

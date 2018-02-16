@@ -16,7 +16,7 @@ public enum CentrifugeErrorCode: Int {
     case CentrifugeMessageWithError
 }
 
-public typealias CentrifugeMessageHandler = (CentrifugeServerMessage?, NSError?) -> Void
+public typealias CentrifugeMessageHandler = (CentrifugeServerMessage?, Error?) -> Void
 
 public class Centrifuge {
     public class func client(url: String, creds: CentrifugeCredentials, delegate: CentrifugeClientDelegate) -> CentrifugeClient {

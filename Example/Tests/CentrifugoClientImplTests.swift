@@ -270,7 +270,7 @@ class CentrifugeClientImplTests: XCTestCase {
         client.defaultProcessHandler(messages: nil, error: expectedError)
         
         // then
-        XCTAssertEqual(delegate.receivedError, expectedError)
+        XCTAssertEqual(delegate.disconnectError as NSError?, expectedError)
     }
     
     func testDefaultProcessHandlerProcessMessageWithError() {
@@ -280,7 +280,7 @@ class CentrifugeClientImplTests: XCTestCase {
         let message = CentrifugeServerMessage(uid: UUID().uuidString, method: .publish, error: "decription", body: ["channel":channel])
         
         var receivedMessage: CentrifugeServerMessage?
-        var receivedError: NSError?
+        var receivedError: Error?
         
         client.messageCallbacks[message.uid!] = { message, error in
             receivedMessage = message
@@ -486,7 +486,7 @@ class CentrifugeClientImplTests: XCTestCase {
     
     func testConnectionProcessHandlerProcessError() {
         // given
-        var receivedError: NSError?
+        var receivedError: Error?
         let expectedError = NSError(domain: "", code: 1, userInfo: nil)
         
         client.connectionCompletion = { _, error in
@@ -497,13 +497,13 @@ class CentrifugeClientImplTests: XCTestCase {
         client.connectionProcessHandler(messages: nil, error: expectedError)
         
         // then
-        XCTAssertEqual(receivedError, expectedError)
+        XCTAssertEqual(receivedError as NSError?, expectedError)
     }
     
     func testConnectionProcessHandlerProcessValidMessage() {
         // given
         var handlerCalled = false
-        var receivedError: NSError?
+        var receivedError: Error?
         
         client.connectionCompletion = { _, error in
             handlerCalled = true
@@ -527,7 +527,7 @@ class CentrifugeClientImplTests: XCTestCase {
         let message = CentrifugeServerMessage.errorMessage(desc)
         client.connectionCompletion = { _, error in
             handlerCalled = true
-            receivedError = error
+            receivedError = error as NSError?
         }
         
         // when
@@ -655,7 +655,7 @@ class CentrifugeClientImplTests: XCTestCase {
     func testClientWebSocketErrorUsesHandler() {
         // given
         var handlerCalled = false
-        var receivedError: NSError?
+        var receivedError: Error?
         let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey : "Hello"])
         
         client.blockingHandler = { _, error in
@@ -757,26 +757,20 @@ class CentrifugeClientImplTests: XCTestCase {
     }
     
     class ClientDelegateMock: CentrifugeClientDelegate {
-        var receivedError: NSError?
-        
         var disconnectDidCall = false
-        var disconnectMessage:CentrifugeServerMessage!
+        var disconnectError: Error?
         
         var refreshtDidCall = false
         var refreshMessage:CentrifugeServerMessage!
         
-        func client(_ client: CentrifugeClient, didReceiveRefresh message: CentrifugeServerMessage) {
+        func client(_ client: CentrifugeClient, didReceiveRefreshMessage message: CentrifugeServerMessage) {
             refreshtDidCall = true
             refreshMessage = message
         }
         
-        func client(_ client: CentrifugeClient, didDisconnect message: CentrifugeServerMessage) {
+        func client(_ client: CentrifugeClient, didDisconnectWithError error: Error) {
             disconnectDidCall = true
-            disconnectMessage = message
-        }
-        
-        func client(_ client: CentrifugeClient, didReceiveError error: NSError) {
-            receivedError = error
+            disconnectError = error
         }
     }
     
