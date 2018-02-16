@@ -45,7 +45,8 @@ See the example project and [docs](https://fzambia.gitbooks.io/centrifugal/conte
 * Version 2.0.0: Swift 2.3, iOS 9.3+, Xcode 8
 * Version 3.0.0: Swift 3.0, iOS 9.3+, Xcode 8
 * Version 4.0.0: Swift 4.0, iOS 9.3+, Xcode 9
-	
+* Version 5.0.0: Swift 4.0, iOS 9.3+, Xcode 9
+
 ## Installation
 
 ### CocoaPods
