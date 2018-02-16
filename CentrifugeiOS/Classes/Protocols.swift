@@ -7,9 +7,12 @@
 //
 
 public protocol CentrifugeClientDelegate: class {
-    func client(_ client: CentrifugeClient, didReceiveError error:NSError)
-    func client(_ client: CentrifugeClient, didReceiveRefresh: CentrifugeServerMessage)
-    func client(_ client: CentrifugeClient, didDisconnect: CentrifugeServerMessage)
+    func client(_ client: CentrifugeClient, didReceiveRefreshMessage message: CentrifugeServerMessage)
+    // Possible errors:
+    // - CentrifugeErrorDomain with CentrifugeErrorCode
+    // - Starscream errors
+    // - System errors, e.g. Socket is not connected.
+    func client(_ client: CentrifugeClient, didDisconnectWithError error: Error)
 }
 
 public protocol CentrifugeChannelDelegate {

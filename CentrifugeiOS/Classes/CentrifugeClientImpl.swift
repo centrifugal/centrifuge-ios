@@ -8,7 +8,7 @@
 
 import Starscream
 
-typealias CentrifugeBlockingHandler = ([CentrifugeServerMessage]?, NSError?) -> Void
+typealias CentrifugeBlockingHandler = ([CentrifugeServerMessage]?, Error?) -> Void
 
 class CentrifugeClientImpl: NSObject, CentrifugeClient, WebSocketDelegate {
     var ws: WebSocket!
@@ -115,7 +115,7 @@ class CentrifugeClientImpl: NSObject, CentrifugeClient, WebSocketDelegate {
     /**
      Handler is using while connecting to server.
      */
-    func connectionProcessHandler(messages: [CentrifugeServerMessage]?, error: NSError?) -> Void {
+    func connectionProcessHandler(messages: [CentrifugeServerMessage]?, error: Error?) -> Void {
         guard let handler = connectionCompletion else {
             assertionFailure("Error: No connectionCompletion")
             return
@@ -145,9 +145,9 @@ class CentrifugeClientImpl: NSObject, CentrifugeClient, WebSocketDelegate {
     /**
      Handler is using while normal working with server.
      */
-    func defaultProcessHandler(messages: [CentrifugeServerMessage]?, error: NSError?) {
-        if let err = error {
-            delegate?.client(self, didReceiveError: err)
+    func defaultProcessHandler(messages: [CentrifugeServerMessage]?, error: Error?) {
+        if let error = error {
+            delegate?.client(self, didDisconnectWithError: error)
             return
         }
         
@@ -216,11 +216,11 @@ class CentrifugeClientImpl: NSObject, CentrifugeClient, WebSocketDelegate {
             
         // Client events
         case .disconnect:
-            delegate?.client(self, didDisconnect: message)
-            ws.disconnect()
+            delegate?.client(self, didDisconnectWithError: NSError.errorWithMessage(message: message))
             resetState()
+            ws.disconnect()
         case .refresh:
-            delegate?.client(self, didReceiveRefresh: message)
+            delegate?.client(self, didReceiveRefreshMessage: message)
         default:
             assertionFailure("Error: Invalid method type")
         }
@@ -235,11 +235,7 @@ class CentrifugeClientImpl: NSObject, CentrifugeClient, WebSocketDelegate {
     
     func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
         guard let handler = blockingHandler else { return }
-        var err: NSError?
-        if let localizedDescription = error?.localizedDescription {
-            err = NSError(domain: CentrifugeWebSocketErrorDomain, code: 0, userInfo: [NSLocalizedDescriptionKey : localizedDescription])
-        }
-        handler(nil, err)
+        handler(nil, error)
     }
     
     func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {

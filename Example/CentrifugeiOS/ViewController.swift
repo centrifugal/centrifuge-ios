@@ -56,17 +56,11 @@ class ViewController: UIViewController, CentrifugeChannelDelegate, CentrifugeCli
     }
     
     //MARK: CentrifugeClientDelegate
-    func client(_ client: CentrifugeClient, didReceiveError error: NSError) {
+    func client(_ client: CentrifugeClient, didDisconnectWithError error: Error) {
         showError(error)
     }
     
-    func client(_ client: CentrifugeClient, didDisconnect message: CentrifugeServerMessage) {
-        print("didDisconnect message: \(message)")
-        datasource.removeAll()
-        tableView.reloadData()
-    }
-    
-    func client(_ client: CentrifugeClient, didReceiveRefresh message: CentrifugeServerMessage) {
+    func client(_ client: CentrifugeClient, didReceiveRefreshMessage message: CentrifugeServerMessage) {
         print("didReceiveRefresh message: \(message)")
     }
     
@@ -119,7 +113,7 @@ class ViewController: UIViewController, CentrifugeChannelDelegate, CentrifugeCli
         showAlert("Message", message: "\(message)")
     }
     
-    func showResponse(_ message: CentrifugeServerMessage?, error: NSError?) {
+    func showResponse(_ message: CentrifugeServerMessage?, error: Error?) {
         if let msg = message {
             showMessage(msg)
         } else if let err = error {
