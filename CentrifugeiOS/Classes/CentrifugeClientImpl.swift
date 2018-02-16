@@ -147,6 +147,7 @@ class CentrifugeClientImpl: NSObject, CentrifugeClient, WebSocketDelegate {
      */
     func defaultProcessHandler(messages: [CentrifugeServerMessage]?, error: Error?) {
         if let error = error {
+            resetState()
             delegate?.client(self, didDisconnectWithError: error)
             return
         }
@@ -216,9 +217,9 @@ class CentrifugeClientImpl: NSObject, CentrifugeClient, WebSocketDelegate {
             
         // Client events
         case .disconnect:
-            delegate?.client(self, didDisconnectWithError: NSError.errorWithMessage(message: message))
             resetState()
             ws.disconnect()
+            delegate?.client(self, didDisconnectWithError: NSError.errorWithMessage(message: message))
         case .refresh:
             delegate?.client(self, didReceiveRefreshMessage: message)
         default:
