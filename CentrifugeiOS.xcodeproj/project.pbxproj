@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BB77FA4F20D01ADB00ED228C /* CommonCryptoBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = BB77FA4D20D01ADB00ED228C /* CommonCryptoBridge.m */; };
+		BB77FA5020D01ADB00ED228C /* CommonCryptoBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = BB77FA4E20D01ADB00ED228C /* CommonCryptoBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4804CEB200CDF7E00FBBD3D /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4804CEA200CDF7E00FBBD3D /* Starscream.framework */; };
 		D492AD2D1FA0AF97003E92FA /* CentrifugeiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = D492AD2B1FA0AF97003E92FA /* CentrifugeiOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D492AD401FA0B00C003E92FA /* Centrifuge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D492AD361FA0B00C003E92FA /* Centrifuge.swift */; };
@@ -15,10 +17,11 @@
 		D492AD441FA0B00C003E92FA /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = D492AD3A1FA0B00C003E92FA /* Protocols.swift */; };
 		D492AD461FA0B00C003E92FA /* CentrifugeClientMessageBuilderImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D492AD3D1FA0B00C003E92FA /* CentrifugeClientMessageBuilderImpl.swift */; };
 		D492AD471FA0B00C003E92FA /* CentrifugoServerMessageParserImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D492AD3E1FA0B00C003E92FA /* CentrifugoServerMessageParserImpl.swift */; };
-		D492AD4A1FA0B639003E92FA /* IDZSwiftCommonCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D492AD481FA0B639003E92FA /* IDZSwiftCommonCrypto.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BB77FA4D20D01ADB00ED228C /* CommonCryptoBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonCryptoBridge.m; sourceTree = "<group>"; };
+		BB77FA4E20D01ADB00ED228C /* CommonCryptoBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonCryptoBridge.h; sourceTree = "<group>"; };
 		D4804CEA200CDF7E00FBBD3D /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
 		D492AD281FA0AF97003E92FA /* CentrifugeiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CentrifugeiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D492AD2B1FA0AF97003E92FA /* CentrifugeiOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CentrifugeiOS.h; sourceTree = "<group>"; };
@@ -29,7 +32,6 @@
 		D492AD3A1FA0B00C003E92FA /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		D492AD3D1FA0B00C003E92FA /* CentrifugeClientMessageBuilderImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CentrifugeClientMessageBuilderImpl.swift; sourceTree = "<group>"; };
 		D492AD3E1FA0B00C003E92FA /* CentrifugoServerMessageParserImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CentrifugoServerMessageParserImpl.swift; sourceTree = "<group>"; };
-		D492AD481FA0B639003E92FA /* IDZSwiftCommonCrypto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IDZSwiftCommonCrypto.framework; path = Carthage/Build/iOS/IDZSwiftCommonCrypto.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,7 +39,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D492AD4A1FA0B639003E92FA /* IDZSwiftCommonCrypto.framework in Frameworks */,
 				D4804CEB200CDF7E00FBBD3D /* Starscream.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -45,11 +46,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BB77FA4C20D01ADB00ED228C /* CommonCryptoBridge */ = {
+			isa = PBXGroup;
+			children = (
+				BB77FA4E20D01ADB00ED228C /* CommonCryptoBridge.h */,
+				BB77FA4D20D01ADB00ED228C /* CommonCryptoBridge.m */,
+			);
+			path = CommonCryptoBridge;
+			sourceTree = "<group>";
+		};
 		D492AD1E1FA0AF97003E92FA = {
 			isa = PBXGroup;
 			children = (
 				D4804CEA200CDF7E00FBBD3D /* Starscream.framework */,
-				D492AD481FA0B639003E92FA /* IDZSwiftCommonCrypto.framework */,
 				D492AD2A1FA0AF97003E92FA /* CentrifugeiOS */,
 				D492AD291FA0AF97003E92FA /* Products */,
 			);
@@ -76,6 +85,7 @@
 		D492AD351FA0B00C003E92FA /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				BB77FA4C20D01ADB00ED228C /* CommonCryptoBridge */,
 				D492AD361FA0B00C003E92FA /* Centrifuge.swift */,
 				D492AD371FA0B00C003E92FA /* CentrifugeClientImpl.swift */,
 				D492AD391FA0B00C003E92FA /* Models.swift */,
@@ -102,6 +112,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D492AD2D1FA0AF97003E92FA /* CentrifugeiOS.h in Headers */,
+				BB77FA5020D01ADB00ED228C /* CommonCryptoBridge.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,6 +183,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB77FA4F20D01ADB00ED228C /* CommonCryptoBridge.m in Sources */,
 				D492AD431FA0B00C003E92FA /* Models.swift in Sources */,
 				D492AD471FA0B00C003E92FA /* CentrifugoServerMessageParserImpl.swift in Sources */,
 				D492AD411FA0B00C003E92FA /* CentrifugeClientImpl.swift in Sources */,

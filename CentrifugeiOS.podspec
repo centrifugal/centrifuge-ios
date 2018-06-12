@@ -16,6 +16,5 @@ Pod::Spec.new do |s|
 
   s.source_files = 'CentrifugeiOS/Classes/**/*'
 
-  s.dependency 'IDZSwiftCommonCrypto', '~>0.10.0'
   s.dependency 'Starscream', '~>3.0.4'
 end

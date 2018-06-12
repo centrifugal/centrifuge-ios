@@ -6,7 +6,7 @@
 //
 //
 
-import IDZSwiftCommonCrypto
+import Foundation
 
 public let CentrifugeErrorDomain = "com.Centrifuge.error.domain"
 public let CentrifugeWebSocketErrorDomain = "com.Centrifuge.error.domain.websocket"
@@ -31,8 +31,6 @@ public class Centrifuge {
     }
     
     public class func createToken(string: String, key: String) -> String {
-        let hmacs5 = HMAC(algorithm:.sha256, key:key).update(string: string)?.final()
-        let token = hexString(fromArray: hmacs5!)
-        return token
+        return CentrifugeCommonCryptoBridge.hexHMACSHA256(forData: string, withKey: key)
     }
 }
