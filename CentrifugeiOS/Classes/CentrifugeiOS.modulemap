@@ -1,0 +1,10 @@
+framework module CentrifugeiOS {
+    umbrella header "CentrifugeiOS.h"
+
+    export *
+    module * { export * }
+
+    explicit module CommonCryptoBridge {
+        header "CommonCryptoBridge.h"
+    }
+}

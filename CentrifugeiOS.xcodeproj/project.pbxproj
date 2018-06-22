@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BB77FA4F20D01ADB00ED228C /* CommonCryptoBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = BB77FA4D20D01ADB00ED228C /* CommonCryptoBridge.m */; };
-		BB77FA5020D01ADB00ED228C /* CommonCryptoBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = BB77FA4E20D01ADB00ED228C /* CommonCryptoBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BB5D1D6820DC109200E98B34 /* CommonCryptoBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = BB5D1D6620DC109200E98B34 /* CommonCryptoBridge.m */; };
+		BBAEA86820DCF09C00A7802C /* CommonCryptoBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = BB5D1D6720DC109200E98B34 /* CommonCryptoBridge.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D4804CEB200CDF7E00FBBD3D /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4804CEA200CDF7E00FBBD3D /* Starscream.framework */; };
 		D492AD2D1FA0AF97003E92FA /* CentrifugeiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = D492AD2B1FA0AF97003E92FA /* CentrifugeiOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D492AD401FA0B00C003E92FA /* Centrifuge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D492AD361FA0B00C003E92FA /* Centrifuge.swift */; };
@@ -20,8 +20,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		BB77FA4D20D01ADB00ED228C /* CommonCryptoBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonCryptoBridge.m; sourceTree = "<group>"; };
-		BB77FA4E20D01ADB00ED228C /* CommonCryptoBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonCryptoBridge.h; sourceTree = "<group>"; };
+		BB5D1D4520DC00CB00E98B34 /* CentrifugeiOS.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = CentrifugeiOS.modulemap; sourceTree = "<group>"; };
+		BB5D1D6620DC109200E98B34 /* CommonCryptoBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonCryptoBridge.m; sourceTree = "<group>"; };
+		BB5D1D6720DC109200E98B34 /* CommonCryptoBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonCryptoBridge.h; sourceTree = "<group>"; };
 		D4804CEA200CDF7E00FBBD3D /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
 		D492AD281FA0AF97003E92FA /* CentrifugeiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CentrifugeiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D492AD2B1FA0AF97003E92FA /* CentrifugeiOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CentrifugeiOS.h; sourceTree = "<group>"; };
@@ -46,14 +47,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		BB77FA4C20D01ADB00ED228C /* CommonCryptoBridge */ = {
+		BB5D1D4220DC00CB00E98B34 /* CommonCryptoBridge */ = {
 			isa = PBXGroup;
 			children = (
-				BB77FA4E20D01ADB00ED228C /* CommonCryptoBridge.h */,
-				BB77FA4D20D01ADB00ED228C /* CommonCryptoBridge.m */,
+				BB5D1D6620DC109200E98B34 /* CommonCryptoBridge.m */,
+				BB5D1D6720DC109200E98B34 /* CommonCryptoBridge.h */,
 			);
-			path = CommonCryptoBridge;
-			sourceTree = "<group>";
+			name = CommonCryptoBridge;
+			path = CentrifugeiOS/Classes/CommonCryptoBridge;
+			sourceTree = SOURCE_ROOT;
 		};
 		D492AD1E1FA0AF97003E92FA = {
 			isa = PBXGroup;
@@ -76,7 +78,6 @@
 			isa = PBXGroup;
 			children = (
 				D492AD351FA0B00C003E92FA /* Classes */,
-				D492AD2B1FA0AF97003E92FA /* CentrifugeiOS.h */,
 				D492AD2C1FA0AF97003E92FA /* Info.plist */,
 			);
 			path = CentrifugeiOS;
@@ -85,7 +86,9 @@
 		D492AD351FA0B00C003E92FA /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				BB77FA4C20D01ADB00ED228C /* CommonCryptoBridge */,
+				BB5D1D4520DC00CB00E98B34 /* CentrifugeiOS.modulemap */,
+				D492AD2B1FA0AF97003E92FA /* CentrifugeiOS.h */,
+				BB5D1D4220DC00CB00E98B34 /* CommonCryptoBridge */,
 				D492AD361FA0B00C003E92FA /* Centrifuge.swift */,
 				D492AD371FA0B00C003E92FA /* CentrifugeClientImpl.swift */,
 				D492AD391FA0B00C003E92FA /* Models.swift */,
@@ -112,7 +115,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D492AD2D1FA0AF97003E92FA /* CentrifugeiOS.h in Headers */,
-				BB77FA5020D01ADB00ED228C /* CommonCryptoBridge.h in Headers */,
+				BBAEA86820DCF09C00A7802C /* CommonCryptoBridge.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,7 +186,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB77FA4F20D01ADB00ED228C /* CommonCryptoBridge.m in Sources */,
+				BB5D1D6820DC109200E98B34 /* CommonCryptoBridge.m in Sources */,
 				D492AD431FA0B00C003E92FA /* Models.swift in Sources */,
 				D492AD471FA0B00C003E92FA /* CentrifugoServerMessageParserImpl.swift in Sources */,
 				D492AD411FA0B00C003E92FA /* CentrifugeClientImpl.swift in Sources */,
@@ -325,6 +328,7 @@
 				INFOPLIST_FILE = CentrifugeiOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "$(SRCROOT)/CentrifugeiOS/Classes/CentrifugeiOS.modulemap";
 				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.CentrifugeiOS.CentrifugeiOS;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -349,6 +353,7 @@
 				INFOPLIST_FILE = CentrifugeiOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "$(SRCROOT)/CentrifugeiOS/Classes/CentrifugeiOS.modulemap";
 				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.CentrifugeiOS.CentrifugeiOS;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CentrifugeiOS.CommonCryptoBridge
 
 public let CentrifugeErrorDomain = "com.Centrifuge.error.domain"
 public let CentrifugeWebSocketErrorDomain = "com.Centrifuge.error.domain.websocket"
