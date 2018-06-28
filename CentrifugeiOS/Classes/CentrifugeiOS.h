@@ -14,5 +14,3 @@ FOUNDATION_EXPORT double CentrifugeiOSVersionNumber;
 FOUNDATION_EXPORT const unsigned char CentrifugeiOSVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <CentrifugeiOS/PublicHeader.h>
-
-
