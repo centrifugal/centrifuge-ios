@@ -31,6 +31,10 @@ Subscribe to channel:
 ```swift
 client.subscribe(toChannel: channel, delegate: delegate) { message, error in }
 ```
+Subscribe to private channel:
+```swift
+client.subscribe(privateChannel: channel, client: clientString, sign: sign, delegate: delegate) { message, error in }
+```
 Publish: 
 ```swift
 client.publish(toChannel: channel, data:  data) { message, error in }

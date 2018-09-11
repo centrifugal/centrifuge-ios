@@ -13,6 +13,8 @@ public let CentrifugeErrorDomain = "com.Centrifuge.error.domain"
 public let CentrifugeWebSocketErrorDomain = "com.Centrifuge.error.domain.websocket"
 public let CentrifugeErrorMessageKey = "com.Centrifuge.error.messagekey"
 
+public let CentrifugePrivateChannelPrefix = "$"
+
 public enum CentrifugeErrorCode: Int {
     case CentrifugeMessageWithError
 }

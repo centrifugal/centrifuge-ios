@@ -30,6 +30,12 @@ public protocol CentrifugeClient {
 
     //MARK: Channel related methods
     func subscribe(toChannel: String, delegate: CentrifugeChannelDelegate, completion: @escaping CentrifugeMessageHandler)
+    
+    /// - Parameters:
+    ///   - channel: Channel UUID
+    ///   - client: 'client' field from `connect` response
+    ///   - sign: token from your backend
+    func subscribe(privateChannel channel: String, client: String, sign: String, delegate: CentrifugeChannelDelegate, completion: @escaping CentrifugeMessageHandler)
     func subscribe(toChannel: String, delegate: CentrifugeChannelDelegate, lastMessageUID: String, completion: @escaping CentrifugeMessageHandler)
     
     func publish(toChannel: String, data: [String : Any], completion: @escaping CentrifugeMessageHandler)

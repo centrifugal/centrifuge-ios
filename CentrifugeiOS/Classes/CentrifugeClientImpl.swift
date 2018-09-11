@@ -55,6 +55,14 @@ class CentrifugeClientImpl: NSObject, CentrifugeClient, WebSocketDelegate {
         send(message: message)
     }
     
+    func subscribe(privateChannel channel: String, client: String, sign: String, delegate: CentrifugeChannelDelegate, completion: @escaping CentrifugeMessageHandler) {
+        let channel = channel.hasPrefix(CentrifugePrivateChannelPrefix) ? channel : CentrifugePrivateChannelPrefix + channel
+        let message = builder.buildSubscribeMessageToPrivate(channel: channel, client: client, sign: sign)
+        subscription[channel] = delegate
+        messageCallbacks[message.uid] = completion
+        send(message: message)
+    }
+    
     func subscribe(toChannel channel: String, delegate: CentrifugeChannelDelegate, lastMessageUID uid: String, completion: @escaping CentrifugeMessageHandler) {
         let message = builder.buildSubscribeMessageTo(channel: channel, lastMessageUUID: uid)
         subscription[channel] = delegate
